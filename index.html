@@ -72,14 +72,33 @@ input[disabled]{background:#eee;color:#777}
 <tr><td id="totalMasuk"></td><td id="totalKeluar"></td><td id="saldoAkhir" class="saldo-akhir"></td></tr>
 </table>
 </div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
 <script>
+// Konfigurasi milikmu sudah saya pasang di sini
+const firebaseConfig = {
+    apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
+    authDomain: "kasmawar3-59c18.firebaseapp.com",
+    databaseURL: "https://kasmawar3-59c18-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "kasmawar3-59c18",
+    storageBucket: "kasmawar3-59c18.firebasestorage.app",
+    messagingSenderId: "643313437210",
+    appId: "1:643313437210:web:7377bbd6e4cd9aa33b5fa3",
+    measurementId: "G-KY0GS26WNT"
+};
+
+// Hubungkan ke Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 let isAdmin=false;
 let autoSaveTimer=null;
 let bulan=0,tahun=2026;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
-let dataPeriode=JSON.parse(localStorage.getItem('KAS_DATA')||'{}');
 let currentTheme='';
 
 function createRowMasuk(nama){
@@ -112,6 +131,7 @@ function lockUI(lock){document.querySelectorAll('.editable').forEach(i=>i.disabl
 function applyAdminLock(){lockUI(!isAdmin);}
 
 function saveData(){
+ if(!isAdmin) return;
  const key=bulan+'-'+tahun;
  const masuk=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({
   tanggal:tr.children[0].firstChild.value,
@@ -125,8 +145,8 @@ function saveData(){
   qty:tr.children[2].firstChild.value,
   harga:tr.children[3].firstChild.value
  }));
- dataPeriode[key]={masuk,keluar};
- localStorage.setItem('KAS_DATA',JSON.stringify(dataPeriode));
+ // Simpan ke Database Online
+ db.ref('kas_data/' + key).set({masuk, keluar});
 }
 
 function recalc(){
@@ -137,8 +157,7 @@ function recalc(){
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=masuk.toLocaleString('id-ID');
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
-  const isBelumBayar=ketVal.includes('BELUM BAYAR');
-  if(isBelumBayar){
+  if(ketVal.includes('BELUM BAYAR')){
    [1,2,3].forEach(i=>{const el=tr.children[i].firstChild; el.style.backgroundColor='var(--danger)'; el.style.color='#000';});
   } else {
    [1,2,3].forEach(i=>{const el=tr.children[i].firstChild; el.style.backgroundColor=''; el.style.color='';});
@@ -154,12 +173,9 @@ function recalc(){
   keluar+=t;
  });
  const saldo=(masuk-keluar);
- const tm=document.getElementById('totalMasuk');
- const tk=document.getElementById('totalKeluar');
- const sa=document.getElementById('saldoAkhir');
- tm.textContent=masuk.toLocaleString('id-ID'); tm.style.textAlign='center'; tm.style.fontWeight='700';
- tk.textContent=keluar.toLocaleString('id-ID'); tk.style.textAlign='center'; tk.style.fontWeight='700';
- sa.textContent=saldo.toLocaleString('id-ID'); sa.className='saldo-akhir'; sa.style.textAlign='center'; sa.style.fontWeight='700';
+ document.getElementById('totalMasuk').textContent=masuk.toLocaleString('id-ID');
+ document.getElementById('totalKeluar').textContent=keluar.toLocaleString('id-ID');
+ document.getElementById('saldoAkhir').textContent=saldo.toLocaleString('id-ID');
 }
 
 adminBtn.onclick=()=>{
@@ -192,31 +208,39 @@ themeBtn.onclick=()=>{
 };
 
 document.addEventListener('input',()=>{recalc();});
-function prevMonth(){saveData(); bulan--; if(bulan<0){bulan=11;tahun--;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
-function nextMonth(){saveData(); bulan++; if(bulan>11){bulan=0;tahun++;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
+function prevMonth(){ bulan--; if(bulan<0){bulan=11;tahun--;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
+function nextMonth(){ bulan++; if(bulan>11){bulan=0;tahun++;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
 cetakBtn.onclick=()=>{window.scrollTo(0,0);html2canvas(document.body,{scale:2}).then(canvas=>{const link=document.createElement('a');link.download = `LAPORAN_KAS_${namaBulan[bulan]}_${tahun}.jpg`;link.href = canvas.toDataURL('image/jpeg',0.95);link.click();});}
 
 function loadData(){
  buildTables();
  const key=bulan+'-'+tahun;
- if(dataPeriode[key]){
-  dataPeriode[key].masuk.forEach((r,i)=>{
-   const tr=document.querySelectorAll('#tbMasuk tr')[i];
-   tr.children[0].firstChild.value=r.tanggal;
-   tr.children[1].firstChild.value=r.nama;
-   tr.children[2].firstChild.value=r.ket;
-   tr.children[3].firstChild.value=r.uang;
-  });
-  dataPeriode[key].keluar.forEach((r,i)=>{
-   const tr=document.querySelectorAll('#tbKeluar tr')[i];
-   tr.children[0].firstChild.value=r.tanggal;
-   tr.children[1].firstChild.value=r.ket||'';
-   tr.children[2].firstChild.value=r.qty;
-   tr.children[3].firstChild.value=r.harga;
-  });
- }
- recalc();
- applyAdminLock();
+ // Ambil data dari Database Online
+ db.ref('kas_data/' + key).once('value').then((snapshot) => {
+  const data = snapshot.val();
+  if(data){
+   if(data.masuk) data.masuk.forEach((r,i)=>{
+    const tr=document.querySelectorAll('#tbMasuk tr')[i];
+    if(tr){
+     tr.children[0].firstChild.value=r.tanggal;
+     tr.children[1].firstChild.value=r.nama;
+     tr.children[2].firstChild.value=r.ket;
+     tr.children[3].firstChild.value=r.uang;
+    }
+   });
+   if(data.keluar) data.keluar.forEach((r,i)=>{
+    const tr=document.querySelectorAll('#tbKeluar tr')[i];
+    if(tr){
+     tr.children[0].firstChild.value=r.tanggal;
+     tr.children[1].firstChild.value=r.ket||'';
+     tr.children[2].firstChild.value=r.qty;
+     tr.children[3].firstChild.value=r.harga;
+    }
+   });
+  }
+  recalc();
+  applyAdminLock();
+ });
 }
 
 loadData();
