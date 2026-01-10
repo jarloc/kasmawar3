@@ -153,7 +153,8 @@ function saveData(){
 function recalc(){
  let masuk=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let u=parseInt(tr.children[3].firstChild.value.replace(/\./g,''))||0;
+  let val = tr.children[3].firstChild.value.replace(/\./g,'');
+  let u=parseInt(val)||0;
   masuk+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=masuk.toLocaleString('id-ID');
@@ -228,30 +229,26 @@ document.getElementById('cetakBtn').onclick=()=>{
     }, 500);
 }
 
-// LOGIKA OTOMATIS SALDO SEBELUMNYA
+// FUNGSI TARIK SALDO DARI DATABASE
 function fetchPreviousSaldo(m, t) {
-    let pm = m - 1;
-    let pt = t;
+    let pm = m - 1; let pt = t;
     if (pm < 0) { pm = 11; pt--; }
     const key = pm + '-' + pt;
     
     db.ref('kas_data/' + key).once('value').then((snapshot) => {
         const data = snapshot.val();
-        let totalM = 0;
-        let totalK = 0;
+        let tM = 0; let tK = 0;
         if (data) {
-            if (data.masuk) data.masuk.forEach(r => totalM += (parseInt(r.uang.replace(/\./g, '')) || 0));
-            if (data.keluar) data.keluar.forEach(r => totalK += ((parseInt(r.qty) || 0) * (parseInt(r.harga.replace(/\./g, '')) || 0)));
-            
-            const saldoLalu = totalM - totalK;
+            if (data.masuk) data.masuk.forEach(r => tM += (parseInt(r.uang.replace(/\./g, '')) || 0));
+            if (data.keluar) data.keluar.forEach(r => tK += ((parseInt(r.qty) || 0) * (parseInt(r.harga.replace(/\./g, '')) || 0)));
+            const saldoLalu = tM - tK;
             const rowSisa = document.querySelectorAll('#tbMasuk tr')[0];
-            if (rowSisa && !rowSisa.children[3].firstChild.value || rowSisa.children[3].firstChild.value === "0") {
-                // Set Tanggal ke tgl 1 bulan tsb
-                const formattedMonth = (bulan + 1).toString().padStart(2, '0');
-                rowSisa.children[0].firstChild.value = `${tahun}-${formattedMonth}-01`;
-                // Set Uang Masuk dari Saldo Lalu
+            if (rowSisa) {
+                const fMonth = (bulan + 1).toString().padStart(2, '0');
+                rowSisa.children[0].firstChild.value = `${tahun}-${fMonth}-01`;
                 rowSisa.children[3].firstChild.value = saldoLalu.toLocaleString('id-ID');
                 recalc();
+                if(isAdmin) saveData(); // Simpan otomatis saldo tarikan ini
             }
         }
     });
@@ -262,27 +259,27 @@ function loadData(){
  const key=bulan+'-'+tahun;
  db.ref('kas_data/' + key).once('value').then((snapshot) => {
   const data = snapshot.val();
-  if(data){
+  if(data && (data.masuk || data.keluar)){
    if(data.masuk) data.masuk.forEach((r,i)=>{
     const tr=document.querySelectorAll('#tbMasuk tr')[i];
     if(tr){
-     tr.children[0].firstChild.value=r.tanggal;
-     tr.children[1].firstChild.value=r.nama;
-     tr.children[2].firstChild.value=r.ket;
-     tr.children[3].firstChild.value=r.uang;
+     tr.children[0].firstChild.value=r.tanggal||'';
+     tr.children[1].firstChild.value=r.nama||'';
+     tr.children[2].firstChild.value=r.ket||'';
+     tr.children[3].firstChild.value=r.uang||'0';
     }
    });
    if(data.keluar) data.keluar.forEach((r,i)=>{
     const tr=document.querySelectorAll('#tbKeluar tr')[i];
     if(tr){
-     tr.children[0].firstChild.value=r.tanggal;
+     tr.children[0].firstChild.value=r.tanggal||'';
      tr.children[1].firstChild.value=r.ket||'';
-     tr.children[2].firstChild.value=r.qty;
-     tr.children[3].firstChild.value=r.harga;
+     tr.children[2].firstChild.value=r.qty||'';
+     tr.children[3].firstChild.value=r.harga||'0';
     }
    });
   } else {
-     // Jika data bulan ini kosong dan ini bukan Jan 2026, ambil saldo bulan lalu
+     // JIKA DATA BULAN INI KOSONG, TARIK DARI BULAN LALU
      if(!(bulan === 0 && tahun === 2026)) {
          fetchPreviousSaldo(bulan, tahun);
      }
