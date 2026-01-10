@@ -229,26 +229,27 @@ document.getElementById('cetakBtn').onclick=()=>{
     }, 500);
 }
 
-// FUNGSI TARIK SALDO DARI DATABASE
-function fetchPreviousSaldo(m, t) {
-    let pm = m - 1; let pt = t;
+// LOGIKA TARIK SALDO YANG LEBIH KUAT
+function fetchPreviousSaldo() {
+    let pm = bulan - 1; let pt = tahun;
     if (pm < 0) { pm = 11; pt--; }
     const key = pm + '-' + pt;
     
     db.ref('kas_data/' + key).once('value').then((snapshot) => {
         const data = snapshot.val();
-        let tM = 0; let tK = 0;
         if (data) {
+            let tM = 0; let tK = 0;
             if (data.masuk) data.masuk.forEach(r => tM += (parseInt(r.uang.replace(/\./g, '')) || 0));
             if (data.keluar) data.keluar.forEach(r => tK += ((parseInt(r.qty) || 0) * (parseInt(r.harga.replace(/\./g, '')) || 0)));
             const saldoLalu = tM - tK;
-            const rowSisa = document.querySelectorAll('#tbMasuk tr')[0];
+            
+            const rowSisa = document.querySelector('#tbMasuk tr:first-child');
             if (rowSisa) {
                 const fMonth = (bulan + 1).toString().padStart(2, '0');
                 rowSisa.children[0].firstChild.value = `${tahun}-${fMonth}-01`;
                 rowSisa.children[3].firstChild.value = saldoLalu.toLocaleString('id-ID');
                 recalc();
-                if(isAdmin) saveData(); // Simpan otomatis saldo tarikan ini
+                if(isAdmin) saveData(); 
             }
         }
     });
@@ -259,7 +260,9 @@ function loadData(){
  const key=bulan+'-'+tahun;
  db.ref('kas_data/' + key).once('value').then((snapshot) => {
   const data = snapshot.val();
+  
   if(data && (data.masuk || data.keluar)){
+   // ISI DATA DARI DATABASE
    if(data.masuk) data.masuk.forEach((r,i)=>{
     const tr=document.querySelectorAll('#tbMasuk tr')[i];
     if(tr){
@@ -278,13 +281,14 @@ function loadData(){
      tr.children[3].firstChild.value=r.harga||'0';
     }
    });
+   recalc();
   } else {
-     // JIKA DATA BULAN INI KOSONG, TARIK DARI BULAN LALU
+     // JIKA DATA KOSONG, TUNGGU SEBENTAR LALU AMBIL SALDO BULAN LALU
+     recalc();
      if(!(bulan === 0 && tahun === 2026)) {
-         fetchPreviousSaldo(bulan, tahun);
+         setTimeout(fetchPreviousSaldo, 500);
      }
   }
-  recalc();
   applyAdminLock();
  });
 }
