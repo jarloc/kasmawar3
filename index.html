@@ -78,7 +78,7 @@ input[disabled]{background:#eee;color:#777}
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-// Konfigurasi milikmu sudah saya pasang di sini
+// Konfigurasi Firebase milikmu
 const firebaseConfig = {
     apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
     authDomain: "kasmawar3-59c18.firebaseapp.com",
@@ -90,7 +90,7 @@ const firebaseConfig = {
     measurementId: "G-KY0GS26WNT"
 };
 
-// Hubungkan ke Firebase
+// Inisialisasi Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -130,6 +130,7 @@ function buildTables(){
 function lockUI(lock){document.querySelectorAll('.editable').forEach(i=>i.disabled=lock);}
 function applyAdminLock(){lockUI(!isAdmin);}
 
+// Fungsi Simpan ke Firebase
 function saveData(){
  if(!isAdmin) return;
  const key=bulan+'-'+tahun;
@@ -145,7 +146,6 @@ function saveData(){
   qty:tr.children[2].firstChild.value,
   harga:tr.children[3].firstChild.value
  }));
- // Simpan ke Database Online
  db.ref('kas_data/' + key).set({masuk, keluar});
 }
 
@@ -212,10 +212,10 @@ function prevMonth(){ bulan--; if(bulan<0){bulan=11;tahun--;} document.getElemen
 function nextMonth(){ bulan++; if(bulan>11){bulan=0;tahun++;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
 cetakBtn.onclick=()=>{window.scrollTo(0,0);html2canvas(document.body,{scale:2}).then(canvas=>{const link=document.createElement('a');link.download = `LAPORAN_KAS_${namaBulan[bulan]}_${tahun}.jpg`;link.href = canvas.toDataURL('image/jpeg',0.95);link.click();});}
 
+// Fungsi Ambil dari Firebase
 function loadData(){
  buildTables();
  const key=bulan+'-'+tahun;
- // Ambil data dari Database Online
  db.ref('kas_data/' + key).once('value').then((snapshot) => {
   const data = snapshot.val();
   if(data){
