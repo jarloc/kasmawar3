@@ -10,7 +10,6 @@
 }
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
 header{text-align:center;font-size:2rem;margin-bottom:10px}
-/* Floating Menu Styles */
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.8); padding:10px; border-radius:8px}
 .menu-items.show {display:flex}
@@ -102,11 +101,7 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 let currentTheme='';
 
-// Fungsi Toggle Menu
-function toggleMenu() {
-    const menu = document.getElementById('menuItems');
-    menu.classList.toggle('show');
-}
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
 function createRowMasuk(nama){
  const tr=document.createElement('tr');
@@ -182,6 +177,7 @@ function recalc(){
  document.getElementById('totalMasuk').textContent=masuk.toLocaleString('id-ID');
  document.getElementById('totalKeluar').textContent=keluar.toLocaleString('id-ID');
  document.getElementById('saldoAkhir').textContent=saldo.toLocaleString('id-ID');
+ return saldo;
 }
 
 document.getElementById('adminBtn').onclick=()=>{
@@ -197,7 +193,7 @@ document.getElementById('adminBtn').onclick=()=>{
  }
  applyAdminLock();
  recalc();
- toggleMenu(); // Tutup menu setelah klik
+ toggleMenu();
 };
 
 function startAutoSave(){stopAutoSave(); autoSaveTimer=setInterval(()=>{saveData();},2500);}
@@ -215,8 +211,10 @@ document.getElementById('themeBtn').onclick=()=>{
 };
 
 document.addEventListener('input',()=>{recalc();});
-function prevMonth(){ bulan--; if(bulan<0){bulan=11;tahun--;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
-function nextMonth(){ bulan++; if(bulan>11){bulan=0;tahun++;} document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData();}
+function prevMonth(){ bulan--; if(bulan<0){bulan=11;tahun--;} updatePeriode(); loadData();}
+function nextMonth(){ bulan++; if(bulan>11){bulan=0;tahun++;} updatePeriode(); loadData();}
+function updatePeriode(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; }
+
 document.getElementById('cetakBtn').onclick=()=>{
     toggleMenu(); 
     window.scrollTo(0,0);
@@ -228,6 +226,35 @@ document.getElementById('cetakBtn').onclick=()=>{
             link.click();
         });
     }, 500);
+}
+
+// LOGIKA OTOMATIS SALDO SEBELUMNYA
+function fetchPreviousSaldo(m, t) {
+    let pm = m - 1;
+    let pt = t;
+    if (pm < 0) { pm = 11; pt--; }
+    const key = pm + '-' + pt;
+    
+    db.ref('kas_data/' + key).once('value').then((snapshot) => {
+        const data = snapshot.val();
+        let totalM = 0;
+        let totalK = 0;
+        if (data) {
+            if (data.masuk) data.masuk.forEach(r => totalM += (parseInt(r.uang.replace(/\./g, '')) || 0));
+            if (data.keluar) data.keluar.forEach(r => totalK += ((parseInt(r.qty) || 0) * (parseInt(r.harga.replace(/\./g, '')) || 0)));
+            
+            const saldoLalu = totalM - totalK;
+            const rowSisa = document.querySelectorAll('#tbMasuk tr')[0];
+            if (rowSisa && !rowSisa.children[3].firstChild.value || rowSisa.children[3].firstChild.value === "0") {
+                // Set Tanggal ke tgl 1 bulan tsb
+                const formattedMonth = (bulan + 1).toString().padStart(2, '0');
+                rowSisa.children[0].firstChild.value = `${tahun}-${formattedMonth}-01`;
+                // Set Uang Masuk dari Saldo Lalu
+                rowSisa.children[3].firstChild.value = saldoLalu.toLocaleString('id-ID');
+                recalc();
+            }
+        }
+    });
 }
 
 function loadData(){
@@ -254,6 +281,11 @@ function loadData(){
      tr.children[3].firstChild.value=r.harga;
     }
    });
+  } else {
+     // Jika data bulan ini kosong dan ini bukan Jan 2026, ambil saldo bulan lalu
+     if(!(bulan === 0 && tahun === 2026)) {
+         fetchPreviousSaldo(bulan, tahun);
+     }
   }
   recalc();
   applyAdminLock();
