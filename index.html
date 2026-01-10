@@ -129,11 +129,12 @@ function buildTables(){
 function recalc(){
  let tM=0, tK=0, runM=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let u=parseInt(tr.children[3].firstChild.value.replace(/\D/g,''))||0;
+  let raw = tr.children[3].firstChild.value.toString().replace(/\D/g,'');
+  let u=parseInt(raw)||0;
   runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
-  // Fitur Warna Merah Belum Bayar
+  
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
   if(ketVal.includes('BELUM BAYAR')){
@@ -143,8 +144,8 @@ function recalc(){
   }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/\D/g,''))||0;
-  let h=parseInt(tr.children[3].firstChild.value.replace(/\D/g,''))||0;
+  let q=parseInt(tr.children[2].firstChild.value.toString().replace(/\D/g,''))||0;
+  let h=parseInt(tr.children[3].firstChild.value.toString().replace(/\D/g,''))||0;
   let t=q*h; tK+=t;
   tr.children[2].firstChild.value=q.toLocaleString('id-ID');
   tr.children[3].firstChild.value=h.toLocaleString('id-ID');
@@ -155,22 +156,24 @@ function recalc(){
  document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
 }
 
+// LOGIKA HITUNG ULANG SALDO DARI DATABASE
 function fetchPrevSaldo(){
  let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
  db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
   const d=s.val(); let sL=0;
   if(d){
-   let m=0, k=0;
-   if(d.masuk) d.masuk.forEach(r=>m+=parseInt(r.uang.replace(/\D/g,''))||0);
-   if(d.keluar) d.keluar.forEach(r=>k+=(parseInt(r.qty.replace(/\D/g,''))||0)*(parseInt(r.harga.replace(/\D/g,''))||0));
-   sL=m-k;
+   let mTotal=0, kTotal=0;
+   if(d.masuk) d.masuk.forEach(r=>mTotal+=parseInt(r.uang.replace(/\D/g,''))||0);
+   if(d.keluar) d.keluar.forEach(r=>kTotal+=(parseInt(r.qty.replace(/\D/g,''))||0)*(parseInt(r.harga.replace(/\D/g,''))||0));
+   sL=mTotal-kTotal;
   }
-  const tr=document.querySelector('#tbMasuk tr');
-  if(tr){
+  const trSisa=document.querySelector('#tbMasuk tr');
+  if(trSisa){
     const fM=(bulan+1).toString().padStart(2,'0');
-    tr.children[0].firstChild.value=`${tahun}-${fM}-01`;
-    tr.children[3].firstChild.value=sL.toLocaleString('id-ID');
-    recalc(); if(isAdmin) saveData();
+    trSisa.children[0].firstChild.value=`${tahun}-${fM}-01`;
+    trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID');
+    recalc(); 
+    if(isAdmin) { setTimeout(saveData, 1000); }
   }
  });
 }
@@ -179,17 +182,27 @@ function loadData(){
  buildTables();
  db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
   const d=s.val();
-  if(d && (d.masuk || d.keluar)){
+  // Cek apakah data bulan ini benar-benar ada isinya
+  let hasData = false;
+  if(d && d.masuk){
+    // Cek jika baris pertama (SISA KAS) sudah ada isinya atau baris lain
+    const isSisaFilled = d.masuk[0] && (parseInt(d.masuk[0].uang.replace(/\D/g,'')) > 0);
+    const isOtherFilled = d.masuk.slice(1).some(r => parseInt(r.uang.replace(/\D/g,'')) > 0);
+    if(isSisaFilled || isOtherFilled) hasData = true;
+  }
+
+  if(hasData){
    if(d.masuk) d.masuk.forEach((r,i)=>{
     const tr=document.querySelectorAll('#tbMasuk tr')[i];
-    if(tr){ tr.children[0].firstChild.value=r.tanggal; tr.children[1].firstChild.value=r.nama; tr.children[2].firstChild.value=r.ket; tr.children[3].firstChild.value=r.uang; }
+    if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; }
    });
    if(d.keluar) d.keluar.forEach((r,i)=>{
     const tr=document.querySelectorAll('#tbKeluar tr')[i];
-    if(tr){ tr.children[0].firstChild.value=r.tanggal; tr.children[1].firstChild.value=r.ket; tr.children[2].firstChild.value=r.qty; tr.children[3].firstChild.value=r.harga; }
+    if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; }
    });
    recalc();
   } else {
+   // Jika data murni kosong, tarik sisa saldo bulan lalu
    if(!(bulan===0 && tahun===2026)) fetchPrevSaldo();
    recalc();
   }
@@ -229,9 +242,7 @@ document.getElementById('themeBtn').onclick=()=>{
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
- // LED Effect Toggle
- const blocks=document.querySelectorAll('.block');
- blocks.forEach(b=>b.classList.toggle('cyber-effect', currentTheme==='theme-cyberpunk'));
+ document.querySelectorAll('.block').forEach(b=>b.classList.toggle('cyber-effect', currentTheme==='theme-cyberpunk'));
 };
 
 document.getElementById('cetakBtn').onclick=()=>{
