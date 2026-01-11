@@ -9,27 +9,19 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- ULTIMATE FIX SAFARI IPHONE: PEKAT ABSOLUT (ACC) --- */
+/* --- SAPU JAGAT FIX: FORCING SAFARI COLOR RENDERING (ACC) --- */
+input:disabled {
+  -webkit-text-fill-color: currentcolor !important; /* Kunci utama Safari */
+  color: inherit !important;
+  opacity: 1 !important; /* Mencegah transparan */
+  background-color: inherit;
+  border-color: transparent;
+}
+
 @media screen and (max-width: 768px) {
-  /* Memaksa Safari menampilkan teks putih tanpa pudar */
-  #tbMasuk input, #tbKeluar input, .saldo, .total {
-    -webkit-text-fill-color: #ffffff !important;
-    opacity: 1 !important;
+  #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir {
     font-weight: 800 !important;
-    color: #ffffff !important;
-    text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
-  }
-  
-  /* Khusus teks hitam di kolom Saldo Akhir agar tetap hitam pekat */
-  #totalMasuk, .saldo-akhir {
-    -webkit-text-fill-color: #000000 !important;
-    color: #000000 !important;
-    font-weight: 800 !important;
-  }
-  
-  #totalKeluar {
-    -webkit-text-fill-color: #ffffff !important;
-    color: #ffffff !important;
+    font-size: 0.9rem;
   }
 }
 
@@ -71,17 +63,16 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 @keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
-#totalMasuk { background:var(--success); color:#fff; }
-#totalKeluar { background:var(--danger); color:#fff; }
-.saldo-akhir { background:var(--yellow); color:#000; }
+#totalMasuk { background:var(--success); color:#ffffff; }
+#totalKeluar { background:var(--danger); color:#ffffff; }
+.saldo-akhir { background:var(--yellow); color:#000000; }
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
 #catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
 #catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
-input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
-input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
+input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
@@ -90,9 +81,9 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .theme-cyberpunk tr:nth-child(odd) td { border-color: #00ffcc; }
 .theme-cyberpunk tr:nth-child(even) td { border-color: #ffff00; }
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
-.theme-cyberpunk #totalMasuk { background:#00ff00; color:#000; box-shadow: 0 0 10px #00ff00; }
-.theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff; box-shadow: 0 0 10px #ff0000; }
-.theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000; box-shadow: 0 0 10px #ffff00; }
+.theme-cyberpunk #totalMasuk { background:#00ff00; color:#000 !important; box-shadow: 0 0 10px #00ff00; }
+.theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff !important; box-shadow: 0 0 10px #ff0000; }
+.theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 #checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
@@ -320,9 +311,25 @@ function recalc(){
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
   const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"];
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';}); }
-  else if(kuncis.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';}); }
-  else { inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';}); }
+  
+  if(ketVal.includes('BELUM BAYAR')){ 
+     inputs.forEach(inp=>{
+        inp.style.backgroundColor='var(--danger)'; 
+        inp.style.color='#ffffff'; 
+     }); 
+  }
+  else if(kuncis.some(k => ketVal.includes(k))){ 
+     inputs.forEach(inp=>{
+        inp.style.backgroundColor='var(--success)'; 
+        inp.style.color='#ffffff'; 
+     }); 
+  }
+  else { 
+     inputs.forEach(inp=>{
+        inp.style.backgroundColor='transparent'; 
+        inp.style.color='var(--text)';
+     }); 
+  }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
@@ -332,6 +339,18 @@ function recalc(){
  document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
  document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
  document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
+ applyAdminLock();
+}
+
+function applyAdminLock(){ 
+    document.querySelectorAll('.editable').forEach(i=>{
+        i.disabled=!isAdmin;
+        if(!isAdmin) {
+            i.style.cursor = "default";
+        } else {
+            i.style.cursor = "text";
+        }
+    }); 
 }
 
 function loadData(){
@@ -343,7 +362,7 @@ function loadData(){
    if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
-  recalc(); applyAdminLock();
+  recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
     const cat = snapshot.val();
@@ -445,7 +464,6 @@ document.getElementById('pullBtn').onclick=()=>{
  toggleMenu();
 }
 
-function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
