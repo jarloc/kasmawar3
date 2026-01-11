@@ -18,7 +18,7 @@ input:disabled {
   border-color: transparent;
 }
 
-/* --- UKURAN TOMBOL DIPERBESAR 2X LIPAT (ACC) --- */
+/* --- UKURAN TOMBOL DIPERBESAR 2X LIPAT --- */
 button {
   padding: 20px 32px; 
   font-size: 1.2rem;
@@ -89,7 +89,7 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
-/* --- CYBERPUNK THEME REFINEMENT (ACC) --- */
+/* --- CYBERPUNK THEME REFINEMENT --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
@@ -102,13 +102,11 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff !important; box-shadow: 0 0 10px #ff0000; }
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
 
-/* FIX TOMBOL CYBERPUNK: UNGU MAGENTA + TULISAN HITAM (ACC) */
 .theme-cyberpunk .menu-items button {
     background: #ff00ff !important; 
     color: #000000 !important; 
     box-shadow: 0 0 15px #ff00ff;
     border: 2px solid #00ffcc;
-    text-shadow: none;
 }
 .theme-cyberpunk #adminBtn.primary {
     background: #00ffcc !important;
@@ -142,6 +140,12 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
         <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
+        
+        <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
+            <h3 style="text-align:center; color:red;">🚨 PERCOBAAN ADMIN GAGAL 🚨</h3>
+            <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
+        </div>
+        
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
 </div>
@@ -251,23 +255,18 @@ const db = firebase.database();
 
 const skrg = new Date();
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
-let isAdmin=false, autoSaveTimer=null, currentTheme='';
+let isAdmin=false, autoSaveTimer=null, currentTheme='', currentUserName='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
     const nama = prompt("SILAHKAN MASUKKAN NAMA ANDA:");
-    if (nama === null || nama.trim() === "") {
-        alert("NAMA TIDAK BOLEH KOSONG!");
-        return;
-    }
+    if (nama === null || nama.trim() === "") { alert("NAMA TIDAK BOLEH KOSONG!"); return; }
+    currentUserName = nama.toUpperCase();
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    db.ref('pengunjung_situs').push({
-        nama: nama.toUpperCase(),
-        waktu: tglLog + ", PUKUL " + jamLog + " WIB"
-    });
+    db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: tglLog + ", PUKUL " + jamLog + " WIB" });
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
@@ -276,40 +275,47 @@ function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung');
     const list = document.getElementById('listPengunjung');
+    const secLog = document.getElementById('secLogAdmin');
+    const listLog = document.getElementById('listLogAdmin');
     const btnHapus = document.getElementById('btnHapusPengunjung');
+    
     btnHapus.style.display = isAdmin ? 'block' : 'none';
+    secLog.style.display = isAdmin ? 'block' : 'none';
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
-    db.ref('pengunjung_situs').limitToLast(50).once('value', s => {
+    db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
         const d = s.val();
         if(d) {
-            let html = "<table style='width:100%; border-collapse:collapse;'>";
-            Object.values(d).reverse().forEach(v => {
-                html += `<tr style='border-bottom:1px solid #eee;'><td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`;
-            });
-            html += "</table>";
-            list.innerHTML = html;
+            let html = "<table style='width:100%;'>";
+            Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #eee;'><td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
+            list.innerHTML = html + "</table>";
         } else { list.innerHTML = "Belum ada pengunjung."; }
     });
+
+    if(isAdmin) {
+        db.ref('percobaan_admin_gagal').limitToLast(20).once('value', s => {
+            const d = s.val();
+            if(d) {
+                let html = "<table style='width:100%;'>";
+                Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #ffcccc;'><td style='padding:5px;'>⚠️ <b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
+                listLog.innerHTML = html + "</table>";
+            } else { listLog.innerHTML = "Tidak ada percobaan mencurigakan."; }
+        });
+    }
 }
 
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
-    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT PENGUNJUNG? TINDAKAN INI TIDAK DAPAT DIBATALKAN.")) {
-        db.ref('pengunjung_situs').remove()
-            .then(() => {
-                alert("RIWAYAT TELAH DIBERSIHKAN, TUAN.");
-                openPengunjung(); 
-            })
-            .catch((error) => {
-                alert("GAGAL MENGHAPUS: " + error.message);
-            });
+    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT (PENGUNJUNG & LOG GAGAL)?")) {
+        db.ref('pengunjung_situs').remove();
+        db.ref('percobaan_admin_gagal').remove();
+        alert("RIWAYAT TELAH DIBERSIHKAN, TUAN.");
+        openPengunjung(); 
     }
 }
 
 function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
-
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
@@ -343,25 +349,9 @@ function recalc(){
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
   const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"];
-  
-  if(ketVal.includes('BELUM BAYAR')){ 
-     inputs.forEach(inp=>{
-        inp.style.backgroundColor='var(--danger)'; 
-        inp.style.color='#ffffff'; 
-     }); 
-  }
-  else if(kuncis.some(k => ketVal.includes(k))){ 
-     inputs.forEach(inp=>{
-        inp.style.backgroundColor='var(--success)'; 
-        inp.style.color='#ffffff'; 
-     }); 
-  }
-  else { 
-     inputs.forEach(inp=>{
-        inp.style.backgroundColor='transparent'; 
-        inp.style.color='var(--text)';
-     }); 
-  }
+  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#ffffff'; }); }
+  else if(kuncis.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#ffffff'; }); }
+  else { inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
@@ -375,10 +365,7 @@ function recalc(){
 }
 
 function applyAdminLock(){ 
-    document.querySelectorAll('.editable').forEach(i=>{
-        i.disabled=!isAdmin;
-        i.style.cursor = !isAdmin ? "default" : "text";
-    }); 
+    document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; i.style.cursor = !isAdmin ? "default" : "text"; }); 
 }
 
 function loadData(){
@@ -406,10 +393,8 @@ function saveData(){
  const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", PUKUL " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- const cat = document.getElementById('catatanWarga').value;
  db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
- db.ref('kas_data/catatan_umum').set(cat);
- document.getElementById('catatanPrint').innerText = cat;
+ db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
  document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
 
@@ -432,8 +417,7 @@ async function openChecklist() {
                 const row = d.masuk.find(r => r.nama === nama);
                 if (row) {
                     const ket = (row.ket||'').toUpperCase();
-                    const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"];
-                    if (kuncis.some(k => ket.includes(k))) matrix[nama][m] = '✓';
+                    if (["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => ket.includes(k))) matrix[nama][m] = '✓';
                 }
             }
         });
@@ -442,11 +426,8 @@ async function openChecklist() {
     Object.keys(matrix).forEach((nama, i) => {
         const tr = document.createElement('tr');
         let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
-        matrix[nama].forEach(status => {
-            const cls = status === '✓' ? 'status-v' : 'status-x';
-            html += `<td class="${cls}">${status}</td>`;
-        });
-        tr.innerHTML = html; tb.appendChild(tr);
+        matrix[nama].forEach(status => { tr.innerHTML += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
+        tb.appendChild(tr);
     });
 }
 
@@ -461,7 +442,13 @@ document.getElementById('adminBtn').onclick = function() {
    document.getElementById('pullBtn').style.display='block';
    document.getElementById('listVisitorBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL, TUAN!');
-  } else { alert('USER/PASS SALAH!'); }
+  } else { 
+   // REKAM PERCOBAAN GAGAL (ACC)
+   const skrgLog = new Date();
+   const waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", PUKUL " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
+   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
+   alert('USER/PASS SALAH!'); 
+  }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
   document.getElementById('pullBtn').style.display='none';
@@ -505,17 +492,12 @@ document.getElementById('themeBtn').onclick=()=>{
 
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
- const areaAdmin = document.getElementById('catatanWarga');
- const areaPrint = document.getElementById('catatanPrint');
- const banner = document.getElementById('deadline-banner');
- banner.style.display = 'none';
- areaPrint.innerText = areaAdmin.value;
- areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
+ banner.style.display = 'none'; areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  setTimeout(()=>{
   html2canvas(document.body,{scale:2}).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   banner.style.display = 'block';
-   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+   banner.style.display = 'block'; areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
   });
  },500);
 };
