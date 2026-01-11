@@ -66,7 +66,6 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
 .theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
-/* Warna Garis Tabel Random di Cyberpunk */
 .theme-cyberpunk td { border: 1px solid #ff00ff; }
 .theme-cyberpunk tr:nth-child(odd) td { border-color: #00ffcc; }
 .theme-cyberpunk tr:nth-child(even) td { border-color: #ffff00; }
@@ -200,7 +199,6 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// AUTO RESIZE CATATAN
 function autoHeight(elem) {
     elem.style.height = "1px";
     elem.style.height = (elem.scrollHeight) + "px";
@@ -259,20 +257,29 @@ function recalc(){
 
 function loadData(){
  buildTables();
+ // LOAD DATA KAS BULANAN
  db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
   const d=s.val();
   if(d){
    if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
    if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
-   if(d.catatan) { 
-     const ta = document.getElementById('catatanWarga');
-     ta.value = d.catatan; 
-     document.getElementById('catatanPrint').innerText = d.catatan;
-     setTimeout(()=>autoHeight(ta), 100);
-   }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
+ });
+
+ // LOAD CATATAN GLOBAL (ABADI DI SEMUA BULAN)
+ db.ref('kas_data/catatan_umum').once('value', snapshot => {
+    const cat = snapshot.val();
+    const ta = document.getElementById('catatanWarga');
+    if(cat) {
+        ta.value = cat;
+        document.getElementById('catatanPrint').innerText = cat;
+        setTimeout(()=>autoHeight(ta), 150);
+    } else {
+        ta.value = "";
+        document.getElementById('catatanPrint').innerText = "";
+    }
  });
 }
 
@@ -282,8 +289,15 @@ function saveData(){
  const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", PUKUL " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+ 
  const cat = document.getElementById('catatanWarga').value;
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, catatan:cat, updated:formatUpdate});
+ 
+ // SIMPAN DATA BULANAN
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
+ 
+ // SIMPAN CATATAN KE FOLDER GLOBAL
+ db.ref('kas_data/catatan_umum').set(cat);
+
  document.getElementById('catatanPrint').innerText = cat;
  document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
@@ -306,7 +320,7 @@ async function openChecklist() {
             if (d && d.masuk) {
                 const row = d.masuk.find(r => r.nama === nama);
                 if (row) {
-                    const ket = row.ket.toUpperCase();
+                    const ket = row.get ? row.ket.toUpperCase() : (row.ket||'').toUpperCase();
                     const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"];
                     if (kuncis.some(k => ket.includes(k))) matrix[nama][m] = '✓';
                     else if (ket.includes("BELUM BAYAR") || ket.trim() === "") matrix[nama][m] = 'X';
