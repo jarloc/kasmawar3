@@ -11,7 +11,6 @@
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 
-/* Info Update di Bawah Periode */
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:15px; font-weight:normal; text-transform:none;}
 
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
@@ -27,9 +26,9 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
 
-/* Kotak Catatan Sesuai Tema */
-.note-box {border:2px dashed var(--border); padding:15px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px}
-.note-box textarea {width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1rem; resize:none; text-transform:none}
+/* KOTAK CATATAN LEBIH BESAR */
+.note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px; min-height:200px}
+.note-box textarea {width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:vertical; text-transform:none; min-height:150px; line-height:1.5}
 
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
@@ -37,12 +36,12 @@ th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
 input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 
-/* --- TEMA CYBERPUNK DENGAN LED --- */
+/* THEME CYBERPUNK LED */
 .theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .block { border: 1px solid #ff00ff; animation: ledRotate 3s linear infinite; }
 .theme-cyberpunk .update-info {color:#00ffcc}
 .theme-cyberpunk th {background:#330033; color:#00ffcc; border-color:#00ffcc}
-.theme-cyberpunk input {background:#222; color:#fff; border-color:#ff00ff}
+.theme-cyberpunk input, .theme-cyberpunk textarea {background:#222; color:#fff; border-color:#ff00ff}
 
 @keyframes ledRotate{
   0%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
@@ -104,8 +103,8 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 </div>
 
 <div class="block note-box" id="boxNote">
-  <h2 style="text-align:left; font-size:1rem">📌 CATATAN PENTING</h2>
-  <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." rows="3"></textarea>
+  <h2 style="text-align:left; font-size:0.85rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
+  <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." rows="8"></textarea>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
