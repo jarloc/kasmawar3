@@ -2,12 +2,28 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
 :root{
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
+
+/* --- THEME CYBERPUNK FIX --- */
+.theme-cyberpunk {
+    --bg: #050505 !important;
+    --card: #0f0f0f !important;
+    --text: #00ffcc !important;
+    --border: #ff00ff !important;
+    --accent: #ffff00 !important;
+    --yellow: #ffff00 !important;
+}
+.theme-cyberpunk body { background-color: #050505 !important; color: #00ffcc !important; }
+.theme-cyberpunk .block { border: 1px solid #00ffcc !important; box-shadow: 0 0 15px rgba(0,255,204,0.3) !important; background: #0f0f0f !important; }
+.theme-cyberpunk th { background: #1a1a1a !important; color: #ff00ff !important; border: 1px solid #00ffcc !important; }
+.theme-cyberpunk td { border: 1px solid #ff00ff !important; color: #00ffcc !important; }
+.theme-cyberpunk input, .theme-cyberpunk textarea { color: #fff !important; text-shadow: 0 0 5px #fff !important; }
+.theme-cyberpunk .pulse-line { display: block !important; }
 
 /* --- WELCOME SCREEN --- */
 #welcomeScreen {
@@ -15,102 +31,46 @@
     background: #000; color: #fff; z-index: 9999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 1.6rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; line-height: 1.2; }
-#welcomeScreen p { font-size: 0.75rem; color: #aaa; text-transform: none; margin-bottom: 30px; padding: 0 20px; }
-#welcomeInput { 
-    padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; 
-    background: transparent; color: #fff; text-align: center; font-size: 16px; outline: none;
-}
-#enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase;}
+#welcomeScreen h1 { font-size: 1.6rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; }
+#welcomeScreen p { font-size: 0.75rem; color: #aaa; text-transform: none; margin-bottom: 30px; }
+#welcomeInput { padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; background: transparent; color: #fff; text-align: center; }
+#enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
 
-/* --- MAIN WRAPPER: FIX POSISI --- */
+/* --- MAIN WRAPPER & SCALING --- */
 #mainWrapper {
-    width: 1024px; 
-    margin: 0; 
-    background: var(--bg); 
-    padding: 20px;
-    transform-origin: 0 0; /* NEMPEL KE KIRI ATAS */
-    display: none; 
-    box-sizing: border-box;
-    position: absolute;
-    left: 0;
-    top: 0;
+    width: 1024px; margin: 0; background: var(--bg); padding: 20px;
+    transform-origin: 0 0; display: none; box-sizing: border-box; position: relative;
 }
+body { font-family: var(--font); background: var(--bg); margin: 0; padding: 0; text-transform: uppercase; color: var(--text); }
 
-body {
-    font-family: var(--font);
-    background: var(--bg);
-    margin: 0;
-    padding: 0;
-    text-transform: uppercase;
-    color: var(--text); 
-    overflow-x: hidden; /* ANTI GESER KANAN */
-    width: 100vw;
-}
+/* --- BANNER --- */
+#deadline-banner { background: #333; color: #fff; padding: 12px; margin: 10px 16px; border-radius: 8px; }
+#deadline-text { display: block; font-weight: bold; font-size: 1.2rem; }
 
-header{text-align:center;font-size:2.2rem;margin-bottom:5px; padding-top:20px; font-weight: bold;}
-.update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
+/* --- TABLE & UI --- */
+.block { margin: 16px; padding: 18px; background: var(--card); border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+.pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); margin-bottom:15px; }
+table { width:100%; border-collapse:collapse; }
+th, td { border:1px solid var(--border); padding:8px; }
+input { padding:6px; border-radius:6px; border:1px solid #ccc; width:100%; text-transform:none; font-family:inherit; }
+input[disabled] { background:transparent; color:inherit; border:1px solid transparent; opacity: 1; -webkit-text-fill-color: inherit; }
 
-#deadline-banner {
-    background: #333; color: #fff; padding: 12px; margin: 10px 16px; 
-    border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap;
-}
-#deadline-banner marquee { font-size: 1.2rem; }
-.tgl-aman { color: #00ff00; } 
-.tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } 
-.tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
+/* --- NOTE BOX --- */
+.note-box { border: 2px dashed var(--border); padding: 20px; border-radius: 12px; margin-top: 20px; }
+#catatanWarga { width:100%; background:transparent; border:0; color:inherit; font-size:1.2rem; resize:none; text-transform:none; min-height:100px; overflow:hidden; line-height:1.6; }
 
-@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+/* --- CHECKLIST MODAL FIX --- */
+#checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:99999; overflow:auto; padding:10px; }
+.checklist-content { background:#fff; color:#000; padding:10px; border-radius:10px; width:1000px; margin: 20px auto; transform-origin: top center; }
+.status-v { background:#93c47d !important; }
+.status-x { background:#e06666 !important; }
 
-.menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
-.menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+/* MENU */
+.menu-container {position:fixed; top:12px; right:12px; z-index:10000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px;}
 .menu-items.show {display:flex}
-button{padding:10px 16px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
-button.main-menu {background:#333; color:#fff; border:2px solid #fff}
-button.primary{background:var(--accent);color:#fff}
-button.off{background:#999;color:#fff}
-button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
-
-.block{margin:16px;padding:18px;background:var(--card);border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.1);position:relative;}
-.block h2{font-size:1.5rem;margin-bottom:15px;text-align:center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
-
-.pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
-.theme-cyberpunk .pulse-line { display:block; }
-
-.grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
-.grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:12px;text-align:center;font-weight:700; font-size: 1.2rem;}
-#totalMasuk { background:var(--success); color:#fff; }
-#totalKeluar { background:var(--danger); color:#fff; }
-.saldo-akhir { background:var(--yellow); color:#000; }
-
-.note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
-#catatanWarga { 
-    width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; 
-    font-size:1.2rem; resize:none; text-transform:none; min-height:100px; 
-    overflow:hidden; line-height:1.6; white-space: pre-wrap; word-wrap: break-word; display: block; 
-}
-#catatanPrint { display: none; white-space: pre-wrap; font-size:1.2rem; line-height:1.6; text-transform:none; }
-
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid var(--border);padding:8px;text-align:left}
-th{text-align:center; background:#eee; color:#000; font-size: 1rem;}
-input{padding:6px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; font-size: 1rem;}
-input[disabled]{background:transparent; color:var(--text); border:1px solid transparent; opacity: 1; -webkit-text-fill-color: var(--text);}
-
-/* THEMES */
-.theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
-.theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
-.theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
-.theme-cyberpunk td { border: 1px solid #ff00ff; }
-.theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
-.theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
-.theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
-
-#checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
-.checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
-.status-v { background:#93c47d !important; color:#000; }
-.status-x { background:#e06666 !important; color:#000; }
+button { padding:10px 16px; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase; border:none; }
+button.primary { background:var(--accent); color:#fff; }
 </style>
 </head>
 <body>
@@ -123,25 +83,25 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 </div>
 
 <div id="mainWrapper">
-    <header>
-      LAPORAN KAS GANG MAWAR 3
-      <div style="margin-top:10px; text-align:center; font-size: 1.2rem;">
-        <button onclick="prevMonth()" style="font-size: 1.2rem;">◀</button>
-        <span id="periode" style="min-width:220px; display:inline-block">...</span>
-        <button onclick="nextMonth()" style="font-size: 1.2rem;">▶</button>
+    <header style="text-align:center; padding-top:20px;">
+      <h1 style="font-size:2.5rem; margin:0;">LAPORAN KAS GANG MAWAR 3</h1>
+      <div style="margin:10px 0;">
+        <button onclick="prevMonth()">◀</button>
+        <span id="periode" style="min-width:220px; display:inline-block; font-size:1.5rem; font-weight:bold;">...</span>
+        <button onclick="nextMonth()">▶</button>
       </div>
-      <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
+      <div id="lastUpdate" style="font-size:0.9rem; color:#666; text-transform:none;">TERAKHIR DI UPDATE PADA: -</div>
     </header>
 
     <div id="deadline-banner">
-        <marquee id="deadline-text" scrollamount="5">Mengecek tanggal...</marquee>
+        <marquee id="deadline-text" scrollamount="6">Mengecek tanggal...</marquee>
     </div>
 
     <div class="menu-container">
-        <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
+        <button onclick="toggleMenu()" style="background:#333; color:#fff; border:1px solid #fff;">☰ MENU</button>
         <div class="menu-items" id="menuItems">
-            <button id="adminBtn" class="off">ADMIN OFF</button>
-            <button id="pullBtn" class="warning" style="display:none">TARIK SALDO LALU</button>
+            <button id="adminBtn" style="background:#999; color:#fff;">ADMIN OFF</button>
+            <button id="pullBtn" style="background:#f0ad4e; color:#fff; display:none;">TARIK SALDO LALU</button>
             <button onclick="openChecklist()" class="primary">CHECKLIST KAS</button>
             <button id="themeBtn" class="primary">GANTI TEMA</button>
             <button id="cetakBtn" class="primary">CETAK LAPORAN</button>
@@ -152,8 +112,8 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
         <h2>PEMASUKAN</h2>
         <div class="pulse-line"></div>
         <table>
-        <tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:60%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th></tr>
-        <tbody id="tbMasuk"></tbody>
+            <thead><tr><th>TGL</th><th>NAMA</th><th>KETERANGAN</th><th>MASUK</th><th>SALDO</th></tr></thead>
+            <tbody id="tbMasuk"></tbody>
         </table>
     </div>
 
@@ -161,49 +121,43 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
         <h2>PENGELUARAN</h2>
         <div class="pulse-line"></div>
         <table>
-        <tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th></tr>
-        <tbody id="tbKeluar"></tbody>
+            <thead><tr><th>TGL</th><th>KETERANGAN</th><th>QTY</th><th>HARGA</th><th>TOTAL</th></tr></thead>
+            <tbody id="tbKeluar"></tbody>
         </table>
     </div>
 
     <div class="block">
-        <h2>GRAND TOTAL</h2>
-        <div class="pulse-line"></div>
-        <table class="grand-total-table">
-        <tr><th>TOTAL UANG MASUK</th><th>TOTAL UANG KELUAR</th><th>SALDO AKHIR</th></tr>
-        <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
+        <h2 style="margin-bottom:10px;">GRAND TOTAL</h2>
+        <table style="text-align:center; font-size:1.3rem; font-weight:bold;">
+            <tr style="background:#eee; color:#000;"><th>TOTAL MASUK</th><th>TOTAL KELUAR</th><th>SALDO AKHIR</th></tr>
+            <tr><td id="totalMasuk" style="background:var(--success); color:#fff;">0</td><td id="totalKeluar" style="background:var(--danger); color:#fff;">0</td><td id="saldoAkhir" style="background:var(--yellow); color:#000;">0</td></tr>
         </table>
     </div>
 
     <div class="block note-box">
-      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
-      <div class="pulse-line"></div>
-      <textarea id="catatanWarga" class="editable" placeholder="Catatan akan muncul di sini..." oninput="autoHeight(this)"></textarea>
-      <div id="catatanPrint"></div>
+      <h2 style="text-align:left; border-bottom:1px solid #ccc; padding-bottom:5px;">📌 CATATAN PENTING</h2>
+      <textarea id="catatanWarga" class="editable" oninput="autoHeight(this)"></textarea>
     </div>
-    <div style="height: 100px;"></div> </div>
+    <div style="height:150px;"></div>
+</div>
 
 <div id="checklistModal">
-    <div style="text-align:center; margin-bottom:15px;">
-        <button onclick="closeChecklist()" style="background:#d9534f; color:#fff; padding: 12px 30px;">TUTUP [X]</button>
-        <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px; padding: 12px 30px;">CETAK GAMBAR</button>
+    <div style="text-align:center; position:sticky; top:0; padding:10px; z-index:100;">
+        <button onclick="closeChecklist()" style="background:#d9534f; color:#fff; padding:15px 30px;">TUTUP [X]</button>
     </div>
     <div class="checklist-content" id="checklistPrintArea">
-        <h1 style="text-align:center; background:#92c694; padding:10px; margin:0;">CHECKLIST KAS GANG MAWAR 3</h1>
-        <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0;">PERIODE 2026</h2>
-        <table class="table-checklist" style="width:100%; border:2px solid #000; margin-top:10px; border-collapse:collapse;">
+        <h1 style="text-align:center; background:#92c694; margin:0; padding:10px;">CHECKLIST KAS GANG MAWAR 3</h1>
+        <h2 style="text-align:center; background:#d9ead3; margin:0; border-bottom:2px solid #000;">PERIODE 2026</h2>
+        <table style="width:100%; border:2px solid #000; border-collapse:collapse;">
             <thead>
-                <tr>
-                    <th rowspan="2" style="border:1px solid #000; background:#9fc5e8;">No.</th>
-                    <th rowspan="2" style="border:1px solid #000; background:#9fc5e8;">NAMA</th>
-                    <th colspan="12" id="headerTahun" style="border:1px solid #000; background:#9fc5e8;">CHECKLIST KAS 2026</th>
+                <tr style="background:#9fc5e8;">
+                    <th rowspan="2">No.</th><th rowspan="2">NAMA</th><th colspan="12">CHECKLIST KAS 2026</th>
                 </tr>
                 <tr style="background:#9fc5e8;">
-                    <th style="border:1px solid #000;">JAN</th><th style="border:1px solid #000;">FEB</th><th style="border:1px solid #000;">MAR</th><th style="border:1px solid #000;">APR</th><th style="border:1px solid #000;">MEI</th><th style="border:1px solid #000;">JUN</th>
-                    <th style="border:1px solid #000;">JUL</th><th style="border:1px solid #000;">AGT</th><th style="border:1px solid #000;">SEP</th><th style="border:1px solid #000;">OKT</th><th style="border:1px solid #000;">NOV</th><th style="border:1px solid #000;">DES</th>
+                    <th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th><th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th>
                 </tr>
             </thead>
-            <tbody id="tbChecklist"></tbody>
+            <tbody id="tbChecklist" style="text-align:center;"></tbody>
         </table>
     </div>
 </div>
@@ -226,234 +180,167 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const skrg = new Date();
-let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
-let isAdmin=false, autoSaveTimer=null, currentTheme='';
+let bulan = new Date().getMonth(), tahun = 2026, isAdmin = false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- FIX FIT TO SCREEN (LOCK TO LEFT) ---
 function applyResponsiveScale() {
     const wrapper = document.getElementById('mainWrapper');
-    if (window.getComputedStyle(wrapper).display === 'none') return;
-    
-    const screenWidth = window.innerWidth;
-    const targetWidth = 1024;
-    const scale = screenWidth / targetWidth;
-    
+    if (wrapper.style.display === 'none') return;
+    const scale = window.innerWidth / 1024;
     wrapper.style.transform = `scale(${scale})`;
-    // Pastikan body mengikuti tinggi konten yang sudah diskala
-    document.body.style.height = (wrapper.scrollHeight * scale + 50) + "px";
+    document.body.style.height = (wrapper.scrollHeight * scale + 100) + "px";
 }
 
 function masukWeb() {
-    const nama = document.getElementById('welcomeInput').value.trim();
-    if (nama === "") return alert("Ketik Nama Anda!");
-    db.ref('pengunjung_situs').push({ nama, waktu: new Date().toLocaleString('id-ID'), ts: firebase.database.ServerValue.TIMESTAMP });
-    
+    if (document.getElementById('welcomeInput').value.trim() === "") return alert("Isi Nama!");
     document.getElementById('welcomeScreen').style.display = 'none';
-    const mw = document.getElementById('mainWrapper');
-    mw.style.display = 'block';
-    
-    setTimeout(() => {
-        applyResponsiveScale();
-        autoHeight(document.getElementById('catatanWarga'));
-        window.scrollTo(0,0);
-    }, 50);
+    document.getElementById('mainWrapper').style.display = 'block';
+    setTimeout(() => { applyResponsiveScale(); autoHeight(document.getElementById('catatanWarga')); }, 100);
 }
 
-function autoHeight(elem) {
-    if (!elem) return;
-    elem.style.height = "1px";
-    elem.style.height = (elem.scrollHeight) + "px";
-    applyResponsiveScale(); // Update skala jika kotak memanjang
+function autoHeight(el) {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+    applyResponsiveScale();
 }
 
 function updateDeadlineBanner() {
     const d = new Date().getDate();
-    const banner = document.getElementById('deadline-text');
-    if (d >= 1 && d <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️</span>`;
-    else if (d >= 4 && d <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai tanggal 7 ⚠️</span>`;
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Segera lakukan pembayaran.</span>`;
+    const txt = document.getElementById('deadline-text');
+    if (d <= 3) txt.innerHTML = "⚠️ REMINDER: BATAS IURAN KAS BULAN INI TANGGAL 7 ⚠️ TERIMA KASIH";
+    else if (d <= 7) txt.innerHTML = "⚠️ PERHATIAN: BATAS BAYAR KAS S/D TANGGAL 7 ⚠️ SEGERA BAYAR";
+    else txt.innerHTML = "🛑 BATAS BAYAR KAS SUDAH LEWAT 🛑 MOHON KERJASAMANYA";
 }
 
-function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
-
-function buildTables(){
- document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
- namaAnggota.forEach(n=>{
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td>`;
-  document.getElementById('tbMasuk').appendChild(tr);
- });
- for(let i=0;i<12;i++){
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td>`;
-  document.getElementById('tbKeluar').appendChild(tr);
- }
-}
-
-function recalc(){
- let tM=0, tK=0, runM=0;
- document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
-  tr.children[3].firstChild.value=u.toLocaleString('id-ID');
-  tr.children[4].textContent=runM.toLocaleString('id-ID');
-  const ketVal=tr.children[2].firstChild.value.toUpperCase();
-  const inputs=tr.querySelectorAll('input');
-  const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"];
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';}); }
-  else if(kuncis.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';}); }
-  else { inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';}); }
- });
- document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
-  let t=q*h; tK+=t;
-  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
- });
- document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
- document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
- document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
-}
-
-function loadData(){
- buildTables();
- db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
-  const d=s.val();
-  if(d){
-   if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
-   if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
-   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
-  }
-  recalc(); applyAdminLock();
-  setTimeout(() => applyResponsiveScale(), 200);
- });
-
- db.ref('kas_data/catatan_umum').once('value', snapshot => {
-    const cat = snapshot.val();
-    const ta = document.getElementById('catatanWarga');
-    if(cat) {
-        ta.value = cat;
-        document.getElementById('catatanPrint').innerText = cat;
-        setTimeout(() => autoHeight(ta), 400);
+function buildTables() {
+    const tm = document.getElementById('tbMasuk'); tm.innerHTML = '';
+    namaAnggota.forEach(n => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class="editable" type="date"></td><td><input class="editable" value="${n}"></td><td><input class="editable"></td><td><input class="editable" value="0"></td><td class="saldo">0</td>`;
+        tm.appendChild(tr);
+    });
+    const tk = document.getElementById('tbKeluar'); tk.innerHTML = '';
+    for(let i=0; i<12; i++) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class="editable" type="date"></td><td><input class="editable"></td><td><input class="editable" value="0"></td><td><input class="editable" value="0"></td><td class="total">0</td>`;
+        tk.appendChild(tr);
     }
- });
 }
 
-function saveData(){
- if(!isAdmin) return;
- const tgl = new Date();
- const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
- const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
- db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
+function recalc() {
+    let tM=0, tK=0, runM=0;
+    document.querySelectorAll('#tbMasuk tr').forEach(tr => {
+        let u = parseInt(tr.children[3].firstChild.value.replace(/\./g,'')) || 0;
+        runM += u; tM += u;
+        tr.children[3].firstChild.value = u.toLocaleString('id-ID');
+        tr.children[4].innerText = runM.toLocaleString('id-ID');
+        const ket = tr.children[2].firstChild.value.toUpperCase();
+        const inputs = tr.querySelectorAll('input');
+        if (ket.includes('BELUM')) { inputs.forEach(i => i.style.background = '#d9534f'); }
+        else if (["LUNAS","SUDAH","SISA"].some(k => ket.includes(k))) { inputs.forEach(i => i.style.background = '#28a745'); }
+        else { inputs.forEach(i => i.style.background = 'transparent'); }
+    });
+    document.querySelectorAll('#tbKeluar tr').forEach(tr => {
+        let q = parseInt(tr.children[2].firstChild.value) || 0;
+        let h = parseInt(tr.children[3].firstChild.value.replace(/\./g,'')) || 0;
+        let t = q * h; tK += t;
+        tr.children[3].firstChild.value = h.toLocaleString('id-ID');
+        tr.children[4].innerText = t.toLocaleString('id-ID');
+    });
+    document.getElementById('totalMasuk').innerText = tM.toLocaleString('id-ID');
+    document.getElementById('totalKeluar').innerText = tK.toLocaleString('id-ID');
+    document.getElementById('saldoAkhir').innerText = (tM-tK).toLocaleString('id-ID');
+}
+
+function loadData() {
+    buildTables();
+    db.ref('kas_data/'+bulan+'-'+tahun).once('value', s => {
+        const d = s.val();
+        if(d) {
+            if(d.masuk) d.masuk.forEach((r,i) => { 
+                const tr = document.querySelectorAll('#tbMasuk tr')[i];
+                if(tr) { tr.children[0].firstChild.value=r.tanggal; tr.children[1].firstChild.value=r.nama; tr.children[2].firstChild.value=r.ket; tr.children[3].firstChild.value=r.uang; }
+            });
+            if(d.keluar) d.keluar.forEach((r,i) => {
+                const tr = document.querySelectorAll('#tbKeluar tr')[i];
+                if(tr) { tr.children[0].firstChild.value=r.tanggal; tr.children[1].firstChild.value=r.ket; tr.children[2].firstChild.value=r.qty; tr.children[3].firstChild.value=r.harga; }
+            });
+            document.getElementById('lastUpdate').innerText = "TERAKHIR DI UPDATE PADA: " + (d.updated || "-");
+        }
+        recalc(); applyAdminLock();
+    });
+    db.ref('kas_data/catatan_umum').once('value', s => { 
+        document.getElementById('catatanWarga').value = s.val() || ''; 
+        autoHeight(document.getElementById('catatanWarga'));
+    });
+}
+
+function saveData() {
+    if(!isAdmin) return;
+    const now = new Date();
+    const upstr = now.getDate() + " " + namaBulan[now.getMonth()] + " " + now.getFullYear() + " " + now.getHours() + ":" + now.getMinutes();
+    const m = [...document.querySelectorAll('#tbMasuk tr')].map(tr => ({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
+    const k = [...document.querySelectorAll('#tbKeluar tr')].map(tr => ({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:upstr});
+    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
 }
 
 async function openChecklist() {
     toggleMenu();
     document.getElementById('checklistModal').style.display = 'block';
-    const tb = document.getElementById('tbChecklist');
-    tb.innerHTML = '<tr><td colspan="14">Sedang memproses data...</td></tr>';
+    const tb = document.getElementById('tbChecklist'); tb.innerHTML = 'Memuat...';
     const matrix = {};
-    for (let m = 0; m <= 11; m++) {
-        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
-        const d = snap.val();
+    for (let m=0; m<12; m++) {
+        const s = await db.ref(`kas_data/${m}-${tahun}`).once('value');
+        const d = s.val();
         namaAnggota.forEach((nama, idx) => {
-            if (idx === 0) return;
-            if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
-            if (d && d.masuk) {
-                const row = d.masuk.find(r => r.nama === nama);
-                if (row && ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+            if(idx===0) return;
+            if(!matrix[nama]) matrix[nama] = Array(12).fill('X');
+            if(d && d.masuk) {
+                const r = d.masuk.find(x => x.nama === nama);
+                if(r && ["LUNAS","SUDAH"].some(k => (r.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
             }
         });
     }
     tb.innerHTML = '';
-    Object.keys(matrix).forEach((nama, i) => {
-        let html = `<td style="border:1px solid #000;">${i+1}</td><td style="text-align:left; border:1px solid #000; padding-left:10px;">Bpk. ${nama}</td>`;
-        matrix[nama].forEach(status => html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}" style="border:1px solid #000;">${status}</td>`);
-        const tr = document.createElement('tr'); tr.innerHTML = html; tb.appendChild(tr);
+    Object.keys(matrix).forEach((n, i) => {
+        const tr = document.createElement('tr');
+        let h = `<td>${i+1}</td><td style="text-align:left; padding-left:10px;">${n}</td>`;
+        matrix[n].forEach(v => h += `<td class="${v==='✓'?'status-v':'status-x'}">${v}</td>`);
+        tr.innerHTML = h; tb.appendChild(tr);
     });
 }
 
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-
-function cetakChecklist() {
-    html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => {
-        const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click();
-    });
-}
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
+function applyAdminLock() { document.querySelectorAll('.editable').forEach(i => i.disabled = !isAdmin); }
+function prevMonth() { bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
+function nextMonth() { bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
+function updateUI() { document.getElementById('periode').innerText = namaBulan[bulan] + " " + tahun; loadData(); }
 
 document.getElementById('adminBtn').onclick = function() {
- if(!isAdmin){
-  let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
-   isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
-   document.getElementById('pullBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000);
-   applyAdminLock(); recalc(); alert('Login Admin Berhasil!');
-  }
- } else {
-  isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
-  document.getElementById('pullBtn').style.display='none';
-  clearInterval(autoSaveTimer); applyAdminLock();
- }
- toggleMenu();
+    if(!isAdmin) {
+        if(prompt('USER')==='ADMIN' && prompt('PASS')==='SANUMION') {
+            isAdmin=true; this.innerText='ADMIN ON'; this.style.background='#28a745';
+            document.getElementById('pullBtn').style.display='block';
+            setInterval(saveData, 5000); applyAdminLock();
+        }
+    } else { location.reload(); }
+    toggleMenu();
 };
 
-document.getElementById('pullBtn').onclick=()=>{
- let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
- db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
-  const d=s.val(); let sL=0;
-  if(d && d.masuk){
-   let mt=0, kt=0;
-   d.masuk.forEach(r=>mt+=parseInt(r.uang.replace(/[^0-9]/g,''))||0);
-   if(d.keluar) d.keluar.forEach(r=>kt+=(parseInt(r.qty.replace(/[^0-9]/g,''))||0)*(parseInt(r.harga.replace(/[^0-9]/g,''))||0));
-   sL=mt-kt;
-  }
-  const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){
-    trSisa.children[0].firstChild.value = `${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
-    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
-    trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
-    recalc(); alert("Saldo berhasil ditarik!"); 
-  }
- });
- toggleMenu();
-}
-
-function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
-function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
-function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
-function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
-
-document.getElementById('themeBtn').onclick=()=>{
- const th=['theme-cyberpunk','theme-dark','theme-blue',''];
- let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
- if(currentTheme) document.body.classList.remove(currentTheme);
- currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
-};
-
-document.getElementById('cetakBtn').onclick=()=>{
- toggleMenu(); window.scrollTo(0,0);
- const areaAdmin = document.getElementById('catatanWarga');
- const areaPrint = document.getElementById('catatanPrint');
- const banner = document.getElementById('deadline-banner');
- banner.style.display = 'none';
- areaPrint.innerText = areaAdmin.value;
- areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
- setTimeout(()=>{
-  html2canvas(document.getElementById('mainWrapper'),{scale:2}).then(c=>{
-   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   banner.style.display = 'block'; areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
-  });
- },500);
+document.getElementById('themeBtn').onclick = () => {
+    const th = ['', 'theme-cyberpunk', 'theme-dark'];
+    const cur = document.body.className;
+    let next = th[(th.indexOf(cur) + 1) % th.length];
+    document.body.className = next;
 };
 
 window.addEventListener('resize', applyResponsiveScale);
 document.addEventListener('input', recalc);
-updateUI();
-updateDeadlineBanner();
+updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
