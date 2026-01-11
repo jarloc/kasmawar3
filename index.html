@@ -9,6 +9,13 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
+/* --- OPTIMASI KETERBACAAN SAFARI & GLOBAL --- */
+* {
+    -webkit-font-smoothing: antialiased; /* Membuat font lebih tajam di Mac/iPhone */
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility; /* Memprioritaskan keterbacaan teks */
+}
+
 /* --- STYLE WELCOME SCREEN --- */
 #welcomeScreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -24,8 +31,8 @@
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
 /* --- KODE UTAMA --- */
-body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
-header{text-align:center;font-size:2rem;margin-bottom:5px}
+body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text); -webkit-text-size-adjust: 100%;}
+header{text-align:center;font-size:2rem;margin-bottom:5px; font-weight: bold;}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
@@ -51,18 +58,18 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
-#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
+#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; font-weight: 500;}
 #catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
-th{text-align:center; background:#eee; color:#000}
-input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
+th{text-align:center; background:#eee; color:#000; font-weight: bold;}
+input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; font-weight: 500;}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
 .theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
-.theme-cyberpunk td { border: 1px solid #ff00ff; }
+.theme-cyberpunk td { border: 1px solid #ff00ff; font-weight: bold; }
 .theme-cyberpunk tr:nth-child(odd) td { border-color: #00ffcc; }
 .theme-cyberpunk tr:nth-child(even) td { border-color: #ffff00; }
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
@@ -225,16 +232,12 @@ function masukWeb() {
     window.scrollTo(0,0);
 }
 
-// FUNGSI PENGUNJUNG (DIPERBARUI OLEH ASISTEN ATAS PERINTAH TUAN)
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung');
     const list = document.getElementById('listPengunjung');
     const btnHapus = document.getElementById('btnHapusPengunjung');
-    
-    // Tampilkan tombol hapus hanya untuk Admin
     btnHapus.style.display = isAdmin ? 'block' : 'none';
-    
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
