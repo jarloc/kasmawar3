@@ -9,12 +9,13 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- OPTIMASI PENAJAMAN KHUSUS IPHONE (ACC) --- */
-* { -webkit-font-smoothing: antialiased; }
+/* --- FINAL FIX SAFARI IPHONE: GARIS TEPI & KONTRAS (ACC) --- */
 @media screen and (max-width: 768px) {
-  /* Memberi kontras tambahan pada teks di dalam tabel agar tidak pudar di Safari */
+  /* Memaksa teks tabel di iPhone punya garis tepi hitam halus agar sangat kontras */
   #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir {
-    text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.3);
+    -webkit-text-stroke: 0.5px rgba(0,0,0,0.7);
+    font-weight: 900 !important;
+    letter-spacing: 0.2px;
   }
 }
 
@@ -33,7 +34,7 @@
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
 /* --- KODE UTAMA --- */
-body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
+body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);-webkit-font-smoothing: antialiased;}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
