@@ -22,7 +22,6 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
 
-/* PERBAIKAN TOTAL CATATAN UNTUK CETAK */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px; min-height:200px}
 #catatanWarga {
     width:100%; background:transparent; border:0; color:var(--text); 
@@ -39,19 +38,6 @@ th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 
-/* THEME CYBERPUNK LED */
-.theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
-.theme-cyberpunk .block { border: 1px solid #ff00ff; animation: ledRotate 3s linear infinite; }
-.theme-cyberpunk th {background:#330033; color:#00ffcc; border-color:#00ffcc}
-.theme-cyberpunk input, .theme-cyberpunk textarea, .theme-cyberpunk #catatanPrint {color:#fff;}
-
-@keyframes ledRotate{
-  0%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
-  50%{box-shadow:0 0 15px #ff00ff, 0 0 25px #00ffcc, 0 0 35px #ffff00}
-  100%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
-}
-
-/* OVERLAY MODAL UNTUK CHECKLIST */
 #checklistModal {
     display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
     background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box;
@@ -62,9 +48,18 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .table-checklist { width:100%; border:2px solid #000; margin-top:10px; }
 .table-checklist th, .table-checklist td { border:1px solid #000; text-align:center; padding:5px; font-weight:bold; font-size:0.9rem; }
 .table-checklist th { background:#9fc5e8; }
-.status-v { background:#93c47d; color:#000; } /* Hijau */
-.status-x { background:#e06666; color:#000; } /* Merah */
+.status-v { background:#93c47d; color:#000; }
+.status-x { background:#e06666; color:#000; }
 
+.theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
+.theme-cyberpunk .block { border: 1px solid #ff00ff; animation: ledRotate 3s linear infinite; }
+.theme-cyberpunk th {background:#330033; color:#00ffcc; border-color:#00ffcc}
+.theme-cyberpunk input, .theme-cyberpunk textarea, .theme-cyberpunk #catatanPrint {color:#fff;}
+@keyframes ledRotate{
+  0%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
+  50%{box-shadow:0 0 15px #ff00ff, 0 0 25px #00ffcc, 0 0 35px #ffff00}
+  100%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
+}
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
@@ -239,7 +234,6 @@ function saveData(){
  document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
 
-// FUNGSI CHECKLIST KAS
 async function openChecklist() {
     toggleMenu();
     const modal = document.getElementById('checklistModal');
@@ -248,32 +242,24 @@ async function openChecklist() {
     document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahun}`;
     tb.innerHTML = '<tr><td colspan="14">Sabar, lagi ngitung data warga...</td></tr>';
     modal.style.display = 'block';
-
-    const matrix = {}; // {nama: [Jan, Feb, ...]}
-    // Ambil data dari Jan (0) sampai Des (11)
+    const matrix = {};
     for (let m = 0; m <= 11; m++) {
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
         const d = snap.val();
         namaAnggota.forEach((nama, idx) => {
-            if (idx === 0) return; // Lewati Sisa Kas
+            if (idx === 0) return;
             if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
-            
             if (d && d.masuk) {
-                // Cari nama yang cocok di data bulan tersebut
                 const row = d.masuk.find(r => r.nama === nama);
                 if (row) {
                     const ket = row.ket.toUpperCase();
                     const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"];
-                    if (kuncis.some(k => ket.includes(k))) {
-                        matrix[nama][m] = '✓';
-                    } else if (ket.includes("BELUM BAYAR") || ket.trim() === "") {
-                        matrix[nama][m] = 'X';
-                    }
+                    if (kuncis.some(k => ket.includes(k))) matrix[nama][m] = '✓';
+                    else if (ket.includes("BELUM BAYAR") || ket.trim() === "") matrix[nama][m] = 'X';
                 }
             }
         });
     }
-
     tb.innerHTML = '';
     Object.keys(matrix).forEach((nama, i) => {
         const tr = document.createElement('tr');
@@ -282,8 +268,7 @@ async function openChecklist() {
             const cls = status === '✓' ? 'status-v' : 'status-x';
             html += `<td class="${cls}">${status}</td>`;
         });
-        tr.innerHTML = html;
-        tb.appendChild(tr);
+        tr.innerHTML = html; tb.appendChild(tr);
     });
 }
 
@@ -291,10 +276,7 @@ function closeChecklist() { document.getElementById('checklistModal').style.disp
 
 function cetakChecklist() {
     html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => {
-        const l = document.createElement('a');
-        l.download = `CHECKLIST_KAS_${tahun}.jpg`;
-        l.href = c.toDataURL('image/jpeg', 0.9);
-        l.click();
+        const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click();
     });
 }
 
@@ -326,7 +308,13 @@ document.getElementById('pullBtn').onclick=()=>{
    sL=mt-kt;
   }
   const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){ trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID'); recalc(); saveData(); alert("Saldo Berhasil Ditarik!"); }
+  if(trSisa){
+    // PERBAIKAN: Isi Tanggal, Keterangan, dan Uang secara otomatis
+    trSisa.children[0].firstChild.value = `${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
+    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
+    trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
+    recalc(); saveData(); alert("Saldo Berhasil Ditarik!"); 
+  }
  });
  toggleMenu();
 }
