@@ -377,9 +377,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini tanggal 7 ⚠️</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai tanggal 7 ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Segera bayar kas.</span>`;
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Yuk bapak-bapak, awal bulan nih mumpung masih anget tanggal muda, jangan lupa bayar kas gang ⚠️</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai ditunggu sampai tanggal 7 ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar kas harap untuk segera melakukan pembayaran 🛑 Harap hubungi bendahara kas gang untuk konfirmasi pembayaran dan pelunasan 🛑</span>`;
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -573,3 +573,4 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
