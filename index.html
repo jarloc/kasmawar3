@@ -325,6 +325,13 @@ function prosesMasuk(namaUser, kode) {
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
     db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: tglLog + ", PUKUL " + jamLog + " WIB" });
+    
+    // AKTIFKAN PENGUNCI REFRESH AGRESIF
+    window.addEventListener('beforeunload', function (e) {
+        e.preventDefault();
+        e.returnValue = ''; 
+    });
+
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
