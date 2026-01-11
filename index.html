@@ -17,14 +17,10 @@
 }
 #welcomeScreen h1 { font-size: 2rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
 #welcomeScreen p { font-size: 0.9rem; color: #aaa; text-transform: none; margin-bottom: 30px; font-family: Arial, sans-serif; }
-
-/* ANTI-ZOOM: Font minimal 16px mencegah browser mobile otomatis zoom-in */
 #welcomeInput { 
     padding: 12px; width: 280px; border-radius: 8px; 
     border: 2px solid #00ffcc; background: transparent; 
-    color: #fff; text-align: center; 
-    font-size: 16px; 
-    outline: none; 
+    color: #fff; text-align: center; font-size: 16px; outline: none; 
 }
 #enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; }
 
@@ -32,7 +28,7 @@
 #modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; box-sizing:border-box; }
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
-/* --- KODE UTAMA (ORIGINAL) --- */
+/* --- KODE UTAMA --- */
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
@@ -162,7 +158,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 </div>
 
 <div class="block note-box">
-  <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+  <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
   <div class="pulse-line"></div>
   <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." oninput="autoHeight(this)"></textarea>
   <div id="catatanPrint"></div>
@@ -218,12 +214,16 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    const nama = document.getElementById('welcomeInput').value.trim();
+    const input = document.getElementById('welcomeInput');
+    const nama = input.value.trim();
     if (nama === "") {
         alert("TULIS NAMA DULU!");
         return;
     }
     
+    // 1. PAKSA TUTUP KEYBOARD (Supaya Browser tidak nyangkut di tingkat Zoom Input)
+    input.blur();
+
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
@@ -233,8 +233,11 @@ function masukWeb() {
         waktu: tglLog + ", PUKUL " + jamLog + " WIB"
     });
 
-    document.getElementById('welcomeScreen').remove();
-    window.scrollTo(0,0);
+    // 2. KASIH JEDA 300ms BIAR BROWSER SEMPAT ZOOM-OUT OTOMATIS
+    setTimeout(() => {
+        document.getElementById('welcomeScreen').remove();
+        window.scrollTo(0,0);
+    }, 300);
 }
 
 function openPengunjung() {
