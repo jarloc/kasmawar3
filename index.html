@@ -34,13 +34,6 @@ button {
   margin-bottom: 12px;
 }
 
-@media screen and (max-width: 768px) {
-  #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir {
-    font-weight: 800 !important;
-    font-size: 0.9rem;
-  }
-}
-
 /* --- STYLE WELCOME SCREEN --- */
 #welcomeScreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -101,18 +94,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-cyberpunk #totalMasuk { background:#00ff00; color:#000 !important; box-shadow: 0 0 10px #00ff00; }
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff !important; box-shadow: 0 0 10px #ff0000; }
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
-
-.theme-cyberpunk .menu-items button {
-    background: #ff00ff !important; 
-    color: #000000 !important; 
-    box-shadow: 0 0 15px #ff00ff;
-    border: 2px solid #00ffcc;
-}
-.theme-cyberpunk #adminBtn.primary {
-    background: #00ffcc !important;
-    color: #000000 !important;
-    box-shadow: 0 0 15px #00ffcc;
-}
+.theme-cyberpunk .menu-items button { background: #ff00ff !important; color: #000000 !important; box-shadow: 0 0 15px #ff00ff; border: 2px solid #00ffcc; }
+.theme-cyberpunk #adminBtn.primary { background: #00ffcc !important; color: #000000 !important; box-shadow: 0 0 15px #00ffcc; }
 
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
@@ -131,8 +114,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <div id="welcomeScreen">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar &copy; 2026 . All Rights Reserved.</p>
-    <button id="enterBtn" onclick="masukWeb()">ENTER</button>
+    <p>Silahkan masukkan KATA KUNCI (NOMOR BLOK) untuk mengakses laporan.</p>
+    <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
 <div id="modalPengunjung">
@@ -140,12 +123,10 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
         <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
-        
         <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
             <h3 style="text-align:center; color:red;">🚨 PERCOBAAN ADMIN GAGAL 🚨</h3>
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
         </div>
-        
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
 </div>
@@ -253,6 +234,14 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// KAMUS KATA KUNCI BLOK (SESUAI GAMBAR)
+const daftarKunci = {
+    "D3/2": "RIZAL", "D3/3": "ROMI", "D3/4": "TRI", "D3/5": "ANIS",
+    "D3/6": "FAJAR DJAKA", "D3/7": "FAJAR SHANUM", "D3/10": "AGUS", "D3/11": "LUKMAN",
+    "D2/16": "IRAWAN", "D2/17": "RIAN", "D2/18": "MULYADIE", "D2/19": "HELDI",
+    "D2/20": "HILMAN", "D2/21": "HILMAN", "D2/22": "NANO", "D2/23": "TEGUH"
+};
+
 const skrg = new Date();
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
 let isAdmin=false, autoSaveTimer=null, currentTheme='', currentUserName='';
@@ -260,25 +249,26 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    const nama = prompt("SILAHKAN MASUKKAN NAMA ANDA:");
-    if (nama === null || nama.trim() === "") { alert("NAMA TIDAK BOLEH KOSONG!"); return; }
-    currentUserName = nama.toUpperCase();
-    const skrgLog = new Date();
-    const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
-    const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: tglLog + ", PUKUL " + jamLog + " WIB" });
-    document.getElementById('welcomeScreen').remove();
-    window.scrollTo(0,0);
+    const kunci = prompt("MASUKKAN KODE AKSES (NOMOR BLOK):");
+    if (!kunci) return;
+    
+    const kunciUpper = kunci.toUpperCase();
+    if (daftarKunci[kunciUpper]) {
+        currentUserName = daftarKunci[kunciUpper] + " (" + kunciUpper + ")";
+        const skrgLog = new Date();
+        const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
+        const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
+        db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: tglLog + ", PUKUL " + jamLog + " WIB" });
+        document.getElementById('welcomeScreen').remove();
+        window.scrollTo(0,0);
+    } else {
+        alert("KODE AKSES SALAH! ANDA TIDAK MEMILIKI IZIN.");
+    }
 }
 
 function openPengunjung() {
     toggleMenu();
-    const modal = document.getElementById('modalPengunjung');
-    const list = document.getElementById('listPengunjung');
-    const secLog = document.getElementById('secLogAdmin');
-    const listLog = document.getElementById('listLogAdmin');
-    const btnHapus = document.getElementById('btnHapusPengunjung');
-    
+    const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
     btnHapus.style.display = isAdmin ? 'block' : 'none';
     secLog.style.display = isAdmin ? 'block' : 'none';
     list.innerHTML = "Memuat daftar...";
@@ -307,11 +297,9 @@ function openPengunjung() {
 
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
-    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT (PENGUNJUNG & LOG GAGAL)?")) {
-        db.ref('pengunjung_situs').remove();
-        db.ref('percobaan_admin_gagal').remove();
-        alert("RIWAYAT TELAH DIBERSIHKAN, TUAN.");
-        openPengunjung(); 
+    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT?")) {
+        db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
+        alert("RIWAYAT TELAH DIBERSIHKAN."); openPengunjung(); 
     }
 }
 
@@ -319,9 +307,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni >= 1 && hariIni <= 3) { banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih bagi yang sudah membayar!</span>`; } 
-    else if (hariIni >= 4 && hariIni <= 7) { banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera lakukan pembayaran! Batas iuran sampai tanggal 7 ⚠️</span>`; } 
-    else { banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum bayar, harap segera melakukan pembayaran.</span>`; }
+    if (hariIni >= 1 && hariIni <= 3) { banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️</span>`; } 
+    else if (hariIni >= 4 && hariIni <= 7) { banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai tanggal 7 ⚠️</span>`; } 
+    else { banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Harap segera bayar kas.</span>`; }
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -348,14 +336,12 @@ function recalc(){
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"];
   if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#ffffff'; }); }
-  else if(kuncis.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#ffffff'; }); }
+  else if(["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"].some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#ffffff'; }); }
   else { inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
-  let t=q*h; tK+=t;
+  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
   tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
  });
  document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
@@ -364,9 +350,7 @@ function recalc(){
  applyAdminLock();
 }
 
-function applyAdminLock(){ 
-    document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; i.style.cursor = !isAdmin ? "default" : "text"; }); 
-}
+function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; }); }
 
 function loadData(){
  buildTables();
@@ -380,8 +364,7 @@ function loadData(){
   recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
-    const cat = snapshot.val();
-    const ta = document.getElementById('catatanWarga');
+    const cat = snapshot.val(); const ta = document.getElementById('catatanWarga');
     if(cat) { ta.value = cat; document.getElementById('catatanPrint').innerText = cat; setTimeout(()=>autoHeight(ta), 150); } 
     else { ta.value = ""; document.getElementById('catatanPrint').innerText = ""; }
  });
@@ -389,8 +372,7 @@ function loadData(){
 
 function saveData(){
  if(!isAdmin) return;
- const tgl = new Date();
- const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", PUKUL " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
+ const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
  db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
@@ -399,26 +381,18 @@ function saveData(){
 }
 
 async function openChecklist() {
-    toggleMenu();
-    const modal = document.getElementById('checklistModal');
-    const tb = document.getElementById('tbChecklist');
+    toggleMenu(); const modal = document.getElementById('checklistModal'), tb = document.getElementById('tbChecklist');
     document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
-    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahun}`;
-    tb.innerHTML = '<tr><td colspan="14">Sabar, lagi ngitung data warga...</td></tr>';
-    modal.style.display = 'block';
+    tb.innerHTML = '<tr><td colspan="14">Sabar...</td></tr>'; modal.style.display = 'block';
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
-        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
-        const d = snap.val();
+        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
         namaAnggota.forEach((nama, idx) => {
             if (idx === 0) return;
             if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
             if (d && d.masuk) {
                 const row = d.masuk.find(r => r.nama === nama);
-                if (row) {
-                    const ket = (row.ket||'').toUpperCase();
-                    if (["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => ket.includes(k))) matrix[nama][m] = '✓';
-                }
+                if (row && ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
             }
         });
     }
@@ -426,8 +400,8 @@ async function openChecklist() {
     Object.keys(matrix).forEach((nama, i) => {
         const tr = document.createElement('tr');
         let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
-        matrix[nama].forEach(status => { tr.innerHTML += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
-        tb.appendChild(tr);
+        matrix[nama].forEach(status => { html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
+        tr.innerHTML = html; tb.appendChild(tr);
     });
 }
 
@@ -439,20 +413,16 @@ document.getElementById('adminBtn').onclick = function() {
   let u=prompt('USER'), p=prompt('PASS');
   if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
-   document.getElementById('pullBtn').style.display='block';
-   document.getElementById('listVisitorBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL, TUAN!');
+   document.getElementById('pullBtn').style.display='block'; document.getElementById('listVisitorBtn').style.display='block';
+   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL!');
   } else { 
-   // REKAM PERCOBAAN GAGAL (ACC)
-   const skrgLog = new Date();
-   const waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", PUKUL " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
+   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
    db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
    alert('USER/PASS SALAH!'); 
   }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
-  document.getElementById('pullBtn').style.display='none';
-  document.getElementById('listVisitorBtn').style.display='none';
+  document.getElementById('pullBtn').style.display='none'; document.getElementById('listVisitorBtn').style.display='none';
   clearInterval(autoSaveTimer); applyAdminLock();
  }
  toggleMenu();
@@ -469,12 +439,7 @@ document.getElementById('pullBtn').onclick=()=>{
    sL=mt-kt;
   }
   const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){
-    trSisa.children[0].firstChild.value = `${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
-    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
-    trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
-    recalc(); saveData(); alert("Saldo Berhasil Ditarik!"); 
-  }
+  if(trSisa){ trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); recalc(); saveData(); alert("Saldo Ditarik!"); }
  });
  toggleMenu();
 }
@@ -503,8 +468,7 @@ document.getElementById('cetakBtn').onclick=()=>{
 };
 
 document.addEventListener('input', recalc);
-updateUI();
-updateDeadlineBanner();
+updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
