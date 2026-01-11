@@ -105,7 +105,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .status-v { background:#93c47d; color:#000; }
 .status-x { background:#e06666; color:#000; }
 
-/* CSS BARU UNTUK FITUR TAMBAH/HAPUS */
 .admin-action { display: none; width: 40px; text-align: center; }
 #adminTools { display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; }
 </style>
@@ -157,7 +156,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <div id="adminTools">
             <button onclick="tambahBaris('WARGA')" style="background:#28a745; color:#fff;">👤 TAMBAH WARGA</button>
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">💰 PEMASUKAN LAIN</button>
-            <button id="pullBtn" class="warning">TARIK SALDO LALU</button>
+            <button id="pullBtn" class="warning" onclick="tarikSaldo()">TARIK SALDO LALU</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">DAFTAR PENGUNJUNG</button>
         </div>
         <button onclick="openChecklist()" class="primary">CHECKLIST KAS</button>
@@ -285,7 +284,43 @@ function prosesMasuk(namaUser, kode) {
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
-// LOGIKA BARU UNTUK TAMBAH BARIS
+function openPengunjung() {
+    toggleMenu();
+    const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
+    btnHapus.style.display = isAdmin ? 'block' : 'none';
+    secLog.style.display = isAdmin ? 'block' : 'none';
+    list.innerHTML = "Memuat daftar...";
+    modal.style.display = 'block';
+
+    db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
+        const d = s.val();
+        if(d) {
+            let html = "<table style='width:100%;'>";
+            Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #eee;'><td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
+            list.innerHTML = html + "</table>";
+        }
+    });
+
+    if(isAdmin) {
+        db.ref('percobaan_admin_gagal').limitToLast(20).once('value', s => {
+            const d = s.val();
+            if(d) {
+                let html = "<table style='width:100%;'>";
+                Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #ffcccc;'><td style='padding:5px;'>⚠️ <b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
+                listLog.innerHTML = html + "</table>";
+            }
+        });
+    }
+}
+
+function hapusRiwayatPengunjung() {
+    if (!isAdmin) return;
+    if (confirm("HAPUS SEMUA RIWAYAT, TUAN?")) {
+        db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
+        alert("BERSIH!"); openPengunjung(); 
+    }
+}
+
 function tambahBaris(tipe) {
     const tb = document.getElementById('tbMasuk');
     const tr = document.createElement('tr');
@@ -381,16 +416,13 @@ async function openChecklist() {
     toggleMenu(); const modal = document.getElementById('checklistModal'), tb = document.getElementById('tbChecklist');
     document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
     tb.innerHTML = '<tr><td colspan="14">Memindai Data...</td></tr>'; modal.style.display = 'block';
-    
-    // LOGIKA SCAN WARGA DINAMIS
     let listWarga = [...namaAnggotaAwal];
     for(let m=0; m<=11; m++){
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
         if(d && d.masuk) d.masuk.forEach(r => { 
-            if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN') listWarga.push(r.nama);
+            if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama);
         });
     }
-
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
@@ -435,7 +467,7 @@ document.getElementById('adminBtn').onclick = function() {
  toggleMenu();
 };
 
-document.getElementById('pullBtn').onclick=()=>{
+function tarikSaldo(){
     let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
     const btn = document.getElementById('pullBtn');
     const originalText = btn.textContent;
@@ -496,4 +528,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
