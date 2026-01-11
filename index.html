@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
 :root{
@@ -15,7 +15,7 @@
     background: #000; color: #fff; z-index: 9999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 1.6rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; }
+#welcomeScreen h1 { font-size: 1.6rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; line-height: 1.2; }
 #welcomeScreen p { font-size: 0.75rem; color: #aaa; text-transform: none; margin-bottom: 30px; padding: 0 20px; }
 #welcomeInput { 
     padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; 
@@ -23,21 +23,21 @@
 }
 #enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase;}
 
-/* --- MAIN WRAPPER FOR AUTO-SCALE --- */
+/* --- MAIN WRAPPER: FIT TO SCREEN LOGIC --- */
 #mainWrapper {
     width: 1024px; margin: 0 auto; background: var(--bg); padding: 20px;
-    transform-origin: top center; display: none;
+    transform-origin: top center; display: none; box-sizing: border-box;
 }
 
 body{font-family:var(--font);background:var(--bg);margin:0;padding:0;text-transform:uppercase;color:var(--text); overflow-x: hidden;}
-header{text-align:center;font-size:2rem;margin-bottom:5px; padding-top:20px;}
+header{text-align:center;font-size:2.2rem;margin-bottom:5px; padding-top:20px; font-weight: bold;}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
 
 #deadline-banner {
-    background: #333; color: #fff; padding: 10px; margin: 10px 16px; 
+    background: #333; color: #fff; padding: 12px; margin: 10px 16px; 
     border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap;
 }
-#deadline-banner marquee { font-size: 1.1rem; }
+#deadline-banner marquee { font-size: 1.2rem; }
 .tgl-aman { color: #00ff00; } 
 .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } 
 .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
@@ -54,49 +54,47 @@ button.primary{background:var(--accent);color:#fff}
 button.off{background:#999;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 
-.block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
-.block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
+.block{margin:16px;padding:18px;background:var(--card);border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.1);position:relative;}
+.block h2{font-size:1.5rem;margin-bottom:15px;text-align:center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
 
 .pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
-.pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
-@keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
+.theme-cyberpunk .pulse-line { display:block; }
 
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
-.grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
+.grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:12px;text-align:center;font-weight:700; font-size: 1.2rem;}
 #totalMasuk { background:var(--success); color:#fff; }
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 
+/* NOTE BOX AUTO EXPAND */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
-#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
-#catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
+#catatanWarga { 
+    width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; 
+    font-size:1.2rem; resize:none; text-transform:none; min-height:100px; 
+    overflow:hidden; line-height:1.6; white-space: pre-wrap; word-wrap: break-word; display: block; 
+}
+#catatanPrint { display: none; white-space: pre-wrap; font-size:1.2rem; line-height:1.6; text-transform:none; }
 
 table{width:100%;border-collapse:collapse}
-th,td{border:1px solid var(--border);padding:6px;text-align:left}
-th{text-align:center; background:#eee; color:#000}
-input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
-input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
+th,td{border:1px solid var(--border);padding:8px;text-align:left}
+th{text-align:center; background:#eee; color:#000; font-size: 1rem;}
+input{padding:6px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; font-size: 1rem;}
+input[disabled]{background:transparent; color:var(--text); border:1px solid transparent; opacity: 1; -webkit-text-fill-color: var(--text);}
 
-/* THEME CYBERPUNK */
+/* THEMES */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
-.theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
 .theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
 .theme-cyberpunk td { border: 1px solid #ff00ff; }
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
-
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
-#checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
+/* CHECKLIST MODAL */
+#checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
 .checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
-.checklist-content h1 { text-align:center; margin:0; font-size:1.5rem; background:#92c694; padding:10px; }
-.checklist-content h2 { text-align:center; margin:0; font-size:1.2rem; background:#d9ead3; padding:5px; border-bottom:2px solid #000; }
-.table-checklist { width:100%; border:2px solid #000; margin-top:10px; }
-.table-checklist th, .table-checklist td { border:1px solid #000; text-align:center; padding:5px; font-weight:bold; font-size:0.9rem; }
-.table-checklist th { background:#9fc5e8; }
-.status-v { background:#93c47d; color:#000; }
-.status-x { background:#e06666; color:#000; }
+.status-v { background:#93c47d !important; color:#000; }
+.status-x { background:#e06666 !important; color:#000; }
 </style>
 </head>
 <body>
@@ -111,10 +109,10 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 <div id="mainWrapper">
     <header>
       LAPORAN KAS GANG MAWAR 3
-      <div style="margin-top:10px; text-align:center">
-        <button onclick="prevMonth()">◀</button>
-        <span id="periode" style="min-width:180px; display:inline-block">...</span>
-        <button onclick="nextMonth()">▶</button>
+      <div style="margin-top:10px; text-align:center; font-size: 1.2rem;">
+        <button onclick="prevMonth()" style="font-size: 1.2rem;">◀</button>
+        <span id="periode" style="min-width:220px; display:inline-block">...</span>
+        <button onclick="nextMonth()" style="font-size: 1.2rem;">▶</button>
       </div>
       <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
     </header>
@@ -162,31 +160,31 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
     </div>
 
     <div class="block note-box">
-      <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
       <div class="pulse-line"></div>
-      <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." oninput="autoHeight(this)"></textarea>
+      <textarea id="catatanWarga" class="editable" placeholder="Catatan akan muncul di sini..." oninput="autoHeight(this)"></textarea>
       <div id="catatanPrint"></div>
     </div>
 </div>
 
 <div id="checklistModal">
-    <div style="text-align:center; margin-bottom:10px;">
-        <button onclick="closeChecklist()" style="background:#d9534f; color:#fff;">TUTUP [X]</button>
-        <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px;">CETAK GAMBAR</button>
+    <div style="text-align:center; margin-bottom:15px;">
+        <button onclick="closeChecklist()" style="background:#d9534f; color:#fff; padding: 12px 30px;">TUTUP [X]</button>
+        <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px; padding: 12px 30px;">CETAK GAMBAR</button>
     </div>
     <div class="checklist-content" id="checklistPrintArea">
-        <h1 id="judulChecklist">CHECKLIST KAS GANG MAWAR 3</h1>
-        <h2 id="subJudulChecklist">PERIODE 2026</h2>
-        <table class="table-checklist">
+        <h1 style="text-align:center; background:#92c694; padding:10px; margin:0;">CHECKLIST KAS GANG MAWAR 3</h1>
+        <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0;">PERIODE 2026</h2>
+        <table class="table-checklist" style="width:100%; border:2px solid #000; margin-top:10px; border-collapse:collapse;">
             <thead>
                 <tr>
-                    <th rowspan="2" style="width:30px">No.</th>
-                    <th rowspan="2">NAMA</th>
-                    <th colspan="12" id="headerTahun">CHECKLIST KAS 2026</th>
+                    <th rowspan="2" style="border:1px solid #000; background:#9fc5e8;">No.</th>
+                    <th rowspan="2" style="border:1px solid #000; background:#9fc5e8;">NAMA</th>
+                    <th colspan="12" id="headerTahun" style="border:1px solid #000; background:#9fc5e8;">CHECKLIST KAS 2026</th>
                 </tr>
-                <tr>
-                    <th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th>
-                    <th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th>
+                <tr style="background:#9fc5e8;">
+                    <th style="border:1px solid #000;">JAN</th><th style="border:1px solid #000;">FEB</th><th style="border:1px solid #000;">MAR</th><th style="border:1px solid #000;">APR</th><th style="border:1px solid #000;">MEI</th><th style="border:1px solid #000;">JUN</th>
+                    <th style="border:1px solid #000;">JUL</th><th style="border:1px solid #000;">AGT</th><th style="border:1px solid #000;">SEP</th><th style="border:1px solid #000;">OKT</th><th style="border:1px solid #000;">NOV</th><th style="border:1px solid #000;">DES</th>
                 </tr>
             </thead>
             <tbody id="tbChecklist"></tbody>
@@ -218,31 +216,38 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
+// --- FIX FIT TO SCREEN ---
 function applyResponsiveScale() {
     const wrapper = document.getElementById('mainWrapper');
+    if (window.getComputedStyle(wrapper).display === 'none') return;
+    
     const screenWidth = window.innerWidth;
     const targetWidth = 1024;
-    if (screenWidth < targetWidth) {
-        const scale = screenWidth / targetWidth;
-        wrapper.style.transform = `scale(${scale})`;
-        document.body.style.height = (wrapper.offsetHeight * scale) + "px";
-    } else {
-        wrapper.style.transform = `none`;
-        document.body.style.height = "auto";
-    }
+    const scale = screenWidth / targetWidth;
+    
+    wrapper.style.transform = `scale(${scale})`;
+    document.body.style.height = (wrapper.offsetHeight * scale) + "px";
 }
 
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
-    if (nama === "") return alert("Ketik Nama Dulu!");
+    if (nama === "") return alert("Ketik Nama Anda!");
     db.ref('pengunjung_situs').push({ nama, waktu: new Date().toLocaleString('id-ID'), ts: firebase.database.ServerValue.TIMESTAMP });
+    
     document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('mainWrapper').style.display = 'block';
-    applyResponsiveScale();
-    window.scrollTo(0,0);
+    const mw = document.getElementById('mainWrapper');
+    mw.style.display = 'block';
+    
+    // Trigger scale dan perbaikan tinggi catatan
+    setTimeout(() => {
+        applyResponsiveScale();
+        autoHeight(document.getElementById('catatanWarga'));
+        window.scrollTo(0,0);
+    }, 100);
 }
 
 function autoHeight(elem) {
+    if (!elem) return;
     elem.style.height = "1px";
     elem.style.height = (elem.scrollHeight) + "px";
 }
@@ -250,9 +255,9 @@ function autoHeight(elem) {
 function updateDeadlineBanner() {
     const d = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (d >= 1 && d <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️</span>`;
-    else if (d >= 4 && d <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai tanggal 7 ⚠️</span>`;
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Segera lakukan pembayaran.</span>`;
+    if (d >= 1 && d <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih!</span>`;
+    else if (d >= 4 && d <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera bayar kas! Batas s/d tanggal 7 ⚠️</span>`;
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum, mohon kerjasamanya.</span>`;
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -264,7 +269,7 @@ function buildTables(){
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td>`;
   document.getElementById('tbMasuk').appendChild(tr);
  });
- for(let i=0;i<10;i++){
+ for(let i=0;i<12;i++){
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td>`;
   document.getElementById('tbKeluar').appendChild(tr);
@@ -304,10 +309,17 @@ function loadData(){
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
+  setTimeout(() => applyResponsiveScale(), 300);
  });
+
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
     const cat = snapshot.val();
-    if(cat) { document.getElementById('catatanWarga').value = cat; document.getElementById('catatanPrint').innerText = cat; setTimeout(()=>autoHeight(document.getElementById('catatanWarga')), 150); }
+    const ta = document.getElementById('catatanWarga');
+    if(cat) {
+        ta.value = cat;
+        document.getElementById('catatanPrint').innerText = cat;
+        setTimeout(() => { autoHeight(ta); applyResponsiveScale(); }, 500);
+    }
  });
 }
 
@@ -325,7 +337,7 @@ async function openChecklist() {
     toggleMenu();
     document.getElementById('checklistModal').style.display = 'block';
     const tb = document.getElementById('tbChecklist');
-    tb.innerHTML = '<tr><td colspan="14">Loading Data...</td></tr>';
+    tb.innerHTML = '<tr><td colspan="14">Sedang memproses data...</td></tr>';
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
@@ -341,8 +353,8 @@ async function openChecklist() {
     }
     tb.innerHTML = '';
     Object.keys(matrix).forEach((nama, i) => {
-        let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
-        matrix[nama].forEach(status => html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`);
+        let html = `<td style="border:1px solid #000;">${i+1}</td><td style="text-align:left; border:1px solid #000; padding-left:10px;">Bpk. ${nama}</td>`;
+        matrix[nama].forEach(status => html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}" style="border:1px solid #000;">${status}</td>`);
         const tr = document.createElement('tr'); tr.innerHTML = html; tb.appendChild(tr);
     });
 }
@@ -362,7 +374,7 @@ document.getElementById('adminBtn').onclick = function() {
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('pullBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 3000);
-   applyAdminLock(); recalc();
+   applyAdminLock(); recalc(); alert('Login Admin Berhasil!');
   }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
@@ -387,7 +399,7 @@ document.getElementById('pullBtn').onclick=()=>{
     trSisa.children[0].firstChild.value = `${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
     trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
     trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
-    recalc(); alert("Saldo Berhasil!"); 
+    recalc(); alert("Saldo berhasil ditarik!"); 
   }
  });
  toggleMenu();
