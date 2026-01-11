@@ -2,14 +2,12 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
 :root{
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
-
-/* RESET TOTAL */
 * { box-sizing: border-box; }
 body { 
     font-family: var(--font); background: var(--bg); margin: 0; padding: 0;
@@ -22,125 +20,147 @@ body {
     background: #000; color: #fff; z-index: 9999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 1.8rem; margin: 0 20px 10px; color: #00ffcc; }
+#welcomeScreen h1 { font-size: 1.8rem; margin: 0 20px 10px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+#welcomeScreen p { font-size: 0.8rem; color: #aaa; text-transform: none; margin-bottom: 30px; }
 #welcomeInput { 
     padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; 
-    background: transparent; color: #fff; text-align: center; font-size: 16px; outline: none; margin-bottom: 20px;
+    background: transparent; color: #fff; text-align: center; font-size: 16px; outline: none;
 }
-#enterBtn { padding: 12px 50px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
+#enterBtn { margin-top: 20px; padding: 12px 50px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
 
-/* --- WRAPPER UNTUK MODE DESKTOP --- */
-/* Ini yang bikin tampilan rapi di HP tapi tetep lebar Desktop */
+/* --- MAIN WRAPPER (DESKTOP MODE) --- */
 #mainWrapper {
-    width: 1024px; /* Lebar asli web lu */
-    margin: 0 auto;
-    background: var(--bg);
-    padding: 20px;
-    transform-origin: top left; /* Titik tumpu pengecilan */
-    display: none; /* Sembunyi dulu sebelum Login */
+    width: 1024px; margin: 0 auto; background: var(--bg); padding: 20px;
+    transform-origin: top center; display: none; position: relative;
 }
 
-header { text-align: center; font-size: 2.2rem; margin-bottom: 20px; }
-.update-info { text-align: center; font-size: 0.9rem; color: #666; margin-bottom: 15px; text-transform: none; }
+header{text-align:center;font-size:2.5rem;margin-bottom:5px}
+.update-info {text-align:center; font-size:0.9rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
+#deadline-banner { background: #333; color: #fff; padding: 12px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; }
+#deadline-banner marquee { font-size: 1.3rem; }
 
-.menu-container { position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.menu-items { display: none; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 8px; }
-.menu-items.show { display: flex; }
+/* ANIMASI SEISMOGRAF */
+.pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
+.pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
+@keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
 
-button { padding: 12px 18px; border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; text-transform: uppercase; }
-button.main-menu { background: #333; color: #fff; border: 2px solid #fff; }
-button.primary { background: var(--accent); color: #fff; }
-button.warning { background: #f0ad4e; color: #fff; }
+.menu-container {position:fixed; top:20px; right:20px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:15px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.menu-items.show {display:flex}
+button{padding:12px 20px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
+button.main-menu {background:#333; color:#fff; border:2px solid #fff}
+button.primary{background:var(--accent);color:#fff}
+button.off{background:#999;color:#fff}
+button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 
-.block { margin-bottom: 20px; padding: 20px; background: var(--card); border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.1); }
-.block h2 { font-size: 1.5rem; text-align: center; margin-bottom: 15px; }
+.block{margin-bottom:20px;padding:20px;background:var(--card);border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.1);position:relative;}
+.block h2{font-size:1.5rem;margin-bottom:15px;text-align:center}
 
-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-th, td { border: 1px solid var(--border); padding: 10px; text-align: left; font-size: 1.1rem; }
-th { background: #eee; text-align: center; }
-input { padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%; font-size: 1.1rem; }
+table{width:100%;border-collapse:collapse; table-layout: fixed;}
+th,td{border:1px solid var(--border);padding:10px;text-align:left; font-size: 1rem;}
+th{text-align:center; background:#eee; color:#000}
+input{padding:6px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
+input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 
-.grand-total-table td { padding: 15px; font-size: 1.3rem; text-align: center; font-weight: bold; }
-#totalMasuk { background: var(--success); color: #fff; }
-#totalKeluar { background: var(--danger); color: #fff; }
-.saldo-akhir { background: var(--yellow); color: #000; }
+.grand-total-table th, .grand-total-table td{padding:15px; font-size: 1.3rem; text-align:center;}
+#totalMasuk { background:var(--success); color:#fff; }
+#totalKeluar { background:var(--danger); color:#fff; }
+.saldo-akhir { background:var(--yellow); color:#000; }
 
-#catatanWarga { width: 100%; background: transparent; border: 0; font-family: inherit; font-size: 1.2rem; min-height: 100px; text-transform: none; }
+.note-box {border:2px dashed var(--border); padding:25px; background:rgba(0,0,0,0.03); border-radius:12px;}
+#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.2rem; resize:none; text-transform:none; min-height:80px; }
 
-/* MODAL */
-#visitorModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; padding: 20px; }
-.modal-inner { background: #fff; color: #000; padding: 20px; border-radius: 12px; width: 900px; margin: 0 auto; }
+/* THEME CYBERPUNK */
+.theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
+.theme-cyberpunk .pulse-line { display:block; }
+.theme-cyberpunk .block { border: 1px solid #00ffcc; }
+.theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; }
+
+/* MODALS */
+#checklistModal, #visitorModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow:auto; padding:20px; }
+.modal-content { background:#fff; color:#000; padding:30px; border-radius:10px; width:980px; margin:0 auto; }
 </style>
 </head>
 <body>
 
 <div id="welcomeScreen">
-    <h1>KAS GANG MAWAR 3</h1>
-    <p>Silakan masukkan nama anda untuk melanjutkan</p>
-    <input type="text" id="welcomeInput" placeholder="NAMA ANDA">
-    <button id="enterBtn" onclick="masukWeb()">MASUK</button>
+    <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
+    <p>Built and developed by Fajar Ilmanosa Viar © 2026 . All Rights Reserved.</p>
+    <div style="margin-top:10px">
+        <input type="text" id="welcomeInput" placeholder="tulis nama anda disini">
+        <br>
+        <button id="enterBtn" onclick="masukWeb()">ENTER</button>
+    </div>
 </div>
 
 <div id="mainWrapper">
     <header>
       LAPORAN KAS GANG MAWAR 3
-      <div style="margin-top:10px;">
+      <div style="margin-top:10px; text-align:center">
         <button onclick="prevMonth()">◀</button>
         <span id="periode" style="min-width:250px; display:inline-block">...</span>
         <button onclick="nextMonth()">▶</button>
       </div>
-      <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE: -</div>
+      <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
     </header>
+
+    <div id="deadline-banner">
+        <marquee id="deadline-text" scrollamount="6">Mengecek tanggal...</marquee>
+    </div>
 
     <div class="menu-container">
         <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
         <div class="menu-items" id="menuItems">
             <button id="adminBtn" class="off">ADMIN OFF</button>
+            <button id="pullBtn" class="warning" style="display:none">TARIK SALDO LALU</button>
             <button id="visitorBtn" class="warning" style="display:none" onclick="openVisitors()">DAFTAR PENGUNJUNG</button>
-            <button id="cetakBtn" class="primary">CETAK GAMBAR</button>
+            <button onclick="openChecklist()" class="primary">CHECKLIST KAS</button>
+            <button id="themeBtn" class="primary">GANTI TEMA</button>
+            <button id="cetakBtn" class="primary">CETAK LAPORAN</button>
         </div>
     </div>
 
     <div class="block">
         <h2>PEMASUKAN</h2>
+        <div class="pulse-line"></div>
         <table>
-            <thead><tr><th style="width:100px">Tgl</th><th style="width:200px">Nama</th><th>Keterangan</th><th style="width:150px">Masuk</th><th style="width:150px">Saldo</th></tr></thead>
+            <tr><th style="width:100px">Tgl</th><th style="width:200px">Nama</th><th>Keterangan</th><th style="width:150px">Masuk</th><th style="width:150px">Saldo</th></tr>
             <tbody id="tbMasuk"></tbody>
         </table>
     </div>
 
     <div class="block">
         <h2>PENGELUARAN</h2>
+        <div class="pulse-line"></div>
         <table>
-            <thead><tr><th style="width:100px">Tgl</th><th>Keterangan</th><th style="width:80px">Qty</th><th style="width:150px">Harga</th><th style="width:150px">Total</th></tr></thead>
+            <tr><th style="width:100px">Tgl</th><th>Keterangan</th><th style="width:80px">Qty</th><th style="width:150px">Harga</th><th style="width:150px">Total</th></tr>
             <tbody id="tbKeluar"></tbody>
         </table>
     </div>
 
     <div class="block">
         <h2>GRAND TOTAL</h2>
+        <div class="pulse-line"></div>
         <table class="grand-total-table">
-            <tr><th>TOTAL MASUK</th><th>TOTAL KELUAR</th><th>SALDO AKHIR</th></tr>
+            <tr><th>TOTAL UANG MASUK</th><th>TOTAL UANG KELUAR</th><th>SALDO AKHIR</th></tr>
             <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
         </table>
     </div>
 
-    <div class="block">
-      <h2 style="text-align:left;">📌 CATATAN</h2>
-      <textarea id="catatanWarga" class="editable" disabled></textarea>
+    <div class="block note-box">
+      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
+      <div class="pulse-line"></div>
+      <textarea id="catatanWarga" class="editable" placeholder="Isi catatan..." oninput="autoHeight(this)"></textarea>
+      <div id="catatanPrint" style="display:none"></div>
     </div>
 </div>
 
-<div id="visitorModal">
-    <div class="modal-inner">
-        <button onclick="document.getElementById('visitorModal').style.display='none'">TUTUP</button>
-        <h2>DAFTAR PENGUNJUNG</h2>
-        <table style="width:100%"><tbody id="tbVisitors"></tbody></table>
-    </div>
-</div>
+<div id="visitorModal"><div class="modal-content"><button onclick="document.getElementById('visitorModal').style.display='none'">TUTUP</button><h2>DAFTAR PENGUNJUNG</h2><table style="width:100%"><thead><tr><th>NO</th><th>NAMA</th><th>TANGGAL</th><th>JAM</th></tr></thead><tbody id="tbVisitors"></tbody></table></div></div>
+<div id="checklistModal"><div class="modal-content"><button onclick="closeChecklist()">TUTUP</button><h2>CHECKLIST TAHUNAN</h2><table style="width:100%; border:2px solid #000"><thead><tr><th>NO</th><th>NAMA</th><th colspan="12">BULAN</th></tr></thead><tbody id="tbChecklist"></tbody></table></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
 // Firebase Config
@@ -157,20 +177,19 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const skrg = new Date();
-let bulan = skrg.getMonth(), tahun = skrg.getFullYear(), isAdmin = false;
+let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
+let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- FUNGSI ANTI BUG TAMPILAN ---
+// --- ANTI-BUG SCALE ---
 function applyResponsiveScale() {
     const wrapper = document.getElementById('mainWrapper');
     const screenWidth = window.innerWidth;
     const targetWidth = 1024;
-    
     if (screenWidth < targetWidth) {
         const scale = screenWidth / targetWidth;
         wrapper.style.transform = `scale(${scale})`;
-        // Menghitung sisa tinggi agar tidak ada ruang kosong di bawah
         document.body.style.height = (wrapper.offsetHeight * scale) + "px";
     } else {
         wrapper.style.transform = `none`;
@@ -180,33 +199,22 @@ function applyResponsiveScale() {
 
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
-    if (!nama) return alert("Isi nama!");
+    if (nama === "") return alert("Isi nama!");
     
-    // Log Visitor
-    const tgl = new Date();
-    db.ref('pengunjung_situs').push({ 
-        nama: nama, 
-        waktu: tgl.toLocaleString('id-ID'), 
-        timestamp: firebase.database.ServerValue.TIMESTAMP 
-    });
+    // Log
+    db.ref('pengunjung_situs').push({ nama: nama, waktu: new Date().toLocaleString('id-ID'), timestamp: firebase.database.ServerValue.TIMESTAMP });
 
     document.getElementById('welcomeScreen').style.display = 'none';
-    const wrapper = document.getElementById('mainWrapper');
-    wrapper.style.display = 'block';
+    const mw = document.getElementById('mainWrapper');
+    mw.style.display = 'block';
     
-    // Jalankan Scale
     applyResponsiveScale();
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
-// Jalankan ulang scale jika layar HP diputar (rotate)
-window.addEventListener('resize', () => {
-    if (document.getElementById('mainWrapper').style.display === 'block') {
-        applyResponsiveScale();
-    }
-});
-
+// Fitur Kas
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
+function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
 
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -223,10 +231,16 @@ function buildTables(){
 }
 
 function recalc(){
- let tM=0, tK=0;
+ let tM=0, tK=0, runM=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; tM+=u;
+  let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
+  tr.children[4].textContent=runM.toLocaleString('id-ID');
+  const ketVal=tr.children[2].firstChild.value.toUpperCase();
+  const inputs=tr.querySelectorAll('input');
+  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>inp.style.color='#ff4444'); }
+  else if(["LUNAS","SUDAH BAYAR"].some(k=>ketVal.includes(k))){ inputs.forEach(inp=>inp.style.color='#28a745'); }
+  else { inputs.forEach(inp=>inp.style.color='var(--text)'); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
@@ -249,30 +263,81 @@ function loadData(){
   }
   recalc(); applyAdminLock();
  });
+ db.ref('kas_data/catatan_umum').once('value', snapshot => {
+    const cat = snapshot.val();
+    if(cat) { document.getElementById('catatanWarga').value = cat; autoHeight(document.getElementById('catatanWarga')); }
+ });
 }
 
-function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
+function saveData(){
+ if(!isAdmin) return;
+ const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
+ const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+ const cat = document.getElementById('catatanWarga').value;
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated: new Date().toLocaleString('id-ID')});
+ db.ref('kas_data/catatan_umum').set(cat);
+}
 
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
-  let p=prompt('PASS');
-  if(p && p.toUpperCase()==='SANUMION'){
-   isAdmin=true; this.textContent='ADMIN ON';
+  if(prompt('PASS')==='SANUMION'){
+   isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
+   document.getElementById('pullBtn').style.display='block';
    document.getElementById('visitorBtn').style.display='block';
+   autoSaveTimer=setInterval(saveData, 3000);
    applyAdminLock();
   }
  } else {
-  isAdmin=false; this.textContent='ADMIN OFF';
-  document.getElementById('visitorBtn').style.display='none';
-  applyAdminLock();
+  isAdmin=false; this.textContent='ADMIN OFF'; clearInterval(autoSaveTimer); applyAdminLock();
  }
  toggleMenu();
 };
 
+async function openChecklist() {
+    toggleMenu();
+    document.getElementById('checklistModal').style.display = 'block';
+    const tb = document.getElementById('tbChecklist'); tb.innerHTML = 'Loading...';
+    const matrix = {};
+    for (let m = 0; m <= 11; m++) {
+        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
+        const d = snap.val();
+        namaAnggota.forEach((nama, idx) => {
+            if (idx === 0) return;
+            if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
+            if (d && d.masuk) {
+                const row = d.masuk.find(r => r.nama === nama);
+                if (row && ["LUNAS","SUDAH BAYAR"].some(k=>(row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+            }
+        });
+    }
+    tb.innerHTML = '';
+    Object.keys(matrix).forEach((nama, i) => {
+        const tr = document.createElement('tr');
+        let html = `<td>${i+1}</td><td>${nama}</td>`;
+        matrix[nama].forEach(status => html += `<td style="background:${status==='✓'?'#93c47d':'#e06666'}">${status}</td>`);
+        tr.innerHTML = html; tb.appendChild(tr);
+    });
+}
+
+function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
+function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
 
+document.getElementById('themeBtn').onclick=()=>{
+ currentTheme = currentTheme === 'theme-cyberpunk' ? '' : 'theme-cyberpunk';
+ document.body.className = currentTheme;
+};
+
+document.getElementById('cetakBtn').onclick=()=>{
+ window.scrollTo(0,0);
+ html2canvas(document.getElementById('mainWrapper'),{scale:2}).then(c=>{
+  const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.jpg`; l.href=c.toDataURL(); l.click();
+ });
+};
+
+window.addEventListener('resize', applyResponsiveScale);
 document.addEventListener('input', recalc);
 updateUI();
 </script>
