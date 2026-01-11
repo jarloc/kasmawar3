@@ -15,14 +15,9 @@
     background: #000; color: #fff; z-index: 99999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 2rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
-#welcomeScreen p { font-size: 0.9rem; color: #aaa; text-transform: none; margin-bottom: 30px; font-family: Arial, sans-serif; }
-#welcomeInput { 
-    padding: 12px; width: 280px; border-radius: 8px; 
-    border: 2px solid #00ffcc; background: transparent; 
-    color: #fff; text-align: center; font-size: 16px; outline: none; 
-}
-#enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; }
+#welcomeScreen h1 { font-size: 2.2rem; color: #00ffcc; text-shadow: 0 0 15px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
+#welcomeScreen p { font-size: 1rem; color: #aaa; text-transform: none; margin-bottom: 40px; font-family: Arial, sans-serif; }
+#enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 0 20px rgba(0,255,204,0.4); }
 
 /* --- STYLE MODAL PENGUNJUNG --- */
 #modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; box-sizing:border-box; }
@@ -92,7 +87,6 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 <div id="welcomeScreen">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
     <p>Built and developed by Fajar Ilmanosa Viar &copy; 2026 . All Rights Reserved.</p>
-    <input type="text" id="welcomeInput" placeholder="Ketik Nama Anda...">
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
@@ -213,17 +207,15 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
+// JURUS PAMUNGKAS: Pake Prompt System (Bawaan HP) biar nggak ganggu Viewport/Zoom
 function masukWeb() {
-    const input = document.getElementById('welcomeInput');
-    const nama = input.value.trim();
-    if (nama === "") {
-        alert("TULIS NAMA DULU!");
+    const nama = prompt("SILAHKAN MASUKKAN NAMA ANDA:");
+    
+    if (nama === null || nama.trim() === "") {
+        alert("NAMA TIDAK BOLEH KOSONG!");
         return;
     }
     
-    // 1. PAKSA TUTUP KEYBOARD (Supaya Browser tidak nyangkut di tingkat Zoom Input)
-    input.blur();
-
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
@@ -233,11 +225,8 @@ function masukWeb() {
         waktu: tglLog + ", PUKUL " + jamLog + " WIB"
     });
 
-    // 2. KASIH JEDA 300ms BIAR BROWSER SEMPAT ZOOM-OUT OTOMATIS
-    setTimeout(() => {
-        document.getElementById('welcomeScreen').remove();
-        window.scrollTo(0,0);
-    }, 300);
+    document.getElementById('welcomeScreen').remove();
+    window.scrollTo(0,0);
 }
 
 function openPengunjung() {
