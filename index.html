@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1024">
+<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
 :root{
@@ -16,11 +16,12 @@ body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-tra
     background: #000; color: #fff; z-index: 9999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 2.2rem; margin-bottom: 10px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
-#welcomeScreen p { font-size: 0.9rem; color: #aaa; text-transform: none; margin-bottom: 30px; }
+#welcomeScreen h1 { font-size: 1.8rem; margin: 0 20px 10px 20px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+#welcomeScreen p { font-size: 0.8rem; color: #aaa; text-transform: none; margin-bottom: 30px; padding: 0 20px; }
 #welcomeInput { 
-    padding: 12px; width: 300px; border-radius: 8px; border: 2px solid #00ffcc; 
-    background: transparent; color: #fff; text-align: center; font-size: 1.1rem; outline: none;
+    padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; 
+    background: transparent; color: #fff; text-align: center; font-size: 16px; /* Font 16px mencegah auto-zoom berlebih di iPhone */
+    outline: none;
 }
 #welcomeInput::placeholder { color: rgba(255,255,255,0.5); font-style: italic; text-transform: none; }
 #welcomeInput:focus { box-shadow: 0 0 15px #00ffcc; }
@@ -28,16 +29,11 @@ body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-tra
     margin-top: 20px; padding: 12px 40px; background: #00ffcc; color: #000; 
     font-weight: bold; border-radius: 8px; border: none; cursor: pointer; transition: 0.3s;
 }
-#enterBtn:hover { background: #fff; transform: scale(1.1); }
 
+/* --- STYLE UTAMA --- */
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
-
-/* STYLE UNTUK RUNNING TEXT DEADLINE */
-#deadline-banner {
-    background: #333; color: #fff; padding: 10px; margin: 10px 16px; 
-    border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap;
-}
+#deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
 .tgl-aman { color: #00ff00; } 
 .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } 
@@ -63,14 +59,12 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 .pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
 @keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
 
-/* TABEL GRAND TOTAL */
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
 #totalMasuk { background:var(--success); color:#fff; }
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 
-/* NOTE BOX */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
 #catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
 #catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
@@ -94,12 +88,13 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff; box-shadow: 0 0 10px #ff0000; }
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000; box-shadow: 0 0 10px #ffff00; }
 
-/* MODAL CHECKLIST & PENGUNJUNG */
 #checklistModal, #visitorModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
 .modal-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
 </style>
 </head>
-<body style="overflow: hidden;"> <div id="welcomeScreen">
+<body style="overflow: hidden;">
+
+<div id="welcomeScreen">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
     <p>Built and developed by Fajar Ilmanosa Viar © 2026 . All Rights Reserved.</p>
     <div style="margin-top:10px">
@@ -138,7 +133,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 <div class="block">
 <h2>PEMASUKAN</h2>
 <div class="pulse-line"></div>
-<table id="tblMasukHeader">
+<table>
 <tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:60%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th></tr>
 <tbody id="tbMasuk"></tbody>
 </table>
@@ -175,7 +170,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
     </div>
     <div class="modal-content">
         <h2 style="text-align:center">DAFTAR PENGUNJUNG SITUS</h2>
-        <table style="width:100%; margin-top:10px; border:1px solid #000">
+        <table style="width:100%; border:1px solid #000">
             <thead style="background:#eee">
                 <tr><th>NO</th><th>NAMA PENGUNJUNG</th><th>TANGGAL</th><th>JAM</th></tr>
             </thead>
@@ -192,7 +187,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
     <div class="modal-content" id="checklistPrintArea">
         <h1 style="text-align:center">CHECKLIST KAS GANG MAWAR 3</h1>
         <h2 id="subJudulChecklist" style="text-align:center">PERIODE 2026</h2>
-        <table class="table-checklist" style="width:100%; border-collapse:collapse; border:2px solid #000">
+        <table style="width:100%; border-collapse:collapse; border:2px solid #000">
             <thead style="background:#9fc5e8">
                 <tr><th rowspan="2">No.</th><th rowspan="2">NAMA</th><th colspan="12" id="headerTahun">CHECKLIST KAS 2026</th></tr>
                 <tr><th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th><th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th></tr>
@@ -226,7 +221,6 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- FUNGSI WELCOME SCREEN & LOGGER ---
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
     if (nama === "") { alert("Mohon isi nama anda terlebih dahulu!"); return; }
@@ -235,20 +229,28 @@ function masukWeb() {
     const tgl = new Date();
     const jamStr = tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
     const tglStr = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear();
-    
-    db.ref('pengunjung_situs').push({
-        nama: nama,
-        tanggal: tglStr,
-        jam: jamStr,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    });
+    db.ref('pengunjung_situs').push({ nama: nama, tanggal: tglStr, jam: jamStr, timestamp: firebase.database.ServerValue.TIMESTAMP });
 
-    // Buka Akses
+    // --- TRICK RESET ZOOM ---
+    // 1. Blur input untuk sembunyikan keyboard
+    document.getElementById('welcomeInput').blur();
+    
+    // 2. Hilangkan Welcome Screen
     document.getElementById('welcomeScreen').style.display = 'none';
+    
+    // 3. Kembalikan Scroll & Reset Viewport
     document.body.style.overflow = 'auto';
+    window.scrollTo(0, 0); // Balik ke pojok atas
+
+    // 4. Force Reset Scale via Meta Tag
+    const vMeta = document.getElementById('viewportMeta');
+    vMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0');
+    
+    setTimeout(() => {
+        vMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    }, 300);
 }
 
-// Support Enter Key
 document.getElementById('welcomeInput').addEventListener("keypress", function(e) {
     if (e.key === "Enter") masukWeb();
 });
@@ -258,12 +260,9 @@ function openVisitors() {
     document.getElementById('visitorModal').style.display = 'block';
     const tb = document.getElementById('tbVisitors');
     tb.innerHTML = '<tr><td colspan="4">Loading data...</td></tr>';
-    
     db.ref('pengunjung_situs').orderByChild('timestamp').limitToLast(100).once('value', s => {
-        tb.innerHTML = '';
-        let i = 1;
-        const data = [];
-        s.forEach(child => { data.unshift(child.val()); }); // Balik urutan jadi terbaru di atas
+        tb.innerHTML = ''; let i = 1; const data = [];
+        s.forEach(child => { data.unshift(child.val()); });
         data.forEach(v => {
             const tr = document.createElement('tr');
             tr.innerHTML = `<td style="text-align:center">${i++}</td><td>${v.nama}</td><td style="text-align:center">${v.tanggal}</td><td style="text-align:center">${v.jam}</td>`;
@@ -272,11 +271,7 @@ function openVisitors() {
     });
 }
 
-// --- FUNGSI UTAMA LAINNYA ---
-function autoHeight(elem) {
-    elem.style.height = "1px";
-    elem.style.height = (elem.scrollHeight) + "px";
-}
+function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
 
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
