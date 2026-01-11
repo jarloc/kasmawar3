@@ -9,31 +9,40 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
-header{text-align:center;font-size:2rem;margin-bottom:10px}
+header{text-align:center;font-size:2rem;margin-bottom:5px}
+
+/* Info Update di Bawah Periode */
+.update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:15px; font-weight:normal; text-transform:none;}
+
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .menu-items.show {display:flex}
+
 button{padding:10px 16px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
 button.main-menu {background:#333; color:#fff; border:2px solid #fff}
 button.primary{background:var(--accent);color:#fff}
 button.off{background:#999;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
+
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
+
+/* Kotak Catatan Sesuai Tema */
+.note-box {border:2px dashed var(--border); padding:15px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px}
+.note-box textarea {width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1rem; resize:none; text-transform:none}
+
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
 input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
+
 .theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
-.cyber-effect{animation:ledRotate 3s linear infinite}
-@keyframes ledRotate{
-  0%{box-shadow:0 0 5px #ff00ff,0 0 10px #00ffcc}
-  50%{box-shadow:0 0 10px #ff00ff,0 0 20px #00ffcc,0 0 30px #ffff00}
-  100%{box-shadow:0 0 5px #ff00ff,0 0 10px #00ffcc}
-}
+.theme-cyberpunk .update-info {color:#00ffcc}
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
+.theme-dark .update-info {color:#aaa}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
+
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
 .grand-total-table td.saldo-akhir{background:var(--yellow);color:#000}
@@ -47,6 +56,7 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
     <span id="periode" style="min-width:180px; display:inline-block">...</span>
     <button onclick="nextMonth()">▶</button>
   </div>
+  <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
 </header>
 
 <div class="menu-container">
@@ -76,11 +86,15 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 </div>
 
 <div class="block" id="boxGrand">
-<h2>GRAND TOTAL</h2>
 <table class="grand-total-table">
 <tr><th>Total Masuk</th><th>Total Keluar</th><th>Saldo Akhir</th></tr>
 <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
 </table>
+</div>
+
+<div class="block note-box" id="boxNote">
+  <h2 style="text-align:left; font-size:1rem">📌 CATATAN PENTING</h2>
+  <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." rows="3"></textarea>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -113,18 +127,16 @@ const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAK
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
 function buildTables(){
- const tbMasuk=document.getElementById('tbMasuk');
- const tbKeluar=document.getElementById('tbKeluar');
- tbMasuk.innerHTML=''; tbKeluar.innerHTML='';
+ document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
  namaAnggota.forEach(n=>{
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td>`;
-  tbMasuk.appendChild(tr);
+  document.getElementById('tbMasuk').appendChild(tr);
  });
  for(let i=0;i<10;i++){
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td>`;
-  tbKeluar.appendChild(tr);
+  document.getElementById('tbKeluar').appendChild(tr);
  }
 }
 
@@ -132,8 +144,7 @@ function recalc(){
  let tM=0, tK=0, runM=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
   let raw = tr.children[3].firstChild.value.toString().replace(/[^0-9]/g,'');
-  let u=parseInt(raw)||0;
-  runM+=u; tM+=u;
+  let u=parseInt(raw)||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
@@ -159,29 +170,6 @@ function recalc(){
  document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
 }
 
-function fetchPrevSaldoManual(){
- let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
- db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
-  const d=s.val(); let sL=0;
-  if(d && d.masuk){
-   let mTotal=0, kTotal=0;
-   d.masuk.forEach(r=>mTotal+=parseInt(r.uang.toString().replace(/[^0-9]/g,''))||0);
-   if(d.keluar) d.keluar.forEach(r=>kTotal+=(parseInt(r.qty.toString().replace(/[^0-9]/g,''))||0)*(parseInt(r.harga.toString().replace(/[^0-9]/g,''))||0));
-   sL=mTotal-kTotal;
-  }
-  const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){
-    const fM=(bulan+1).toString().padStart(2,'0');
-    trSisa.children[0].firstChild.value=`${tahun}-${fM}-01`;
-    trSisa.children[2].firstChild.value=`SISA KAS ${namaBulan[pm]} ${pt}`;
-    trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID');
-    recalc(); 
-    alert("Berhasil menarik saldo " + namaBulan[pm] + ": Rp " + sL.toLocaleString('id-ID'));
-    if(isAdmin) saveData();
-  }
- });
-}
-
 function loadData(){
  buildTables();
  db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
@@ -195,6 +183,8 @@ function loadData(){
     const tr=document.querySelectorAll('#tbKeluar tr')[i];
     if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; }
    });
+   if(d.catatan) document.getElementById('catatanWarga').value = d.catatan;
+   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
  });
@@ -202,21 +192,24 @@ function loadData(){
 
 function saveData(){
  if(!isAdmin) return;
+ const tgl = new Date();
+ const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", PUKUL " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
+ 
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).set({masuk:m, keluar:k});
+ const cat = document.getElementById('catatanWarga').value;
+
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, catatan:cat, updated:formatUpdate});
+ document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
 
 document.getElementById('adminBtn').onclick=()=>{
  if(!isAdmin){
   const u=prompt('USER'), p=prompt('PASS');
-  // LOGIKA LOGIN DISAMARKAN (Base64)
   if(btoa(u)==='QURNSU4=' && btoa(p)==='U0FOVUlPTg=='){
    isAdmin=true; adminBtn.textContent='ADMIN ON'; adminBtn.className='primary';
    document.getElementById('pullBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 2500);
-  } else {
-   alert('USER/PASS SALAH!');
+   autoSaveTimer=setInterval(saveData, 3000);
   }
  }else{
   isAdmin=false; adminBtn.textContent='ADMIN OFF'; adminBtn.className='off';
@@ -226,7 +219,27 @@ document.getElementById('adminBtn').onclick=()=>{
  applyAdminLock(); toggleMenu(); recalc();
 };
 
-document.getElementById('pullBtn').onclick=()=>{ fetchPrevSaldoManual(); toggleMenu(); }
+document.getElementById('pullBtn').onclick=()=>{
+ let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
+ db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
+  const d=s.val(); let sL=0;
+  if(d && d.masuk){
+   let mt=0, kt=0;
+   d.masuk.forEach(r=>mt+=parseInt(r.uang.replace(/[^0-9]/g,''))||0);
+   if(d.keluar) d.keluar.forEach(r=>kt+=(parseInt(r.qty.replace(/[^0-9]/g,''))||0)*(parseInt(r.harga.replace(/[^0-9]/g,''))||0));
+   sL=mt-kt;
+  }
+  const trSisa=document.querySelector('#tbMasuk tr');
+  if(trSisa){
+    trSisa.children[0].firstChild.value=`${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
+    trSisa.children[2].firstChild.value=`SISA KAS ${namaBulan[pm]} ${pt}`;
+    trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID');
+    recalc(); saveData(); alert("Saldo Ditarik!");
+  }
+ });
+ toggleMenu();
+}
+
 function lockUI(l){ document.querySelectorAll('.editable').forEach(i=>i.disabled=l); }
 function applyAdminLock(){ lockUI(!isAdmin); }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
@@ -238,7 +251,6 @@ document.getElementById('themeBtn').onclick=()=>{
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
- document.querySelectorAll('.block').forEach(b=>b.classList.toggle('cyber-effect', currentTheme==='theme-cyberpunk'));
 };
 
 document.getElementById('cetakBtn').onclick=()=>{
