@@ -9,7 +9,7 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- STYLE WELCOME SCREEN (HANYA MUNCUL DI AWAL) --- */
+/* --- STYLE WELCOME SCREEN (DIBUAT ANTI-ZOOM) --- */
 #welcomeScreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: #000; color: #fff; z-index: 99999; 
@@ -17,30 +17,31 @@
 }
 #welcomeScreen h1 { font-size: 2rem; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
 #welcomeScreen p { font-size: 0.9rem; color: #aaa; text-transform: none; margin-bottom: 30px; font-family: Arial, sans-serif; }
-#welcomeInput { padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; background: transparent; color: #fff; text-align: center; font-size: 1rem; outline: none; }
+
+/* KUNCI ANTI ZOOM: FONT MINIMAL 16PX */
+#welcomeInput { 
+    padding: 12px; width: 280px; border-radius: 8px; 
+    border: 2px solid #00ffcc; background: transparent; 
+    color: #fff; text-align: center; 
+    font-size: 16px; /* Browser gak akan maksa zoom kalau sudah 16px */
+    outline: none; 
+}
+
 #enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; }
 
 /* --- STYLE MODAL PENGUNJUNG --- */
 #modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; box-sizing:border-box; }
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
-/* --- KODE SAKRAL LU DIBAWAH INI (TIDAK BERUBAH) --- */
+/* --- KODE SAKRAL LU (TIDAK BERUBAH) --- */
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
-
-#deadline-banner {
-    background: #333; color: #fff; padding: 10px; margin: 10px 16px; 
-    border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap;
-}
+#deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
-.tgl-aman { color: #00ff00; } 
-.tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } 
-.tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
-
+.tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
 @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .menu-items.show {display:flex}
@@ -49,31 +50,24 @@ button.main-menu {background:#333; color:#fff; border:2px solid #fff}
 button.primary{background:var(--accent);color:#fff}
 button.off{background:#999;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
-
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
-
 .pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
 .pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
-
 @keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
-
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
 #totalMasuk { background:var(--success); color:#fff; }
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
-
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
 #catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
 #catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
-
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
-
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
@@ -85,10 +79,8 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .theme-cyberpunk #totalMasuk { background:#00ff00; color:#000; box-shadow: 0 0 10px #00ff00; }
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff; box-shadow: 0 0 10px #ff0000; }
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000; box-shadow: 0 0 10px #ffff00; }
-
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
-
 #checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
 .checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
 .checklist-content h1 { text-align:center; margin:0; font-size:1.5rem; background:#92c694; padding:10px; }
@@ -171,7 +163,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 </div>
 
 <div class="block note-box">
-  <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+  <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
   <div class="pulse-line"></div>
   <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." oninput="autoHeight(this)"></textarea>
   <div id="catatanPrint"></div>
@@ -226,7 +218,6 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- FUNGSI WELCOME SCREEN & LOG PENGUNJUNG ---
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
     if (nama === "") {
@@ -234,7 +225,6 @@ function masukWeb() {
         return;
     }
     
-    // Simpan ke Firebase Pengunjung
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
@@ -244,10 +234,9 @@ function masukWeb() {
         waktu: tglLog + ", PUKUL " + jamLog + " WIB"
     });
 
-    // Hapus Welcome Screen agar tampilan balik ke Kode Sakral
     document.getElementById('welcomeScreen').remove();
-    updateUI(); 
-    updateDeadlineBanner();
+    // RESET LAYAR KE ATAS JIKA SEMPAT BERGESER
+    window.scrollTo(0,0);
 }
 
 function openPengunjung() {
@@ -266,28 +255,18 @@ function openPengunjung() {
             });
             html += "</table>";
             list.innerHTML = html;
-        } else {
-            list.innerHTML = "Belum ada pengunjung.";
-        }
+        } else { list.innerHTML = "Belum ada pengunjung."; }
     });
 }
 
-// --- KODE SAKRAL LU DIBAWAH INI (TIDAK BERUBAH) ---
-function autoHeight(elem) {
-    elem.style.height = "1px";
-    elem.style.height = (elem.scrollHeight) + "px";
-}
+function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
 
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni >= 1 && hariIni <= 3) {
-        banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih bagi yang sudah membayar!</span>`;
-    } else if (hariIni >= 4 && hariIni <= 7) {
-        banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera lakukan pembayaran! Batas iuran sampai tanggal 7 ⚠️</span>`;
-    } else {
-        banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum bayar, harap segera melakukan pembayaran.</span>`;
-    }
+    if (hariIni >= 1 && hariIni <= 3) { banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih bagi yang sudah membayar!</span>`; } 
+    else if (hariIni >= 4 && hariIni <= 7) { banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera lakukan pembayaran! Batas iuran sampai tanggal 7 ⚠️</span>`; } 
+    else { banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum bayar, harap segera melakukan pembayaran.</span>`; }
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -343,14 +322,8 @@ function loadData(){
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
     const cat = snapshot.val();
     const ta = document.getElementById('catatanWarga');
-    if(cat) {
-        ta.value = cat;
-        document.getElementById('catatanPrint').innerText = cat;
-        setTimeout(()=>autoHeight(ta), 150);
-    } else {
-        ta.value = "";
-        document.getElementById('catatanPrint').innerText = "";
-    }
+    if(cat) { ta.value = cat; document.getElementById('catatanPrint').innerText = cat; setTimeout(()=>autoHeight(ta), 150); } 
+    else { ta.value = ""; document.getElementById('catatanPrint').innerText = ""; }
  });
 }
 
@@ -405,12 +378,7 @@ async function openChecklist() {
 }
 
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-
-function cetakChecklist() {
-    html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => {
-        const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click();
-    });
-}
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
 
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
@@ -419,8 +387,7 @@ document.getElementById('adminBtn').onclick = function() {
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('pullBtn').style.display='block';
    document.getElementById('listVisitorBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000);
-   applyAdminLock(); recalc(); alert('LOGIN BERHASIL!');
+   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL!');
   } else { alert('USER/PASS SALAH!'); }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
@@ -482,7 +449,8 @@ document.getElementById('cetakBtn').onclick=()=>{
 };
 
 document.addEventListener('input', recalc);
-// updateUI & updateDeadlineBanner dipanggil di dalam masukWeb()
+updateUI();
+updateDeadlineBanner();
 </script>
 </body>
 </html>
