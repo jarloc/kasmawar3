@@ -18,9 +18,9 @@ header{text-align:center;font-size:2rem;margin-bottom:5px}
     border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap;
 }
 #deadline-banner marquee { font-size: 1.1rem; }
-.tgl-aman { color: #00ff00; } /* Hijau */
-.tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } /* Kuning Berkedip */
-.tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } /* Merah Berdenyut */
+.tgl-aman { color: #00ff00; } 
+.tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } 
+.tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
 
 @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
@@ -171,11 +171,9 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// FUNGSI UPDATE DEADLINE BANNER
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    
     if (hariIni >= 1 && hariIni <= 3) {
         banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih bagi yang sudah membayar!</span>`;
     } else if (hariIni >= 4 && hariIni <= 7) {
@@ -350,11 +348,19 @@ document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
  const areaAdmin = document.getElementById('catatanWarga');
  const areaPrint = document.getElementById('catatanPrint');
+ const banner = document.getElementById('deadline-banner');
+ 
+ // 1. SEMBUNYIKAN BANNER DAN SWAP CATATAN
+ banner.style.display = 'none';
  areaPrint.innerText = areaAdmin.value;
  areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+
  setTimeout(()=>{
   html2canvas(document.body,{scale:2}).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+   
+   // 2. MUNCULKAN KEMBALI SETELAH DIFOTO
+   banner.style.display = 'block';
    areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
   });
  },500);
@@ -362,7 +368,7 @@ document.getElementById('cetakBtn').onclick=()=>{
 
 document.addEventListener('input', recalc);
 updateUI();
-updateDeadlineBanner(); // Jalankan fungsi deadline saat web dibuka
+updateDeadlineBanner();
 </script>
 </body>
 </html>
