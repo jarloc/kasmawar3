@@ -9,6 +9,28 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
+/* --- LOGO STYLING --- */
+.logo-mawar-container {
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-svg {
+    width: 50px;
+    height: 50px;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+}
+.logo-welcome {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 15px #00ffcc);
+}
+
 /* --- SAPU JAGAT FIX: FORCING SAFARI COLOR RENDERING --- */
 input:disabled {
   -webkit-text-fill-color: currentcolor !important;
@@ -101,6 +123,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-cyberpunk #totalMasuk { background:#00ff00; color:#000 !important; box-shadow: 0 0 10px #00ff00; }
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff !important; box-shadow: 0 0 10px #ff0000; }
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
+.theme-cyberpunk .logo-svg { filter: drop-shadow(0 0 8px #00ffcc); stroke: #00ffcc; }
 
 .theme-cyberpunk .menu-items button {
     background: #ff00ff !important; 
@@ -129,10 +152,24 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </head>
 <body>
 
+<svg style="display:none;">
+  <symbol id="icon-mawar" viewBox="0 0 100 100">
+    <path d="M50 20 C60 10, 80 15, 80 35 C80 55, 50 80, 50 80 C50 80, 20 55, 20 35 C20 15, 40 10, 50 20" fill="none" stroke="currentColor" stroke-width="3"/>
+    <circle cx="50" cy="40" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+    <path d="M35 85 L50 70 L65 85" fill="none" stroke="currentColor" stroke-width="3"/>
+    <text x="50" y="95" text-anchor="middle" font-size="12" font-family="Arial" font-weight="bold" fill="currentColor">3</text>
+  </symbol>
+</svg>
+
 <div id="welcomeScreen">
+    <svg class="logo-svg logo-welcome"><use xlink:href="#icon-mawar"></use></svg>
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
     <p>Built and developed by Fajar Ilmanosa Viar Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
+</div>
+
+<div class="logo-mawar-container">
+    <svg class="logo-svg"><use xlink:href="#icon-mawar"></use></svg>
 </div>
 
 <div id="modalPengunjung">
@@ -472,7 +509,6 @@ document.getElementById('adminBtn').onclick = function() {
  toggleMenu();
 };
 
-/* --- FIX FINAL: TARIK SALDO DENGAN TANGGAL 1 OTOMATIS & ANTI CACAT --- */
 document.getElementById('pullBtn').onclick=()=>{
     let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
     const btn = document.getElementById('pullBtn');
@@ -494,12 +530,10 @@ document.getElementById('pullBtn').onclick=()=>{
         
         const trSisa = document.querySelector('#tbMasuk tr');
         if(trSisa){ 
-            // 1. ISI TANGGAL OTOMATIS (TGL 1)
             const tglInput = trSisa.children[0].firstChild;
             const formatTgl = tahun + "-" + (bulan + 1).toString().padStart(2, '0') + "-01";
             tglInput.value = formatTgl;
 
-            // 2. ISI KETERANGAN & SALDO BERSIH
             trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
             trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
             
