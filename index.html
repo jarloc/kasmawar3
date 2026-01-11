@@ -9,13 +9,27 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- FINAL FIX SAFARI IPHONE: GARIS TEPI & KONTRAS (ACC) --- */
+/* --- ULTIMATE FIX SAFARI IPHONE: PEKAT ABSOLUT (ACC) --- */
 @media screen and (max-width: 768px) {
-  /* Memaksa teks tabel di iPhone punya garis tepi hitam halus agar sangat kontras */
-  #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir {
-    -webkit-text-stroke: 0.5px rgba(0,0,0,0.7);
-    font-weight: 900 !important;
-    letter-spacing: 0.2px;
+  /* Memaksa Safari menampilkan teks putih tanpa pudar */
+  #tbMasuk input, #tbKeluar input, .saldo, .total {
+    -webkit-text-fill-color: #ffffff !important;
+    opacity: 1 !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.5);
+  }
+  
+  /* Khusus teks hitam di kolom Saldo Akhir agar tetap hitam pekat */
+  #totalMasuk, .saldo-akhir {
+    -webkit-text-fill-color: #000000 !important;
+    color: #000000 !important;
+    font-weight: 800 !important;
+  }
+  
+  #totalKeluar {
+    -webkit-text-fill-color: #ffffff !important;
+    color: #ffffff !important;
   }
 }
 
