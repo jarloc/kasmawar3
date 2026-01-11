@@ -23,13 +23,31 @@
 }
 #enterBtn { margin-top: 20px; padding: 12px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase;}
 
-/* --- MAIN WRAPPER: FIT TO SCREEN LOGIC --- */
+/* --- MAIN WRAPPER: FIX POSISI --- */
 #mainWrapper {
-    width: 1024px; margin: 0 auto; background: var(--bg); padding: 20px;
-    transform-origin: top center; display: none; box-sizing: border-box;
+    width: 1024px; 
+    margin: 0; 
+    background: var(--bg); 
+    padding: 20px;
+    transform-origin: 0 0; /* NEMPEL KE KIRI ATAS */
+    display: none; 
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
-body{font-family:var(--font);background:var(--bg);margin:0;padding:0;text-transform:uppercase;color:var(--text); overflow-x: hidden;}
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    color: var(--text); 
+    overflow-x: hidden; /* ANTI GESER KANAN */
+    width: 100vw;
+}
+
 header{text-align:center;font-size:2.2rem;margin-bottom:5px; padding-top:20px; font-weight: bold;}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
 
@@ -66,7 +84,6 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 
-/* NOTE BOX AUTO EXPAND */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
 #catatanWarga { 
     width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; 
@@ -90,7 +107,6 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
-/* CHECKLIST MODAL */
 #checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
 .checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
 .status-v { background:#93c47d !important; color:#000; }
@@ -160,12 +176,12 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
     </div>
 
     <div class="block note-box">
-      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
       <div class="pulse-line"></div>
       <textarea id="catatanWarga" class="editable" placeholder="Catatan akan muncul di sini..." oninput="autoHeight(this)"></textarea>
       <div id="catatanPrint"></div>
     </div>
-</div>
+    <div style="height: 100px;"></div> </div>
 
 <div id="checklistModal">
     <div style="text-align:center; margin-bottom:15px;">
@@ -216,7 +232,7 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- FIX FIT TO SCREEN ---
+// --- FIX FIT TO SCREEN (LOCK TO LEFT) ---
 function applyResponsiveScale() {
     const wrapper = document.getElementById('mainWrapper');
     if (window.getComputedStyle(wrapper).display === 'none') return;
@@ -226,7 +242,8 @@ function applyResponsiveScale() {
     const scale = screenWidth / targetWidth;
     
     wrapper.style.transform = `scale(${scale})`;
-    document.body.style.height = (wrapper.offsetHeight * scale) + "px";
+    // Pastikan body mengikuti tinggi konten yang sudah diskala
+    document.body.style.height = (wrapper.scrollHeight * scale + 50) + "px";
 }
 
 function masukWeb() {
@@ -238,26 +255,26 @@ function masukWeb() {
     const mw = document.getElementById('mainWrapper');
     mw.style.display = 'block';
     
-    // Trigger scale dan perbaikan tinggi catatan
     setTimeout(() => {
         applyResponsiveScale();
         autoHeight(document.getElementById('catatanWarga'));
         window.scrollTo(0,0);
-    }, 100);
+    }, 50);
 }
 
 function autoHeight(elem) {
     if (!elem) return;
     elem.style.height = "1px";
     elem.style.height = (elem.scrollHeight) + "px";
+    applyResponsiveScale(); // Update skala jika kotak memanjang
 }
 
 function updateDeadlineBanner() {
     const d = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (d >= 1 && d <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih!</span>`;
-    else if (d >= 4 && d <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera bayar kas! Batas s/d tanggal 7 ⚠️</span>`;
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum, mohon kerjasamanya.</span>`;
+    if (d >= 1 && d <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️</span>`;
+    else if (d >= 4 && d <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai tanggal 7 ⚠️</span>`;
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Segera lakukan pembayaran.</span>`;
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -309,7 +326,7 @@ function loadData(){
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
-  setTimeout(() => applyResponsiveScale(), 300);
+  setTimeout(() => applyResponsiveScale(), 200);
  });
 
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
@@ -318,7 +335,7 @@ function loadData(){
     if(cat) {
         ta.value = cat;
         document.getElementById('catatanPrint').innerText = cat;
-        setTimeout(() => { autoHeight(ta); applyResponsiveScale(); }, 500);
+        setTimeout(() => autoHeight(ta), 400);
     }
  });
 }
