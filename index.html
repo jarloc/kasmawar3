@@ -9,10 +9,7 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 * { box-sizing: border-box; }
-body { 
-    font-family: var(--font); background: var(--bg); margin: 0; padding: 0;
-    text-transform: uppercase; color: var(--text); overflow-x: hidden;
-}
+body { font-family: var(--font); background: var(--bg); margin: 0; padding: 0; text-transform: uppercase; color: var(--text); overflow-x: hidden; }
 
 /* --- WELCOME SCREEN --- */
 #welcomeScreen {
@@ -20,150 +17,147 @@ body {
     background: #000; color: #fff; z-index: 9999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
-#welcomeScreen h1 { font-size: 1.8rem; margin: 0 20px 10px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
-#welcomeScreen p { font-size: 0.8rem; color: #aaa; text-transform: none; margin-bottom: 30px; }
+#welcomeScreen h1 { font-size: 2rem; margin: 0 20px 10px; color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
 #welcomeInput { 
-    padding: 12px; width: 280px; border-radius: 8px; border: 2px solid #00ffcc; 
-    background: transparent; color: #fff; text-align: center; font-size: 16px; outline: none;
+    padding: 15px; width: 300px; border-radius: 8px; border: 2px solid #00ffcc; 
+    background: transparent; color: #fff; text-align: center; font-size: 18px; outline: none; margin-bottom: 20px;
 }
-#enterBtn { margin-top: 20px; padding: 12px 50px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
+#enterBtn { padding: 15px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; font-size: 1.1rem; }
 
-/* --- MAIN WRAPPER (DESKTOP MODE) --- */
+/* --- MAIN WRAPPER (FORCED DESKTOP) --- */
 #mainWrapper {
     width: 1024px; margin: 0 auto; background: var(--bg); padding: 20px;
-    transform-origin: top center; display: none; position: relative;
+    transform-origin: top center; display: none;
 }
 
-header{text-align:center;font-size:2.5rem;margin-bottom:5px}
-.update-info {text-align:center; font-size:0.9rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
-#deadline-banner { background: #333; color: #fff; padding: 12px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; }
-#deadline-banner marquee { font-size: 1.3rem; }
+header{text-align:center;font-size:2.8rem;margin-bottom:5px; font-weight: bold;}
+.update-info {text-align:center; font-size:0.9rem; color:#666; margin-bottom:15px; text-transform:none;}
 
-/* ANIMASI SEISMOGRAF */
+#deadline-banner { background: #333; color: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; font-weight: bold; overflow: hidden; }
+#deadline-banner marquee { font-size: 1.4rem; }
+
+/* CYBERPUNK PULSE */
 .pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
 .pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
 @keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
 
 .menu-container {position:fixed; top:20px; right:20px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
-.menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:15px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.menu-items {display:none; flex-direction:column; gap:10px; background:rgba(0,0,0,0.95); padding:20px; border-radius:12px; box-shadow:0 4px 30px rgba(0,0,0,0.5)}
 .menu-items.show {display:flex}
-button{padding:12px 20px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
-button.main-menu {background:#333; color:#fff; border:2px solid #fff}
+
+button{padding:14px 22px; border:0; border-radius:8px; font-weight:bold; cursor:pointer; text-transform:uppercase; font-size: 1rem;}
+button.main-menu {background:#000; color:#fff; border:2px solid #00ffcc}
 button.primary{background:var(--accent);color:#fff}
-button.off{background:#999;color:#fff}
+button.off{background:#666;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 
-.block{margin-bottom:20px;padding:20px;background:var(--card);border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.1);position:relative;}
-.block h2{font-size:1.5rem;margin-bottom:15px;text-align:center}
+.block{margin-bottom:25px;padding:25px;background:var(--card);border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.1);position:relative;}
+.block h2{font-size:1.8rem;margin-bottom:20px;text-align:center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
 
 table{width:100%;border-collapse:collapse; table-layout: fixed;}
-th,td{border:1px solid var(--border);padding:10px;text-align:left; font-size: 1rem;}
-th{text-align:center; background:#eee; color:#000}
-input{padding:6px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
+th,td{border:1px solid var(--border);padding:12px;text-align:left; font-size: 1.1rem;}
+th{background:#f2f2f2; color:#000; text-align:center;}
+input{padding:8px;border-radius:6px;border:1px solid #ccc;width:100%;font-size:1.1rem; text-transform: uppercase;}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 
-.grand-total-table th, .grand-total-table td{padding:15px; font-size: 1.3rem; text-align:center;}
+.grand-total-table td{padding:20px; font-size: 1.5rem; text-align:center; font-weight: bold;}
 #totalMasuk { background:var(--success); color:#fff; }
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 
-.note-box {border:2px dashed var(--border); padding:25px; background:rgba(0,0,0,0.03); border-radius:12px;}
-#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.2rem; resize:none; text-transform:none; min-height:80px; }
+.note-box {border:3px dashed var(--border); background:rgba(0,0,0,0.02);}
+#catatanWarga { width:100%; background:transparent; border:0; font-family:inherit; font-size:1.3rem; resize:none; text-transform:none; min-height:100px; line-height:1.5;}
 
 /* THEME CYBERPUNK */
-.theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
+.theme-cyberpunk{--bg:#050505;--card:#0d0d0d;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
-.theme-cyberpunk .block { border: 1px solid #00ffcc; }
+.theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.2); }
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; }
+.theme-cyberpunk th { background: #1a1a1a; color: #00ffcc; }
 
 /* MODALS */
-#checklistModal, #visitorModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow:auto; padding:20px; }
-.modal-content { background:#fff; color:#000; padding:30px; border-radius:10px; width:980px; margin:0 auto; }
+#checklistModal, #visitorModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow:auto; padding:20px; }
+.modal-content { background:#fff; color:#000; padding:30px; border-radius:15px; width:980px; margin:0 auto; }
 </style>
 </head>
 <body>
 
 <div id="welcomeScreen">
-    <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar © 2026 . All Rights Reserved.</p>
-    <div style="margin-top:10px">
-        <input type="text" id="welcomeInput" placeholder="tulis nama anda disini">
-        <br>
-        <button id="enterBtn" onclick="masukWeb()">ENTER</button>
-    </div>
+    <h1>KAS GANG MAWAR 3</h1>
+    <p>Dikembangkan oleh Fajar Ilmanosa Viar © 2026</p>
+    <input type="text" id="welcomeInput" placeholder="MASUKKAN NAMA ANDA">
+    <button id="enterBtn" onclick="masukWeb()">MASUK SEKARANG</button>
 </div>
 
 <div id="mainWrapper">
     <header>
       LAPORAN KAS GANG MAWAR 3
-      <div style="margin-top:10px; text-align:center">
+      <div style="margin-top:15px;">
         <button onclick="prevMonth()">◀</button>
-        <span id="periode" style="min-width:250px; display:inline-block">...</span>
+        <span id="periode" style="min-width:300px; display:inline-block">...</span>
         <button onclick="nextMonth()">▶</button>
       </div>
-      <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
+      <div class="update-info" id="lastUpdate">TERAKHIR UPDATE: -</div>
     </header>
 
     <div id="deadline-banner">
-        <marquee id="deadline-text" scrollamount="6">Mengecek tanggal...</marquee>
+        <marquee id="deadline-text" scrollamount="7">Sistem sedang mengecek tanggal...</marquee>
     </div>
 
     <div class="menu-container">
-        <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
+        <button class="main-menu" onclick="toggleMenu()">☰ MENU UTAMA</button>
         <div class="menu-items" id="menuItems">
-            <button id="adminBtn" class="off">ADMIN OFF</button>
-            <button id="pullBtn" class="warning" style="display:none">TARIK SALDO LALU</button>
+            <button id="adminBtn" class="off">ADMIN LOGIN</button>
+            <button id="pullBtn" class="warning" style="display:none" onclick="tarikSaldo()">TARIK SALDO LALU</button>
             <button id="visitorBtn" class="warning" style="display:none" onclick="openVisitors()">DAFTAR PENGUNJUNG</button>
-            <button onclick="openChecklist()" class="primary">CHECKLIST KAS</button>
+            <button onclick="openChecklist()" class="primary">CHECKLIST TAHUNAN</button>
             <button id="themeBtn" class="primary">GANTI TEMA</button>
-            <button id="cetakBtn" class="primary">CETAK LAPORAN</button>
+            <button id="cetakBtn" class="primary">SIMPAN GAMBAR</button>
         </div>
     </div>
 
     <div class="block">
-        <h2>PEMASUKAN</h2>
+        <h2>PEMASUKAN (UANG MASUK)</h2>
         <div class="pulse-line"></div>
         <table>
-            <tr><th style="width:100px">Tgl</th><th style="width:200px">Nama</th><th>Keterangan</th><th style="width:150px">Masuk</th><th style="width:150px">Saldo</th></tr>
+            <thead><tr><th style="width:110px">TANGGAL</th><th style="width:220px">NAMA</th><th>KETERANGAN</th><th style="width:160px">JUMLAH</th><th style="width:160px">SALDO</th></tr></thead>
             <tbody id="tbMasuk"></tbody>
         </table>
     </div>
 
     <div class="block">
-        <h2>PENGELUARAN</h2>
+        <h2>PENGELUARAN (UANG KELUAR)</h2>
         <div class="pulse-line"></div>
         <table>
-            <tr><th style="width:100px">Tgl</th><th>Keterangan</th><th style="width:80px">Qty</th><th style="width:150px">Harga</th><th style="width:150px">Total</th></tr>
+            <thead><tr><th style="width:110px">TANGGAL</th><th>KETERANGAN</th><th style="width:90px">QTY</th><th style="width:160px">HARGA</th><th style="width:160px">TOTAL</th></tr></thead>
             <tbody id="tbKeluar"></tbody>
         </table>
     </div>
 
     <div class="block">
-        <h2>GRAND TOTAL</h2>
+        <h2>RINGKASAN KAS (GRAND TOTAL)</h2>
         <div class="pulse-line"></div>
         <table class="grand-total-table">
-            <tr><th>TOTAL UANG MASUK</th><th>TOTAL UANG KELUAR</th><th>SALDO AKHIR</th></tr>
+            <tr><th>TOTAL MASUK</th><th>TOTAL KELUAR</th><th>SALDO AKHIR</th></tr>
             <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
         </table>
     </div>
 
     <div class="block note-box">
-      <h2 style="text-align:left; font-size:1.3rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
-      <div class="pulse-line"></div>
-      <textarea id="catatanWarga" class="editable" placeholder="Isi catatan..." oninput="autoHeight(this)"></textarea>
-      <div id="catatanPrint" style="display:none"></div>
+      <h2 style="text-align:left;">📌 CATATAN PENTING</h2>
+      <textarea id="catatanWarga" class="editable" placeholder="Belum ada catatan..." oninput="autoHeight(this)"></textarea>
     </div>
 </div>
 
-<div id="visitorModal"><div class="modal-content"><button onclick="document.getElementById('visitorModal').style.display='none'">TUTUP</button><h2>DAFTAR PENGUNJUNG</h2><table style="width:100%"><thead><tr><th>NO</th><th>NAMA</th><th>TANGGAL</th><th>JAM</th></tr></thead><tbody id="tbVisitors"></tbody></table></div></div>
-<div id="checklistModal"><div class="modal-content"><button onclick="closeChecklist()">TUTUP</button><h2>CHECKLIST TAHUNAN</h2><table style="width:100%; border:2px solid #000"><thead><tr><th>NO</th><th>NAMA</th><th colspan="12">BULAN</th></tr></thead><tbody id="tbChecklist"></tbody></table></div></div>
+<div id="visitorModal"><div class="modal-content"><button onclick="document.getElementById('visitorModal').style.display='none'" style="background:red; color:white;">TUTUP</button><h2>LOG PENGUNJUNG</h2><table style="width:100%"><thead style="background:#eee"><tr><th>NO</th><th>NAMA</th><th>WAKTU</th></tr></thead><tbody id="tbVisitors"></tbody></table></div></div>
+
+<div id="checklistModal"><div class="modal-content"><button onclick="document.getElementById('checklistModal').style.display='none'" style="background:red; color:white;">TUTUP</button><h2>MATRIX PEMBAYARAN KAS 2026</h2><table style="width:100%; border:1px solid #000; font-size:0.8rem"><thead><tr><th>NAMA</th><th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th><th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th></tr></thead><tbody id="tbChecklist"></tbody></table></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-// Firebase Config
 const firebaseConfig = {
     apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
     authDomain: "kasmawar3-59c18.firebaseapp.com",
@@ -177,12 +171,10 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const skrg = new Date();
-let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
-let isAdmin=false, autoSaveTimer=null, currentTheme='';
+let bulan = skrg.getMonth(), tahun = skrg.getFullYear(), isAdmin = false, autoSaveTimer = null;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- ANTI-BUG SCALE ---
 function applyResponsiveScale() {
     const wrapper = document.getElementById('mainWrapper');
     const screenWidth = window.innerWidth;
@@ -199,142 +191,181 @@ function applyResponsiveScale() {
 
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
-    if (nama === "") return alert("Isi nama!");
-    
-    // Log
-    db.ref('pengunjung_situs').push({ nama: nama, waktu: new Date().toLocaleString('id-ID'), timestamp: firebase.database.ServerValue.TIMESTAMP });
-
+    if (!nama) return alert("Wajib isi nama!");
+    db.ref('pengunjung_situs').push({ nama, waktu: new Date().toLocaleString('id-ID'), timestamp: firebase.database.ServerValue.TIMESTAMP });
     document.getElementById('welcomeScreen').style.display = 'none';
-    const mw = document.getElementById('mainWrapper');
-    mw.style.display = 'block';
-    
+    document.getElementById('mainWrapper').style.display = 'block';
     applyResponsiveScale();
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
 }
 
-// Fitur Kas
-function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
-function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
+function updateDeadline() {
+    const d = new Date().getDate();
+    const banner = document.getElementById('deadline-banner');
+    const txt = document.getElementById('deadline-text');
+    if(d <= 10) {
+        banner.style.background = "#28a745";
+        txt.innerText = `AYO BAYAR KAS SEBELUM TANGGAL 10! SEKARANG TANGGAL ${d}. SEMANGAT WARGA!`;
+    } else {
+        banner.style.background = "#d9534f";
+        txt.innerText = `DEADLINE SUDAH LEWAT! SEKARANG TANGGAL ${d}. YANG BELUM BAYAR SEGERA LUNASI YA!`;
+    }
+}
 
 function buildTables(){
- document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
- namaAnggota.forEach(n=>{
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td>0</td>`;
-  document.getElementById('tbMasuk').appendChild(tr);
- });
- for(let i=0;i<10;i++){
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td>0</td>`;
-  document.getElementById('tbKeluar').appendChild(tr);
- }
+    const tbm = document.getElementById('tbMasuk'); tbm.innerHTML='';
+    const tbk = document.getElementById('tbKeluar'); tbk.innerHTML='';
+    namaAnggota.forEach(n => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td>0</td>`;
+        tbm.appendChild(tr);
+    });
+    for(let i=0; i<10; i++){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td>0</td>`;
+        tbk.appendChild(tr);
+    }
 }
 
 function recalc(){
- let tM=0, tK=0, runM=0;
- document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
-  tr.children[3].firstChild.value=u.toLocaleString('id-ID');
-  tr.children[4].textContent=runM.toLocaleString('id-ID');
-  const ketVal=tr.children[2].firstChild.value.toUpperCase();
-  const inputs=tr.querySelectorAll('input');
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>inp.style.color='#ff4444'); }
-  else if(["LUNAS","SUDAH BAYAR"].some(k=>ketVal.includes(k))){ inputs.forEach(inp=>inp.style.color='#28a745'); }
-  else { inputs.forEach(inp=>inp.style.color='var(--text)'); }
- });
- document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
-  let t=q*h; tK+=t;
-  tr.children[4].textContent=t.toLocaleString('id-ID');
- });
- document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
- document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
- document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
+    let tm=0, tk=0, run=0;
+    document.querySelectorAll('#tbMasuk tr').forEach(tr => {
+        let u = parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; 
+        run += u; tm += u;
+        tr.children[3].firstChild.value = u.toLocaleString('id-ID');
+        tr.children[4].textContent = run.toLocaleString('id-ID');
+        let ket = tr.children[2].firstChild.value.toUpperCase();
+        tr.querySelectorAll('input').forEach(i => {
+            if(ket.includes('LUNAS')) i.style.color = '#28a745';
+            else if(ket.includes('BELUM')) i.style.color = '#d9534f';
+            else i.style.color = 'inherit';
+        });
+    });
+    document.querySelectorAll('#tbKeluar tr').forEach(tr => {
+        let q = parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0;
+        let h = parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
+        let tot = q * h; tk += tot;
+        tr.children[2].firstChild.value = q.toLocaleString('id-ID');
+        tr.children[3].firstChild.value = h.toLocaleString('id-ID');
+        tr.children[4].textContent = tot.toLocaleString('id-ID');
+    });
+    document.getElementById('totalMasuk').textContent = tm.toLocaleString('id-ID');
+    document.getElementById('totalKeluar').textContent = tk.toLocaleString('id-ID');
+    document.getElementById('saldoAkhir').textContent = (tm-tk).toLocaleString('id-ID');
 }
 
 function loadData(){
- buildTables();
- db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
-  const d=s.val();
-  if(d){
-   if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
-   if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
-   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE: " + d.updated;
-  }
-  recalc(); applyAdminLock();
- });
- db.ref('kas_data/catatan_umum').once('value', snapshot => {
-    const cat = snapshot.val();
-    if(cat) { document.getElementById('catatanWarga').value = cat; autoHeight(document.getElementById('catatanWarga')); }
- });
-}
-
-function saveData(){
- if(!isAdmin) return;
- const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- const cat = document.getElementById('catatanWarga').value;
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated: new Date().toLocaleString('id-ID')});
- db.ref('kas_data/catatan_umum').set(cat);
-}
-
-document.getElementById('adminBtn').onclick = function() {
- if(!isAdmin){
-  if(prompt('PASS')==='SANUMION'){
-   isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
-   document.getElementById('pullBtn').style.display='block';
-   document.getElementById('visitorBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000);
-   applyAdminLock();
-  }
- } else {
-  isAdmin=false; this.textContent='ADMIN OFF'; clearInterval(autoSaveTimer); applyAdminLock();
- }
- toggleMenu();
-};
-
-async function openChecklist() {
-    toggleMenu();
-    document.getElementById('checklistModal').style.display = 'block';
-    const tb = document.getElementById('tbChecklist'); tb.innerHTML = 'Loading...';
-    const matrix = {};
-    for (let m = 0; m <= 11; m++) {
-        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value');
-        const d = snap.val();
-        namaAnggota.forEach((nama, idx) => {
-            if (idx === 0) return;
-            if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
-            if (d && d.masuk) {
-                const row = d.masuk.find(r => r.nama === nama);
-                if (row && ["LUNAS","SUDAH BAYAR"].some(k=>(row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
-            }
-        });
-    }
-    tb.innerHTML = '';
-    Object.keys(matrix).forEach((nama, i) => {
-        const tr = document.createElement('tr');
-        let html = `<td>${i+1}</td><td>${nama}</td>`;
-        matrix[nama].forEach(status => html += `<td style="background:${status==='✓'?'#93c47d':'#e06666'}">${status}</td>`);
-        tr.innerHTML = html; tb.appendChild(tr);
+    buildTables();
+    db.ref('kas_data/'+bulan+'-'+tahun).once('value', s => {
+        const d = s.val();
+        if(d){
+            if(d.masuk) d.masuk.forEach((r,i) => {
+                const tr = document.querySelectorAll('#tbMasuk tr')[i];
+                if(tr){ tr.children[0].firstChild.value=r.t; tr.children[1].firstChild.value=r.n; tr.children[2].firstChild.value=r.k; tr.children[3].firstChild.value=r.u; }
+            });
+            if(d.keluar) d.keluar.forEach((r,i) => {
+                const tr = document.querySelectorAll('#tbKeluar tr')[i];
+                if(tr){ tr.children[0].firstChild.value=r.t; tr.children[1].firstChild.value=r.k; tr.children[2].firstChild.value=r.q; tr.children[3].firstChild.value=r.h; }
+            });
+            if(d.upd) document.getElementById('lastUpdate').textContent = "TERAKHIR UPDATE: " + d.upd;
+        }
+        recalc(); applyAdminLock();
+    });
+    db.ref('kas_data/catatan').once('value', s => { 
+        if(s.val()) { document.getElementById('catatanWarga').value = s.val(); autoHeight(document.getElementById('catatanWarga')); }
     });
 }
 
-function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
-function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
-function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
-function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
+function saveData(){
+    if(!isAdmin) return;
+    const m = [...document.querySelectorAll('#tbMasuk tr')].map(tr => ({t:tr.children[0].firstChild.value, n:tr.children[1].firstChild.value, k:tr.children[2].firstChild.value, u:tr.children[3].firstChild.value}));
+    const k = [...document.querySelectorAll('#tbKeluar tr')].map(tr => ({t:tr.children[0].firstChild.value, k:tr.children[1].firstChild.value, q:tr.children[2].firstChild.value, h:tr.children[3].firstChild.value}));
+    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, upd: new Date().toLocaleString('id-ID')});
+    db.ref('kas_data/catatan').set(document.getElementById('catatanWarga').value);
+}
 
-document.getElementById('themeBtn').onclick=()=>{
- currentTheme = currentTheme === 'theme-cyberpunk' ? '' : 'theme-cyberpunk';
- document.body.className = currentTheme;
+function tarikSaldo(){
+    let blnLalu = bulan - 1, thnLalu = tahun;
+    if(blnLalu < 0) { blnLalu = 11; thnLalu--; }
+    db.ref(`kas_data/${blnLalu}-${thnLalu}`).once('value', s => {
+        const d = s.val();
+        if(d){
+            let tm=0, tk=0;
+            d.masuk.forEach(r => tm += parseInt(r.u.replace(/\./g,''))||0);
+            d.keluar.forEach(r => {
+                let q = parseInt(r.q.replace(/\./g,''))||0;
+                let h = parseInt(r.h.replace(/\./g,''))||0;
+                tk += (q*h);
+            });
+            document.querySelectorAll('#tbMasuk tr')[0].children[3].firstChild.value = (tm-tk).toLocaleString('id-ID');
+            document.querySelectorAll('#tbMasuk tr')[0].children[2].firstChild.value = "DARI BULAN LALU";
+            recalc(); alert("SALDO LALU BERHASIL DITARIK!");
+        }
+    });
+}
+
+async function openChecklist(){
+    toggleMenu(); document.getElementById('checklistModal').style.display='block';
+    const tb = document.getElementById('tbChecklist'); tb.innerHTML = "PROSES...";
+    let html = "";
+    const allData = {};
+    for(let m=0; m<12; m++) {
+        const s = await db.ref(`kas_data/${m}-${tahun}`).once('value');
+        allData[m] = s.val();
+    }
+    namaAnggota.forEach((nama, idx) => {
+        if(idx === 0) return;
+        html += `<tr><td style="font-weight:bold">${nama}</td>`;
+        for(let m=0; m<12; m++){
+            let status = "X", color = "#ffcccc";
+            if(allData[m] && allData[m].masuk){
+                const r = allData[m].masuk.find(x => x.n === nama);
+                if(r && (r.k||'').toUpperCase().includes('LUNAS')){ status="✓"; color="#ccffcc"; }
+            }
+            html += `<td style="background:${color}; text-align:center">${status}</td>`;
+        }
+        html += "</tr>";
+    });
+    tb.innerHTML = html;
+}
+
+function openVisitors(){
+    toggleMenu(); document.getElementById('visitorModal').style.display='block';
+    db.ref('pengunjung_situs').limitToLast(20).once('value', s => {
+        let h = ""; let i = 1;
+        s.forEach(c => { h = `<tr><td>${i++}</td><td>${c.val().nama}</td><td>${c.val().waktu}</td></tr>` + h; });
+        document.getElementById('tbVisitors').innerHTML = h;
+    });
+}
+
+document.getElementById('adminBtn').onclick = function(){
+    if(!isAdmin){
+        if(prompt('PASSWORD ADMIN:') === 'SANUMION'){
+            isAdmin=true; this.textContent="ADMIN: ON"; this.style.background="#28a745";
+            document.getElementById('pullBtn').style.display='block';
+            document.getElementById('visitorBtn').style.display='block';
+            autoSaveTimer = setInterval(saveData, 3000);
+            applyAdminLock();
+        }
+    } else {
+        isAdmin=false; this.textContent="ADMIN LOGIN"; this.style.background="#666";
+        clearInterval(autoSaveTimer); applyAdminLock();
+    }
+    toggleMenu();
 };
 
-document.getElementById('cetakBtn').onclick=()=>{
- window.scrollTo(0,0);
- html2canvas(document.getElementById('mainWrapper'),{scale:2}).then(c=>{
-  const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.jpg`; l.href=c.toDataURL(); l.click();
- });
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
+function autoHeight(e) { e.style.height='1px'; e.style.height=e.scrollHeight+'px'; }
+function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
+function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
+function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); updateDeadline(); }
+
+document.getElementById('themeBtn').onclick = () => { document.body.classList.toggle('theme-cyberpunk'); };
+document.getElementById('cetakBtn').onclick = () => {
+    window.scrollTo(0,0);
+    html2canvas(document.getElementById('mainWrapper')).then(c => {
+        const l = document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.png`; l.href=c.toDataURL(); l.click();
+    });
 };
 
 window.addEventListener('resize', applyResponsiveScale);
