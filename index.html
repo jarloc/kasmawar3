@@ -370,11 +370,8 @@ function recalc(){
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   
-  // LOGIKA WARNA KETERANGAN (DIPERBARUI)
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  
-  // Kata kunci Hijau: LUNAS, SUDAH BAYAR, SISA KAS, BAYAR TUNAI, BAYAR TRANSFER
   const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
   
   if(ketVal.includes('BELUM BAYAR')){ 
@@ -475,24 +472,46 @@ document.getElementById('adminBtn').onclick = function() {
  toggleMenu();
 };
 
+/* --- FIX FINAL: TARIK SALDO DENGAN TANGGAL 1 OTOMATIS & ANTI CACAT --- */
 document.getElementById('pullBtn').onclick=()=>{
- let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
- db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
-  const d=s.val(); let sL=0;
-  if(d && d.masuk){
-   let mt=0, kt=0;
-   d.masuk.forEach(r=>mt+=parseInt(r.uang.replace(/[^0-9]/g,''))||0);
-   if(d.keluar) d.keluar.forEach(r=>kt+=(parseInt(r.qty.replace(/[^0-9]/g,''))||0)*(parseInt(r.harga.replace(/[^0-9]/g,''))||0));
-   sL=mt-kt;
-  }
-  const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){ 
-    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
-    trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
-    recalc(); saveData(); alert("SALDO DITARIK!"); 
-  }
- });
- toggleMenu();
+    let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
+    const btn = document.getElementById('pullBtn');
+    const originalText = btn.textContent;
+    btn.textContent = "PROSES...";
+
+    db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
+        const d=s.val(); let sL=0;
+        if(d && d.masuk){
+            let mt=0, kt=0;
+            d.masuk.forEach(r=>{ if(r.uang) mt += parseInt(r.uang.replace(/[^0-9]/g,'')) || 0; });
+            if(d.keluar) d.keluar.forEach(r=>{
+                let q = parseInt(r.qty.replace(/[^0-9]/g,'')) || 0;
+                let h = parseInt(r.harga.replace(/[^0-9]/g,'')) || 0;
+                kt += (q * h);
+            });
+            sL = mt - kt;
+        }
+        
+        const trSisa = document.querySelector('#tbMasuk tr');
+        if(trSisa){ 
+            // 1. ISI TANGGAL OTOMATIS (TGL 1)
+            const tglInput = trSisa.children[0].firstChild;
+            const formatTgl = tahun + "-" + (bulan + 1).toString().padStart(2, '0') + "-01";
+            tglInput.value = formatTgl;
+
+            // 2. ISI KETERANGAN & SALDO BERSIH
+            trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
+            trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
+            
+            recalc(); 
+            setTimeout(() => {
+                saveData(); 
+                btn.textContent = originalText;
+                alert("SALDO " + namaBulan[pm] + " BERHASIL DITARIK KE TANGGAL 1!"); 
+            }, 800);
+        }
+    });
+    toggleMenu();
 }
 
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
@@ -523,4 +542,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
