@@ -22,13 +22,18 @@ button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
 
-/* PERBAIKAN CATATAN AGAR ENTER TERBACA SAAT DICETAK */
+/* PERBAIKAN TOTAL CATATAN UNTUK CETAK */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px; min-height:200px}
-.note-box textarea {
+#catatanWarga {
     width:100%; background:transparent; border:0; color:var(--text); 
-    font-family:inherit; font-size:1.1rem; resize:vertical; 
+    font-family:inherit; font-size:1.1rem; resize:none; 
     text-transform:none; min-height:150px; line-height:1.5;
-    white-space: pre-wrap; /* Ini kuncinya biar Enter kebaca */
+    white-space: pre-wrap; word-wrap: break-word;
+    display: block;
+}
+/* Eleman bayangan buat cetak */
+#catatanPrint {
+    display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none;
 }
 
 table{width:100%;border-collapse:collapse}
@@ -37,12 +42,10 @@ th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 
-/* THEME CYBERPUNK LED */
 .theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .block { border: 1px solid #ff00ff; animation: ledRotate 3s linear infinite; }
-.theme-cyberpunk .update-info {color:#00ffcc}
 .theme-cyberpunk th {background:#330033; color:#00ffcc; border-color:#00ffcc}
-.theme-cyberpunk input, .theme-cyberpunk textarea {color:#fff;}
+.theme-cyberpunk input, .theme-cyberpunk textarea, .theme-cyberpunk #catatanPrint {color:#fff;}
 
 @keyframes ledRotate{
   0%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
@@ -51,7 +54,6 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 }
 
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
-.theme-dark .update-info {color:#aaa}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
@@ -79,33 +81,33 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
     </div>
 </div>
 
-<div class="block" id="boxMasuk">
+<div class="block">
 <h2>PEMASUKAN</h2>
-<table id="tableM">
+<table>
 <tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:60%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th></tr>
 <tbody id="tbMasuk"></tbody>
 </table>
 </div>
 
-<div class="block" id="boxKeluar">
+<div class="block">
 <h2>PENGELUARAN</h2>
-<table id="tableK">
+<table>
 <tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th></tr>
 <tbody id="tbKeluar"></tbody>
 </table>
 </div>
 
-<div class="block" id="boxGrand">
+<div class="block">
 <table class="grand-total-table">
 <tr><th>Total Masuk</th><th>Total Keluar</th><th>Saldo Akhir</th></tr>
 <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
 </table>
 </div>
 
-<div class="block note-box" id="boxNote">
+<div class="block note-box">
   <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
-  <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." rows="8"></textarea>
-</div>
+  <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..."></textarea>
+  <div id="catatanPrint"></div> </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -122,14 +124,11 @@ const firebaseConfig = {
     appId: "1:643313437210:web:7377bbd6e4cd9aa33b5fa3",
     measurementId: "G-KY0GS26WNT"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const skrg = new Date();
-let bulan = skrg.getMonth(); 
-let tahun = skrg.getFullYear();
-
+let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
 let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
@@ -153,27 +152,19 @@ function buildTables(){
 function recalc(){
  let tM=0, tK=0, runM=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
-  let raw = tr.children[3].firstChild.value.toString().replace(/[^0-9]/g,'');
-  let u=parseInt(raw)||0; runM+=u; tM+=u;
+  let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  if(ketVal.includes('BELUM BAYAR')){
-   inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';});
-  } else if(ketVal.includes('LUNAS') || ketVal.includes('SUDAH BAYAR') || ketVal.includes('SISA KAS')){
-   inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';});
-  } else {
-   inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';});
-  }
+  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';}); }
+  else if(ketVal.includes('LUNAS') || ketVal.includes('SUDAH BAYAR') || ketVal.includes('SISA KAS')){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';}); }
+  else { inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';}); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.toString().replace(/[^0-9]/g,''))||0;
-  let h=parseInt(tr.children[3].firstChild.value.toString().replace(/[^0-9]/g,''))||0;
+  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
   let t=q*h; tK+=t;
-  tr.children[2].firstChild.value=q.toLocaleString('id-ID');
-  tr.children[3].firstChild.value=h.toLocaleString('id-ID');
-  tr.children[4].textContent=t.toLocaleString('id-ID');
+  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
  });
  document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
  document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
@@ -185,15 +176,9 @@ function loadData(){
  db.ref('kas_data/'+bulan+'-'+tahun).once('value', s=>{
   const d=s.val();
   if(d){
-   if(d.masuk) d.masuk.forEach((r,i)=>{
-    const tr=document.querySelectorAll('#tbMasuk tr')[i];
-    if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; }
-   });
-   if(d.keluar) d.keluar.forEach((r,i)=>{
-    const tr=document.querySelectorAll('#tbKeluar tr')[i];
-    if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; }
-   });
-   if(d.catatan) document.getElementById('catatanWarga').value = d.catatan;
+   if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
+   if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
+   if(d.catatan) { document.getElementById('catatanWarga').value = d.catatan; document.getElementById('catatanPrint').innerText = d.catatan; }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
@@ -208,14 +193,14 @@ function saveData(){
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
  const cat = document.getElementById('catatanWarga').value;
  db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, catatan:cat, updated:formatUpdate});
+ document.getElementById('catatanPrint').innerText = cat;
  document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
 
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(!u || !p) return;
-  if(u.toUpperCase() === 'ADMIN' && p.toUpperCase() === 'SANUMION'){
+  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('pullBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 3000);
@@ -240,18 +225,12 @@ document.getElementById('pullBtn').onclick=()=>{
    sL=mt-kt;
   }
   const trSisa=document.querySelector('#tbMasuk tr');
-  if(trSisa){
-    trSisa.children[0].firstChild.value=`${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
-    trSisa.children[2].firstChild.value=`SISA KAS ${namaBulan[pm]} ${pt}`;
-    trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID');
-    recalc(); saveData(); alert("Saldo Berhasil Ditarik!");
-  }
+  if(trSisa){ trSisa.children[3].firstChild.value=sL.toLocaleString('id-ID'); recalc(); saveData(); alert("Saldo Berhasil Ditarik!"); }
  });
  toggleMenu();
 }
 
-function lockUI(l){ document.querySelectorAll('.editable').forEach(i=>i.disabled=l); }
-function applyAdminLock(){ lockUI(!isAdmin); }
+function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -265,17 +244,20 @@ document.getElementById('themeBtn').onclick=()=>{
 
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
- // Kasih delay dikit biar menu ketutup sempurna
+ const areaAdmin = document.getElementById('catatanWarga');
+ const areaPrint = document.getElementById('catatanPrint');
+ 
+ // SWAP ELEMEN BIAR KE-FOTO SEBAGAI TEKS BIASA
+ areaPrint.innerText = areaAdmin.value;
+ areaAdmin.style.display = 'none';
+ areaPrint.style.display = 'block';
+
  setTimeout(()=>{
-  html2canvas(document.body,{
-      scale:2,
-      useCORS: true,
-      backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')
-  }).then(c=>{
-   const l=document.createElement('a'); 
-   l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; 
-   l.href=c.toDataURL('image/jpeg',0.9); 
-   l.click();
+  html2canvas(document.body,{scale:2}).then(c=>{
+   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+   // BALIKIN LAGI KE SEMULA
+   areaAdmin.style.display = 'block';
+   areaPrint.style.display = 'none';
   });
  },500);
 };
