@@ -10,38 +10,39 @@
 }
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
-
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:15px; font-weight:normal; text-transform:none;}
-
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .menu-items.show {display:flex}
-
 button{padding:10px 16px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
 button.main-menu {background:#333; color:#fff; border:2px solid #fff}
 button.primary{background:var(--accent);color:#fff}
 button.off{background:#999;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
-
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
 
-/* KOTAK CATATAN LEBIH BESAR */
+/* PERBAIKAN CATATAN AGAR ENTER TERBACA SAAT DICETAK */
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px; min-height:200px}
-.note-box textarea {width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:vertical; text-transform:none; min-height:150px; line-height:1.5}
+.note-box textarea {
+    width:100%; background:transparent; border:0; color:var(--text); 
+    font-family:inherit; font-size:1.1rem; resize:vertical; 
+    text-transform:none; min-height:150px; line-height:1.5;
+    white-space: pre-wrap; /* Ini kuncinya biar Enter kebaca */
+}
 
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
-input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
+input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 
 /* THEME CYBERPUNK LED */
 .theme-cyberpunk{--bg:#0a0a0a;--card:#1a001a;--text:#ff00ff;--border:#00ffcc;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .block { border: 1px solid #ff00ff; animation: ledRotate 3s linear infinite; }
 .theme-cyberpunk .update-info {color:#00ffcc}
 .theme-cyberpunk th {background:#330033; color:#00ffcc; border-color:#00ffcc}
-.theme-cyberpunk input, .theme-cyberpunk textarea {background:#222; color:#fff; border-color:#ff00ff}
+.theme-cyberpunk input, .theme-cyberpunk textarea {color:#fff;}
 
 @keyframes ledRotate{
   0%{box-shadow:0 0 5px #ff00ff, 0 0 10px #00ffcc}
@@ -52,7 +53,6 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-dark .update-info {color:#aaa}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
-
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
 .grand-total-table td.saldo-akhir{background:var(--yellow);color:#000}
@@ -81,7 +81,7 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 
 <div class="block" id="boxMasuk">
 <h2>PEMASUKAN</h2>
-<table>
+<table id="tableM">
 <tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:60%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th></tr>
 <tbody id="tbMasuk"></tbody>
 </table>
@@ -89,7 +89,7 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 
 <div class="block" id="boxKeluar">
 <h2>PENGELUARAN</h2>
-<table>
+<table id="tableK">
 <tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th></tr>
 <tbody id="tbKeluar"></tbody>
 </table>
@@ -103,7 +103,7 @@ input[disabled]{background:#f9f9f9;color:#555;border:1px solid #ddd}
 </div>
 
 <div class="block note-box" id="boxNote">
-  <h2 style="text-align:left; font-size:0.85rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+  <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING & PENGUMUMAN</h2>
   <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." rows="8"></textarea>
 </div>
 
@@ -164,7 +164,7 @@ function recalc(){
   } else if(ketVal.includes('LUNAS') || ketVal.includes('SUDAH BAYAR') || ketVal.includes('SISA KAS')){
    inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';});
   } else {
-   inputs.forEach(inp=>{inp.style.backgroundColor=''; inp.style.color='';});
+   inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';});
   }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
@@ -216,24 +216,15 @@ document.getElementById('adminBtn').onclick = function() {
   let u=prompt('USER'), p=prompt('PASS');
   if(!u || !p) return;
   if(u.toUpperCase() === 'ADMIN' && p.toUpperCase() === 'SANUMION'){
-   isAdmin=true; 
-   this.textContent='ADMIN ON'; 
-   this.className='primary';
+   isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('pullBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 3000);
-   applyAdminLock();
-   recalc();
-   alert('LOGIN BERHASIL!');
-  } else {
-   alert('USER/PASS SALAH!');
-  }
+   applyAdminLock(); recalc(); alert('LOGIN BERHASIL!');
+  } else { alert('USER/PASS SALAH!'); }
  } else {
-  isAdmin=false; 
-  this.textContent='ADMIN OFF'; 
-  this.className='off';
+  isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
   document.getElementById('pullBtn').style.display='none';
-  clearInterval(autoSaveTimer);
-  applyAdminLock();
+  clearInterval(autoSaveTimer); applyAdminLock();
  }
  toggleMenu();
 };
@@ -274,9 +265,17 @@ document.getElementById('themeBtn').onclick=()=>{
 
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
+ // Kasih delay dikit biar menu ketutup sempurna
  setTimeout(()=>{
-  html2canvas(document.body,{scale:2}).then(c=>{
-   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+  html2canvas(document.body,{
+      scale:2,
+      useCORS: true,
+      backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg')
+  }).then(c=>{
+   const l=document.createElement('a'); 
+   l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; 
+   l.href=c.toDataURL('image/jpeg',0.9); 
+   l.click();
   });
  },500);
 };
@@ -286,4 +285,3 @@ updateUI();
 </script>
 </body>
 </html>
-
