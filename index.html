@@ -93,6 +93,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 <div id="modalPengunjung">
     <div class="pengunjung-content">
         <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
+        <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
@@ -207,32 +208,33 @@ let isAdmin=false, autoSaveTimer=null, currentTheme='';
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// JURUS PAMUNGKAS: Pake Prompt System (Bawaan HP) biar nggak ganggu Viewport/Zoom
 function masukWeb() {
     const nama = prompt("SILAHKAN MASUKKAN NAMA ANDA:");
-    
     if (nama === null || nama.trim() === "") {
         alert("NAMA TIDAK BOLEH KOSONG!");
         return;
     }
-    
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    
     db.ref('pengunjung_situs').push({
         nama: nama.toUpperCase(),
         waktu: tglLog + ", PUKUL " + jamLog + " WIB"
     });
-
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
 
+// FUNGSI PENGUNJUNG (DIPERBARUI OLEH ASISTEN ATAS PERINTAH TUAN)
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung');
     const list = document.getElementById('listPengunjung');
+    const btnHapus = document.getElementById('btnHapusPengunjung');
+    
+    // Tampilkan tombol hapus hanya untuk Admin
+    btnHapus.style.display = isAdmin ? 'block' : 'none';
+    
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
@@ -247,6 +249,20 @@ function openPengunjung() {
             list.innerHTML = html;
         } else { list.innerHTML = "Belum ada pengunjung."; }
     });
+}
+
+function hapusRiwayatPengunjung() {
+    if (!isAdmin) return;
+    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT PENGUNJUNG? TINDAKAN INI TIDAK DAPAT DIBATALKAN.")) {
+        db.ref('pengunjung_situs').remove()
+            .then(() => {
+                alert("RIWAYAT TELAH DIBERSIHKAN, TUAN.");
+                openPengunjung(); 
+            })
+            .catch((error) => {
+                alert("GAGAL MENGHAPUS: " + error.message);
+            });
+    }
 }
 
 function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
@@ -377,7 +393,7 @@ document.getElementById('adminBtn').onclick = function() {
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('pullBtn').style.display='block';
    document.getElementById('listVisitorBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL!');
+   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL, TUAN!');
   } else { alert('USER/PASS SALAH!'); }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
@@ -444,4 +460,3 @@ updateDeadlineBanner();
 </script>
 </body>
 </html>
-
