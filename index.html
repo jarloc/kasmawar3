@@ -9,13 +9,6 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- PROTOKOL PENAJAMAN TEKS (SOLUSI IPHONE) --- */
-* {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-}
-
 /* --- STYLE WELCOME SCREEN --- */
 #welcomeScreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -31,63 +24,60 @@
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
 /* --- KODE UTAMA --- */
-body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text); -webkit-text-size-adjust: 100%;}
-header{text-align:center;font-size:2rem;margin-bottom:5px; font-weight: 800; letter-spacing: 1px;}
+body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text)}
+header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
 .tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
-
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4)}
 .menu-items.show {display:flex}
-button{padding:10px 16px; border:0; border-radius:8px; font-weight:700; cursor:pointer; text-transform:uppercase}
+button{padding:10px 16px; border:0; border-radius:8px; font-weight:600; cursor:pointer; text-transform:uppercase}
 button.main-menu {background:#333; color:#fff; border:2px solid #fff}
 button.primary{background:var(--accent);color:#fff}
 button.off{background:#999;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
-
-.block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;}
-.block h2{font-size:1.3rem;margin-bottom:10px;text-align:center; font-weight: 800; color: var(--accent);}
+.block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
+.block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
 .pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
-
-/* --- PERBAIKAN TABEL UNTUK IPHONE --- */
+.pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
+@keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
+.grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
+.grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
+#totalMasuk { background:var(--success); color:#fff; }
+#totalKeluar { background:var(--danger); color:#fff; }
+.saldo-akhir { background:var(--yellow); color:#000; }
+.note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
+#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
+#catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
-th{text-align:center; background:#eee; color:#000; font-weight: 800; font-size: 0.85rem;}
-input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; font-weight: 700; font-size: 0.9rem;}
-input[disabled]{background:transparent; color:var(--text); border:1px solid transparent; opacity: 1; -webkit-text-fill-color: var(--text);}
-
-/* Efek Khusus Teks dalam Kolom Berwarna (Agar tidak pudar di Safari) */
-.status-row-text {
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.2); /* Memberi kedalaman agar putih tidak pudar */
-    font-weight: 800 !important;
-}
-
-.grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
-.grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:800}
-#totalMasuk { background:var(--success); color:#fff; text-shadow: 1px 1px 2px #000;}
-#totalKeluar { background:var(--danger); color:#fff; text-shadow: 1px 1px 2px #000;}
-.saldo-akhir { background:var(--yellow); color:#000; font-weight: 900;}
-
-/* --- THEME CYBERPUNK (DIPERTAJAM) --- */
+th{text-align:center; background:#eee; color:#000}
+input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit}
+input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
+.theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
 .theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
-.theme-cyberpunk td { border: 1px solid #ff00ff; font-weight: 800; }
-.theme-cyberpunk input { color:#fff; text-shadow: 0 0 3px #000; }
-
+.theme-cyberpunk td { border: 1px solid #ff00ff; }
+.theme-cyberpunk tr:nth-child(odd) td { border-color: #00ffcc; }
+.theme-cyberpunk tr:nth-child(even) td { border-color: #ffff00; }
+.theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
+.theme-cyberpunk #totalMasuk { background:#00ff00; color:#000; box-shadow: 0 0 10px #00ff00; }
+.theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff; box-shadow: 0 0 10px #ff0000; }
+.theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000; box-shadow: 0 0 10px #ffff00; }
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
-
-#catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; font-weight: 700;}
-#catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
-
-/* CHECKLIST STYLE */
 #checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
 .checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
+.checklist-content h1 { text-align:center; margin:0; font-size:1.5rem; background:#92c694; padding:10px; }
+.checklist-content h2 { text-align:center; margin:0; font-size:1.2rem; background:#d9ead3; padding:5px; border-bottom:2px solid #000; }
 .table-checklist { width:100%; border:2px solid #000; margin-top:10px; }
-.table-checklist th, .table-checklist td { border:1px solid #000; text-align:center; padding:5px; font-weight:900; font-size:0.9rem; }
+.table-checklist th, .table-checklist td { border:1px solid #000; text-align:center; padding:5px; font-weight:bold; font-size:0.9rem; }
+.table-checklist th { background:#9fc5e8; }
 .status-v { background:#93c47d; color:#000; }
 .status-x { background:#e06666; color:#000; }
 </style>
@@ -102,8 +92,8 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 
 <div id="modalPengunjung">
     <div class="pengunjung-content">
-        <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px; font-weight: 900;">DAFTAR PENGUNJUNG</h2>
-        <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:12px;">⚠️ HAPUS SEMUA RIWAYAT</button>
+        <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
+        <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
@@ -175,7 +165,7 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
         <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px;">CETAK GAMBAR</button>
     </div>
     <div class="checklist-content" id="checklistPrintArea">
-        <h1 id="judulChecklist" style="font-weight: 900;">CHECKLIST KAS GANG MAWAR 3</h1>
+        <h1 id="judulChecklist">CHECKLIST KAS GANG MAWAR 3</h1>
         <h2 id="subJudulChecklist">PERIODE 2026</h2>
         <table class="table-checklist">
             <thead>
@@ -220,7 +210,10 @@ const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAK
 
 function masukWeb() {
     const nama = prompt("SILAHKAN MASUKKAN NAMA ANDA:");
-    if (!nama) return;
+    if (nama === null || nama.trim() === "") {
+        alert("NAMA TIDAK BOLEH KOSONG!");
+        return;
+    }
     const skrgLog = new Date();
     const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
     const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
@@ -229,15 +222,20 @@ function masukWeb() {
         waktu: tglLog + ", PUKUL " + jamLog + " WIB"
     });
     document.getElementById('welcomeScreen').remove();
+    window.scrollTo(0,0);
 }
 
+// FUNGSI PENGUNJUNG (DIPERBARUI OLEH ASISTEN ATAS PERINTAH TUAN)
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung');
     const list = document.getElementById('listPengunjung');
     const btnHapus = document.getElementById('btnHapusPengunjung');
+    
+    // Tampilkan tombol hapus hanya untuk Admin
     btnHapus.style.display = isAdmin ? 'block' : 'none';
-    list.innerHTML = "Memuat...";
+    
+    list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
     db.ref('pengunjung_situs').limitToLast(50).once('value', s => {
@@ -249,14 +247,21 @@ function openPengunjung() {
             });
             html += "</table>";
             list.innerHTML = html;
-        } else { list.innerHTML = "Kosong."; }
+        } else { list.innerHTML = "Belum ada pengunjung."; }
     });
 }
 
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
-    if (confirm("HAPUS SEMUA RIWAYAT?")) {
-        db.ref('pengunjung_situs').remove().then(() => { alert("BERSIH!"); openPengunjung(); });
+    if (confirm("TUAN, APAKAH ANDA YAKIN INGIN MENGHAPUS SELURUH RIWAYAT PENGUNJUNG? TINDAKAN INI TIDAK DAPAT DIBATALKAN.")) {
+        db.ref('pengunjung_situs').remove()
+            .then(() => {
+                alert("RIWAYAT TELAH DIBERSIHKAN, TUAN.");
+                openPengunjung(); 
+            })
+            .catch((error) => {
+                alert("GAGAL MENGHAPUS: " + error.message);
+            });
     }
 }
 
@@ -265,8 +270,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ BATAS IURAN KAS TANGGAL 7 - MOHON KERJASAMANYA ⚠️</span>`;
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT - HARAP SEGERA BAYAR 🛑</span>`;
+    if (hariIni >= 1 && hariIni <= 3) { banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Batas iuran kas bulan ini adalah tanggal 7 ⚠️ Terima kasih bagi yang sudah membayar!</span>`; } 
+    else if (hariIni >= 4 && hariIni <= 7) { banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Harap segera lakukan pembayaran! Batas iuran sampai tanggal 7 ⚠️</span>`; } 
+    else { banner.innerHTML = `<span class="tgl-lewat">🛑 BATAS IURAN SUDAH LEWAT 🛑 Bagi yang belum bayar, harap segera melakukan pembayaran.</span>`; }
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -275,12 +281,12 @@ function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
  namaAnggota.forEach(n=>{
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo status-row-text'>0</td>`;
+  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td>`;
   document.getElementById('tbMasuk').appendChild(tr);
  });
  for(let i=0;i<10;i++){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total status-row-text'>0</td>`;
+  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td>`;
   document.getElementById('tbKeluar').appendChild(tr);
  }
 }
@@ -293,19 +299,10 @@ function recalc(){
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  const tdSaldo=tr.children[4];
   const kuncis = ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER", "SISA KAS"];
-  
-  if(ketVal.includes('BELUM BAYAR')){ 
-      inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; inp.classList.add('status-row-text');});
-      tdSaldo.style.backgroundColor='var(--danger)'; tdSaldo.style.color='#fff';
-  } else if(kuncis.some(k => ketVal.includes(k))){ 
-      inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; inp.classList.add('status-row-text');});
-      tdSaldo.style.backgroundColor='var(--success)'; tdSaldo.style.color='#fff';
-  } else { 
-      inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; inp.classList.remove('status-row-text');});
-      tdSaldo.style.backgroundColor='transparent'; tdSaldo.style.color='var(--text)';
-  }
+  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';}); }
+  else if(kuncis.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{inp.style.backgroundColor='var(--success)'; inp.style.color='#fff';}); }
+  else { inputs.forEach(inp=>{inp.style.backgroundColor='transparent'; inp.style.color='var(--text)';}); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0;
@@ -324,32 +321,38 @@ function loadData(){
   if(d){
    if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.nama||namaAnggota[i]; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
    if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
-   if(d.updated) document.getElementById('lastUpdate').textContent = "UPDATE: " + d.updated;
+   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc(); applyAdminLock();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
     const cat = snapshot.val();
-    if(cat) { document.getElementById('catatanWarga').value = cat; document.getElementById('catatanPrint').innerText = cat; }
+    const ta = document.getElementById('catatanWarga');
+    if(cat) { ta.value = cat; document.getElementById('catatanPrint').innerText = cat; setTimeout(()=>autoHeight(ta), 150); } 
+    else { ta.value = ""; document.getElementById('catatanPrint').innerText = ""; }
  });
 }
 
 function saveData(){
  if(!isAdmin) return;
  const tgl = new Date();
- const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + " [" + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + "]";
+ const formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", PUKUL " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
  const cat = document.getElementById('catatanWarga').value;
  db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
  db.ref('kas_data/catatan_umum').set(cat);
+ document.getElementById('catatanPrint').innerText = cat;
+ document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
 }
 
 async function openChecklist() {
     toggleMenu();
     const modal = document.getElementById('checklistModal');
     const tb = document.getElementById('tbChecklist');
-    document.getElementById('subJudulChecklist').innerText = `TAHUN ${tahun}`;
+    document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
+    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahun}`;
+    tb.innerHTML = '<tr><td colspan="14">Sabar, lagi ngitung data warga...</td></tr>';
     modal.style.display = 'block';
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
@@ -381,21 +384,21 @@ async function openChecklist() {
 }
 
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea')).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_${tahun}.jpg`; l.href = c.toDataURL(); l.click(); }); }
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
 
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u?.toUpperCase()==='ADMIN' && p?.toUpperCase()==='SANUMION'){
+  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
-   document.getElementById('listVisitorBtn').style.display='block';
    document.getElementById('pullBtn').style.display='block';
-   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc();
-  }
+   document.getElementById('listVisitorBtn').style.display='block';
+   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('LOGIN BERHASIL, TUAN!');
+  } else { alert('USER/PASS SALAH!'); }
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
-  document.getElementById('listVisitorBtn').style.display='none';
   document.getElementById('pullBtn').style.display='none';
+  document.getElementById('listVisitorBtn').style.display='none';
   clearInterval(autoSaveTimer); applyAdminLock();
  }
  toggleMenu();
@@ -413,11 +416,13 @@ document.getElementById('pullBtn').onclick=()=>{
   }
   const trSisa=document.querySelector('#tbMasuk tr');
   if(trSisa){
-    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]}`;
+    trSisa.children[0].firstChild.value = `${tahun}-${(bulan+1).toString().padStart(2,'0')}-01`;
+    trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
     trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
-    recalc(); saveData(); alert("SALDO DITARIK!"); 
+    recalc(); saveData(); alert("Saldo Berhasil Ditarik!"); 
   }
  });
+ toggleMenu();
 }
 
 function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
@@ -428,15 +433,25 @@ function updateUI(){ document.getElementById('periode').textContent=namaBulan[bu
 document.getElementById('themeBtn').onclick=()=>{
  const th=['theme-cyberpunk','theme-dark','theme-blue',''];
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
- document.body.classList.remove(currentTheme);
+ if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
 };
 
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
- html2canvas(document.body).then(c=>{
-   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.jpg`; l.href=c.toDataURL(); l.click();
- });
+ const areaAdmin = document.getElementById('catatanWarga');
+ const areaPrint = document.getElementById('catatanPrint');
+ const banner = document.getElementById('deadline-banner');
+ banner.style.display = 'none';
+ areaPrint.innerText = areaAdmin.value;
+ areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ setTimeout(()=>{
+  html2canvas(document.body,{scale:2}).then(c=>{
+   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+   banner.style.display = 'block';
+   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+  });
+ },500);
 };
 
 document.addEventListener('input', recalc);
