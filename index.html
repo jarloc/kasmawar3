@@ -467,9 +467,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar kas gang ⚠️</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas sampai ditunggu sampai tanggal 7 ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Segera bayar kas bagi yang belum, hubungi bendahara 🛑</span>`;
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar kas gang yaa ⚠️</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas gang ditunggu sampai tanggal 7 yaa ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Untuk yang belum bayar kas gang diharap untuk segera melakukan pembayaran dan pelunasan jika masih menunggak 🛑</span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
@@ -496,3 +496,4 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
