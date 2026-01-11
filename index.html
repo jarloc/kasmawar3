@@ -271,7 +271,7 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggota=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
+    let kunci = prompt("SILAKAN MASUKKAN NOMOR BLOK RUMAH ANDA (Contoh: D3/5 atau D2/16)");
     if (!kunci) return;
     let bersih = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/\s+/g, '');
     
@@ -369,11 +369,23 @@ function recalc(){
   let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
+  
+  // LOGIKA WARNA KETERANGAN (DIPERBARUI)
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); }
-  else if(["LUNAS", "SUDAH BAYAR", "SISA KAS"].some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); }
-  else { inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }
+  
+  // Kata kunci Hijau: LUNAS, SUDAH BAYAR, SISA KAS, BAYAR TUNAI, BAYAR TRANSFER
+  const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
+  
+  if(ketVal.includes('BELUM BAYAR')){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); 
+  }
+  else if(keywordsSuccess.some(k => ketVal.includes(k))){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); 
+  }
+  else { 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); 
+  }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
@@ -427,7 +439,7 @@ async function openChecklist() {
             if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
             if (d && d.masuk) {
                 const row = d.masuk.find(r => r.nama === nama);
-                if (row && ["LUNAS", "SUDAH BAYAR"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+                if (row && ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
             }
         });
     }
@@ -511,4 +523,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
