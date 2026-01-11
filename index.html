@@ -22,12 +22,12 @@ body { font-family: var(--font); background: var(--bg); margin: 0; padding: 0; t
     padding: 15px; width: 300px; border-radius: 8px; border: 2px solid #00ffcc; 
     background: transparent; color: #fff; text-align: center; font-size: 18px; outline: none; margin-bottom: 20px;
 }
-#enterBtn { padding: 15px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; font-size: 1.1rem; }
+#enterBtn { padding: 15px 60px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; }
 
-/* --- MAIN WRAPPER (FORCED DESKTOP) --- */
+/* --- MAIN WRAPPER (FORCED DESKTOP 1024px) --- */
 #mainWrapper {
     width: 1024px; margin: 0 auto; background: var(--bg); padding: 20px;
-    transform-origin: top center; display: none;
+    transform-origin: top center; display: none; position: relative;
 }
 
 header{text-align:center;font-size:2.8rem;margin-bottom:5px; font-weight: bold;}
@@ -36,26 +36,21 @@ header{text-align:center;font-size:2.8rem;margin-bottom:5px; font-weight: bold;}
 #deadline-banner { background: #333; color: #fff; padding: 15px; margin: 10px 0; border-radius: 8px; font-weight: bold; overflow: hidden; }
 #deadline-banner marquee { font-size: 1.4rem; }
 
-/* CYBERPUNK PULSE */
-.pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
-.pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
-@keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
-
 .menu-container {position:fixed; top:20px; right:20px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:10px; background:rgba(0,0,0,0.95); padding:20px; border-radius:12px; box-shadow:0 4px 30px rgba(0,0,0,0.5)}
 .menu-items.show {display:flex}
 
-button{padding:14px 22px; border:0; border-radius:8px; font-weight:bold; cursor:pointer; text-transform:uppercase; font-size: 1rem;}
+button{padding:14px 22px; border:0; border-radius:8px; font-weight:bold; cursor:pointer; text-transform:uppercase;}
 button.main-menu {background:#000; color:#fff; border:2px solid #00ffcc}
 button.primary{background:var(--accent);color:#fff}
 button.off{background:#666;color:#fff}
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
 
-.block{margin-bottom:25px;padding:25px;background:var(--card);border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.1);position:relative;}
+.block{margin-bottom:25px;padding:25px;background:var(--card);border-radius:16px;box-shadow:0 4px 15px rgba(0,0,0,.1); clear: both;}
 .block h2{font-size:1.8rem;margin-bottom:20px;text-align:center; border-bottom: 2px solid #eee; padding-bottom: 10px;}
 
 table{width:100%;border-collapse:collapse; table-layout: fixed;}
-th,td{border:1px solid var(--border);padding:12px;text-align:left; font-size: 1.1rem;}
+th,td{border:1px solid var(--border);padding:12px;text-align:left; font-size: 1.1rem; overflow: hidden;}
 th{background:#f2f2f2; color:#000; text-align:center;}
 input{padding:8px;border-radius:6px;border:1px solid #ccc;width:100%;font-size:1.1rem; text-transform: uppercase;}
 input[disabled]{background:transparent; color:var(--text); border:1px solid transparent}
@@ -65,28 +60,26 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
 #totalKeluar { background:var(--danger); color:#fff; }
 .saldo-akhir { background:var(--yellow); color:#000; }
 
-.note-box {border:3px dashed var(--border); background:rgba(0,0,0,0.02);}
 #catatanWarga { width:100%; background:transparent; border:0; font-family:inherit; font-size:1.3rem; resize:none; text-transform:none; min-height:100px; line-height:1.5;}
 
-/* THEME CYBERPUNK */
+/* CYBERPUNK THEME */
 .theme-cyberpunk{--bg:#050505;--card:#0d0d0d;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
-.theme-cyberpunk .pulse-line { display:block; }
-.theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.2); }
+.theme-cyberpunk .block { border: 1px solid #00ffcc; }
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; }
 .theme-cyberpunk th { background: #1a1a1a; color: #00ffcc; }
 
 /* MODALS */
 #checklistModal, #visitorModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; overflow:auto; padding:20px; }
-.modal-content { background:#fff; color:#000; padding:30px; border-radius:15px; width:980px; margin:0 auto; }
+.modal-content { background:#fff; color:#000; padding:30px; border-radius:15px; width:1000px; margin:0 auto; }
 </style>
 </head>
 <body>
 
 <div id="welcomeScreen">
     <h1>KAS GANG MAWAR 3</h1>
-    <p>Dikembangkan oleh Fajar Ilmanosa Viar © 2026</p>
+    <p>Admin: Fajar Ilmanosa Viar © 2026</p>
     <input type="text" id="welcomeInput" placeholder="MASUKKAN NAMA ANDA">
-    <button id="enterBtn" onclick="masukWeb()">MASUK SEKARANG</button>
+    <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
 <div id="mainWrapper">
@@ -97,61 +90,57 @@ input[disabled]{background:transparent; color:var(--text); border:1px solid tran
         <span id="periode" style="min-width:300px; display:inline-block">...</span>
         <button onclick="nextMonth()">▶</button>
       </div>
-      <div class="update-info" id="lastUpdate">TERAKHIR UPDATE: -</div>
+      <div class="update-info" id="lastUpdate">UPDATE: -</div>
     </header>
 
     <div id="deadline-banner">
-        <marquee id="deadline-text" scrollamount="7">Sistem sedang mengecek tanggal...</marquee>
+        <marquee id="deadline-text" scrollamount="7">Checking system...</marquee>
     </div>
 
     <div class="menu-container">
-        <button class="main-menu" onclick="toggleMenu()">☰ MENU UTAMA</button>
+        <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
         <div class="menu-items" id="menuItems">
-            <button id="adminBtn" class="off">ADMIN LOGIN</button>
+            <button id="adminBtn" class="off">LOGIN ADMIN</button>
             <button id="pullBtn" class="warning" style="display:none" onclick="tarikSaldo()">TARIK SALDO LALU</button>
-            <button id="visitorBtn" class="warning" style="display:none" onclick="openVisitors()">DAFTAR PENGUNJUNG</button>
-            <button onclick="openChecklist()" class="primary">CHECKLIST TAHUNAN</button>
+            <button id="visitorBtn" class="warning" style="display:none" onclick="openVisitors()">LOG PENGUNJUNG</button>
+            <button onclick="openChecklist()" class="primary">CHECKLIST MATRIX</button>
             <button id="themeBtn" class="primary">GANTI TEMA</button>
-            <button id="cetakBtn" class="primary">SIMPAN GAMBAR</button>
+            <button id="cetakBtn" class="primary">DOWNLOAD JPG</button>
         </div>
     </div>
 
     <div class="block">
-        <h2>PEMASUKAN (UANG MASUK)</h2>
-        <div class="pulse-line"></div>
+        <h2>PEMASUKAN</h2>
         <table>
-            <thead><tr><th style="width:110px">TANGGAL</th><th style="width:220px">NAMA</th><th>KETERANGAN</th><th style="width:160px">JUMLAH</th><th style="width:160px">SALDO</th></tr></thead>
+            <thead><tr><th style="width:110px">TGL</th><th style="width:220px">NAMA</th><th>KETERANGAN</th><th style="width:160px">MASUK</th><th style="width:160px">SALDO</th></tr></thead>
             <tbody id="tbMasuk"></tbody>
         </table>
     </div>
 
     <div class="block">
-        <h2>PENGELUARAN (UANG KELUAR)</h2>
-        <div class="pulse-line"></div>
+        <h2>PENGELUARAN</h2>
         <table>
-            <thead><tr><th style="width:110px">TANGGAL</th><th>KETERANGAN</th><th style="width:90px">QTY</th><th style="width:160px">HARGA</th><th style="width:160px">TOTAL</th></tr></thead>
+            <thead><tr><th style="width:110px">TGL</th><th>KETERANGAN</th><th style="width:90px">QTY</th><th style="width:160px">HARGA</th><th style="width:160px">TOTAL</th></tr></thead>
             <tbody id="tbKeluar"></tbody>
         </table>
     </div>
 
     <div class="block">
-        <h2>RINGKASAN KAS (GRAND TOTAL)</h2>
-        <div class="pulse-line"></div>
+        <h2>GRAND TOTAL</h2>
         <table class="grand-total-table">
             <tr><th>TOTAL MASUK</th><th>TOTAL KELUAR</th><th>SALDO AKHIR</th></tr>
             <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
         </table>
     </div>
 
-    <div class="block note-box">
-      <h2 style="text-align:left;">📌 CATATAN PENTING</h2>
-      <textarea id="catatanWarga" class="editable" placeholder="Belum ada catatan..." oninput="autoHeight(this)"></textarea>
+    <div class="block">
+      <h2 style="text-align:left;">📌 CATATAN</h2>
+      <textarea id="catatanWarga" class="editable" placeholder="..."></textarea>
     </div>
 </div>
 
-<div id="visitorModal"><div class="modal-content"><button onclick="document.getElementById('visitorModal').style.display='none'" style="background:red; color:white;">TUTUP</button><h2>LOG PENGUNJUNG</h2><table style="width:100%"><thead style="background:#eee"><tr><th>NO</th><th>NAMA</th><th>WAKTU</th></tr></thead><tbody id="tbVisitors"></tbody></table></div></div>
-
-<div id="checklistModal"><div class="modal-content"><button onclick="document.getElementById('checklistModal').style.display='none'" style="background:red; color:white;">TUTUP</button><h2>MATRIX PEMBAYARAN KAS 2026</h2><table style="width:100%; border:1px solid #000; font-size:0.8rem"><thead><tr><th>NAMA</th><th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th><th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th></tr></thead><tbody id="tbChecklist"></tbody></table></div></div>
+<div id="visitorModal"><div class="modal-content"><button onclick="document.getElementById('visitorModal').style.display='none'">TUTUP</button><h2>LOG PENGUNJUNG</h2><table style="width:100%"><tbody id="tbVisitors"></tbody></table></div></div>
+<div id="checklistModal"><div class="modal-content"><button onclick="document.getElementById('checklistModal').style.display='none'">TUTUP</button><h2>MATRIX 2026</h2><table style="width:100%; border:1px solid #000; font-size:0.8rem"><thead><tr id="headCheck"><th>NAMA</th></tr></thead><tbody id="tbChecklist"></tbody></table></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -191,25 +180,12 @@ function applyResponsiveScale() {
 
 function masukWeb() {
     const nama = document.getElementById('welcomeInput').value.trim();
-    if (!nama) return alert("Wajib isi nama!");
-    db.ref('pengunjung_situs').push({ nama, waktu: new Date().toLocaleString('id-ID'), timestamp: firebase.database.ServerValue.TIMESTAMP });
+    if (!nama) return alert("Isi Nama!");
+    db.ref('pengunjung_situs').push({ nama, waktu: new Date().toLocaleString('id-ID'), ts: firebase.database.ServerValue.TIMESTAMP });
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('mainWrapper').style.display = 'block';
     applyResponsiveScale();
     window.scrollTo(0,0);
-}
-
-function updateDeadline() {
-    const d = new Date().getDate();
-    const banner = document.getElementById('deadline-banner');
-    const txt = document.getElementById('deadline-text');
-    if(d <= 10) {
-        banner.style.background = "#28a745";
-        txt.innerText = `AYO BAYAR KAS SEBELUM TANGGAL 10! SEKARANG TANGGAL ${d}. SEMANGAT WARGA!`;
-    } else {
-        banner.style.background = "#d9534f";
-        txt.innerText = `DEADLINE SUDAH LEWAT! SEKARANG TANGGAL ${d}. YANG BELUM BAYAR SEGERA LUNASI YA!`;
-    }
 }
 
 function buildTables(){
@@ -261,19 +237,17 @@ function loadData(){
         if(d){
             if(d.masuk) d.masuk.forEach((r,i) => {
                 const tr = document.querySelectorAll('#tbMasuk tr')[i];
-                if(tr){ tr.children[0].firstChild.value=r.t; tr.children[1].firstChild.value=r.n; tr.children[2].firstChild.value=r.k; tr.children[3].firstChild.value=r.u; }
+                if(tr){ tr.children[0].firstChild.value=r.t||''; tr.children[1].firstChild.value=r.n||namaAnggota[i]; tr.children[2].firstChild.value=r.k||''; tr.children[3].firstChild.value=r.u||'0'; }
             });
             if(d.keluar) d.keluar.forEach((r,i) => {
                 const tr = document.querySelectorAll('#tbKeluar tr')[i];
-                if(tr){ tr.children[0].firstChild.value=r.t; tr.children[1].firstChild.value=r.k; tr.children[2].firstChild.value=r.q; tr.children[3].firstChild.value=r.h; }
+                if(tr){ tr.children[0].firstChild.value=r.t||''; tr.children[1].firstChild.value=r.k||''; tr.children[2].firstChild.value=r.q||'0'; tr.children[3].firstChild.value=r.h||'0'; }
             });
-            if(d.upd) document.getElementById('lastUpdate').textContent = "TERAKHIR UPDATE: " + d.upd;
+            if(d.upd) document.getElementById('lastUpdate').textContent = "UPDATE: " + d.upd;
         }
         recalc(); applyAdminLock();
     });
-    db.ref('kas_data/catatan').once('value', s => { 
-        if(s.val()) { document.getElementById('catatanWarga').value = s.val(); autoHeight(document.getElementById('catatanWarga')); }
-    });
+    db.ref('kas_data/catatan').once('value', s => { if(s.val()) document.getElementById('catatanWarga').value = s.val(); });
 }
 
 function saveData(){
@@ -285,44 +259,39 @@ function saveData(){
 }
 
 function tarikSaldo(){
-    let blnLalu = bulan - 1, thnLalu = tahun;
-    if(blnLalu < 0) { blnLalu = 11; thnLalu--; }
-    db.ref(`kas_data/${blnLalu}-${thnLalu}`).once('value', s => {
+    let blLalu = bulan - 1, thLalu = tahun;
+    if(blLalu < 0) { blLalu = 11; thLalu--; }
+    db.ref(`kas_data/${blLalu}-${thLalu}`).once('value', s => {
         const d = s.val();
         if(d){
             let tm=0, tk=0;
             d.masuk.forEach(r => tm += parseInt(r.u.replace(/\./g,''))||0);
-            d.keluar.forEach(r => {
-                let q = parseInt(r.q.replace(/\./g,''))||0;
-                let h = parseInt(r.h.replace(/\./g,''))||0;
-                tk += (q*h);
-            });
+            d.keluar.forEach(r => { tk += (parseInt(r.q.replace(/\./g,''))||0) * (parseInt(r.h.replace(/\./g,''))||0); });
             document.querySelectorAll('#tbMasuk tr')[0].children[3].firstChild.value = (tm-tk).toLocaleString('id-ID');
             document.querySelectorAll('#tbMasuk tr')[0].children[2].firstChild.value = "DARI BULAN LALU";
-            recalc(); alert("SALDO LALU BERHASIL DITARIK!");
+            recalc(); alert("Saldo Berhasil!");
         }
     });
 }
 
 async function openChecklist(){
     toggleMenu(); document.getElementById('checklistModal').style.display='block';
-    const tb = document.getElementById('tbChecklist'); tb.innerHTML = "PROSES...";
-    let html = "";
+    const head = document.getElementById('headCheck'); head.innerHTML = "<th>NAMA</th>";
+    namaBulan.forEach(b => head.innerHTML += `<th>${b.substring(0,3)}</th>`);
+    const tb = document.getElementById('tbChecklist'); tb.innerHTML = "Loading...";
     const allData = {};
-    for(let m=0; m<12; m++) {
-        const s = await db.ref(`kas_data/${m}-${tahun}`).once('value');
-        allData[m] = s.val();
-    }
+    for(let m=0; m<12; m++) { const s = await db.ref(`kas_data/${m}-${tahun}`).once('value'); allData[m] = s.val(); }
+    let html = "";
     namaAnggota.forEach((nama, idx) => {
         if(idx === 0) return;
         html += `<tr><td style="font-weight:bold">${nama}</td>`;
         for(let m=0; m<12; m++){
-            let status = "X", color = "#ffcccc";
+            let st = "X", bg = "#ffcccc";
             if(allData[m] && allData[m].masuk){
                 const r = allData[m].masuk.find(x => x.n === nama);
-                if(r && (r.k||'').toUpperCase().includes('LUNAS')){ status="✓"; color="#ccffcc"; }
+                if(r && (r.k||'').toUpperCase().includes('LUNAS')){ st="✓"; bg="#ccffcc"; }
             }
-            html += `<td style="background:${color}; text-align:center">${status}</td>`;
+            html += `<td style="background:${bg}; text-align:center">${st}</td>`;
         }
         html += "</tr>";
     });
@@ -331,38 +300,41 @@ async function openChecklist(){
 
 function openVisitors(){
     toggleMenu(); document.getElementById('visitorModal').style.display='block';
-    db.ref('pengunjung_situs').limitToLast(20).once('value', s => {
-        let h = ""; let i = 1;
-        s.forEach(c => { h = `<tr><td>${i++}</td><td>${c.val().nama}</td><td>${c.val().waktu}</td></tr>` + h; });
+    db.ref('pengunjung_situs').limitToLast(15).once('value', s => {
+        let h = ""; s.forEach(c => { h = `<tr><td>${c.val().nama}</td><td>${c.val().waktu}</td></tr>` + h; });
         document.getElementById('tbVisitors').innerHTML = h;
     });
 }
 
 document.getElementById('adminBtn').onclick = function(){
     if(!isAdmin){
-        if(prompt('PASSWORD ADMIN:') === 'SANUMION'){
-            isAdmin=true; this.textContent="ADMIN: ON"; this.style.background="#28a745";
+        if(prompt('PASS:') === 'SANUMION'){
+            isAdmin=true; this.textContent="ADMIN: ON"; this.className="primary";
             document.getElementById('pullBtn').style.display='block';
             document.getElementById('visitorBtn').style.display='block';
             autoSaveTimer = setInterval(saveData, 3000);
             applyAdminLock();
         }
     } else {
-        isAdmin=false; this.textContent="ADMIN LOGIN"; this.style.background="#666";
+        isAdmin=false; this.textContent="LOGIN ADMIN"; this.className="off";
         clearInterval(autoSaveTimer); applyAdminLock();
     }
     toggleMenu();
 };
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
-function autoHeight(e) { e.style.height='1px'; e.style.height=e.scrollHeight+'px'; }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
-function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); updateDeadline(); }
+function updateUI(){ 
+    document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; 
+    loadData(); 
+    const d = new Date().getDate();
+    document.getElementById('deadline-text').innerText = d <= 10 ? `AYO BAYAR KAS! TGL ${d}` : `DEADLINE LEWAT! TGL ${d}`;
+}
+function applyAdminLock(){ document.querySelectorAll('.editable').forEach(i=>i.disabled=!isAdmin); }
 
-document.getElementById('themeBtn').onclick = () => { document.body.classList.toggle('theme-cyberpunk'); };
+document.getElementById('themeBtn').onclick = () => document.body.classList.toggle('theme-cyberpunk');
 document.getElementById('cetakBtn').onclick = () => {
-    window.scrollTo(0,0);
     html2canvas(document.getElementById('mainWrapper')).then(c => {
         const l = document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.png`; l.href=c.toDataURL(); l.click();
     });
