@@ -156,6 +156,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <div id="adminTools">
             <button onclick="tambahBaris('WARGA')" style="background:#28a745; color:#fff;">👤 TAMBAH WARGA</button>
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">💰 PEMASUKAN LAIN</button>
+            <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">💸 TAMBAH PENGELUARAN</button>
             <button id="pullBtn" class="warning" onclick="tarikSaldo()">TARIK SALDO LALU</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">DAFTAR PENGUNJUNG</button>
         </div>
@@ -322,16 +323,28 @@ function hapusRiwayatPengunjung() {
 }
 
 function tambahBaris(tipe) {
-    const tb = document.getElementById('tbMasuk');
-    const tr = document.createElement('tr');
-    const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
-    tr.innerHTML = `<td><input class='editable' type='date'></td>
-                    <td><input class='editable' value='${namaDefault}'></td>
-                    <td><input class='editable'></td>
-                    <td><input class='editable' value='0'></td>
-                    <td class='saldo'>0</td>
-                    <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
-    tb.appendChild(tr);
+    if(tipe === 'KELUAR'){
+        const tb = document.getElementById('tbKeluar');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='total'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tb.appendChild(tr);
+    } else {
+        const tb = document.getElementById('tbMasuk');
+        const tr = document.createElement('tr');
+        const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable' value='${namaDefault}'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='saldo'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tb.appendChild(tr);
+    }
     recalc();
 }
 
@@ -346,7 +359,7 @@ function buildTables(){
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable' value='${n}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action'></td>`;
   document.getElementById('tbMasuk').appendChild(tr);
  });
- for(let i=0;i<10;i++){
+ for(let i=0;i<5;i++){
   const tr=document.createElement('tr');
   tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:${isAdmin?"table-cell":"none"}'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
   document.getElementById('tbKeluar').appendChild(tr);
@@ -392,7 +405,14 @@ function loadData(){
     tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
-   if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
+   if(d.keluar) {
+    document.getElementById('tbKeluar').innerHTML='';
+    d.keluar.forEach(r=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        document.getElementById('tbKeluar').appendChild(tr);
+    });
+   }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc();
