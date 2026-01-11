@@ -21,7 +21,6 @@
 .logo-img {
     width: 60px;
     height: auto;
-    /* Cahaya mengikuti lekuk logo transparan */
     filter: drop-shadow(0 0 5px rgba(0,0,0,0.3));
     transition: all 0.3s;
 }
@@ -37,9 +36,10 @@ input:disabled {
   -webkit-text-fill-color: currentcolor !important;
   color: inherit !important;
   opacity: 1 !important;
+  background-color: inherit;
+  border-color: transparent;
 }
 
-/* --- UKURAN TOMBOL --- */
 button {
   padding: 20px 32px; 
   font-size: 1.2rem;
@@ -51,17 +51,17 @@ button {
   transition: all 0.2s;
 }
 
-/* --- STYLE WELCOME SCREEN --- */
 #welcomeScreen {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: #000; color: #fff; z-index: 99999; 
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
 #welcomeScreen h1 { font-size: 2.2rem; color: #00ffcc; text-shadow: 0 0 15px #00ffcc; margin: 0 20px 10px; }
-#welcomeScreen p { font-size: 0.9rem; color: #888; text-transform: none; }
-#enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 0 20px rgba(0,255,204,0.4); }
+#enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; }
 
-/* --- KODE UTAMA --- */
+#modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; }
+.pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
+
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; text-transform:none;}
@@ -72,6 +72,9 @@ header{text-align:center;font-size:2rem;margin-bottom:5px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:12px; width: 250px;}
 .menu-items.show {display:flex}
 button.main-menu {background:#333; color:#fff; border:2px solid #fff;}
+button.primary{background:var(--accent);color:#fff}
+button.off{background:#999;color:#fff}
+button.warning{background:#f0ad4e;color:#fff}
 
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;}
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
@@ -82,12 +85,12 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;color:inherit; background:transparent;}
 
-/* --- CYBERPUNK THEME --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .logo-img { filter: drop-shadow(0 0 10px #00ffcc); }
 
 #checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; padding:20px; }
+.checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
 </style>
 </head>
 <body>
@@ -101,6 +104,14 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <div class="logo-mawar-container">
     <img src="logo.png" alt="LOGO" class="logo-img">
+</div>
+
+<div id="modalPengunjung">
+    <div class="pengunjung-content">
+        <h2>DAFTAR PENGUNJUNG</h2>
+        <div id="listPengunjung"></div>
+        <button onclick="document.getElementById('modalPengunjung').style.display='none'">TUTUP</button>
+    </div>
 </div>
 
 <header>
@@ -121,6 +132,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
     <div class="menu-items" id="menuItems">
         <button id="adminBtn" class="off">ADMIN OFF</button>
+        <button id="listVisitorBtn" class="warning" style="display:none" onclick="openPengunjung()">DAFTAR PENGUNJUNG</button>
+        <button id="pullBtn" class="warning" style="display:none">TARIK SALDO LALU</button>
         <button onclick="openChecklist()" class="primary">CHECKLIST KAS</button>
         <button id="themeBtn" class="primary">GANTI TEMA</button>
         <button id="cetakBtn" class="primary">CETAK LAPORAN</button>
@@ -147,10 +160,30 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <div class="block">
 <h2>GRAND TOTAL</h2>
-<table style="width:100%; border-collapse:collapse; text-align:center;">
+<table>
 <tr><th>TOTAL MASUK</th><th>TOTAL KELUAR</th><th>SALDO AKHIR</th></tr>
 <tr><td id="totalMasuk" style="background:#28a745; color:#fff;">0</td><td id="totalKeluar" style="background:#d9534f; color:#fff;">0</td><td id="saldoAkhir" style="background:#fff200; color:#000;">0</td></tr>
 </table>
+</div>
+
+<div class="block">
+  <h3>📌 CATATAN PENTING</h3>
+  <textarea id="catatanWarga" class="editable" style="width:100%; min-height:80px;"></textarea>
+</div>
+
+<div id="checklistModal">
+    <div class="checklist-content">
+        <h1>CHECKLIST KAS 2026</h1>
+        <div id="areaChecklist">
+            <table border="1" style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr><th>NAMA</th><th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th></tr>
+                </thead>
+                <tbody id="tbChecklist"></tbody>
+            </table>
+        </div>
+        <button onclick="closeChecklist()" style="margin-top:10px;">TUTUP</button>
+    </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -185,8 +218,8 @@ function masukWeb() {
     if (!kunci) return;
     let bersih = kunci.toUpperCase().replace(/\s+/g, '');
     if (daftarKunci[bersih]) { 
+        db.ref('pengunjung_situs').push({ nama: daftarKunci[bersih], waktu: new Date().toLocaleString() });
         document.getElementById('welcomeScreen').remove();
-        window.scrollTo(0,0);
     } else { alert("BLOK SALAH!"); }
 }
 
@@ -213,6 +246,7 @@ function loadData(){
   if(d){
    if(d.masuk) d.masuk.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbMasuk tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[2].firstChild.value=r.ket||''; tr.children[3].firstChild.value=r.uang||'0'; } });
    if(d.keluar) d.keluar.forEach((r,i)=>{ const tr=document.querySelectorAll('#tbKeluar tr')[i]; if(tr){ tr.children[0].firstChild.value=r.tanggal||''; tr.children[1].firstChild.value=r.ket||''; tr.children[2].firstChild.value=r.qty||'0'; tr.children[3].firstChild.value=r.harga||'0'; } });
+   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   recalc();
  });
@@ -234,28 +268,38 @@ function recalc(){
  document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; });
 }
 
+function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
-function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
 
 document.getElementById('adminBtn').onclick = function() {
   let p=prompt('PASS');
-  if(p==='SANUMION'){ isAdmin=true; this.textContent='ADMIN ON'; recalc(); }
+  if(p==='SANUMION'){ 
+      isAdmin=true; this.textContent='ADMIN ON'; 
+      document.getElementById('listVisitorBtn').style.display='block';
+      recalc(); 
+  }
 };
 
 document.getElementById('themeBtn').onclick=()=>{
- const body = document.body;
- if(body.classList.contains('theme-cyberpunk')) body.classList.remove('theme-cyberpunk');
- else body.classList.add('theme-cyberpunk');
+ document.body.classList.toggle('theme-cyberpunk');
 };
+
+function openPengunjung(){
+    document.getElementById('modalPengunjung').style.display='block';
+    db.ref('pengunjung_situs').limitToLast(20).once('value', s=>{
+        let h=''; s.forEach(c=>{ h+=`<p>${c.val().waktu} - ${c.val().nama}</p>`; });
+        document.getElementById('listPengunjung').innerHTML=h;
+    });
+}
+
+function openChecklist(){ document.getElementById('checklistModal').style.display='block'; }
+function closeChecklist(){ document.getElementById('checklistModal').style.display='none'; }
 
 document.addEventListener('input', recalc);
 updateUI();
 
-/* --- PROTEKSI REFRESH PILIHAN TUAN --- */
-window.onbeforeunload = function() {
-    return "Tuan, yakin ingin refresh? Pastikan data sudah tersimpan.";
-};
+window.onbeforeunload = function() { return "Tuan, pastikan data sudah aman sebelum pergi."; };
 </script>
 </body>
 </html>
