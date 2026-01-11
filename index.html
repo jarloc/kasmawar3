@@ -102,7 +102,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// DETEKSI BULAN & TAHUN SAAT INI
 const skrg = new Date();
 let bulan = skrg.getMonth(); 
 let tahun = skrg.getFullYear();
@@ -137,10 +136,8 @@ function recalc(){
   runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
-  
   const ketVal=tr.children[2].firstChild.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  
   if(ketVal.includes('BELUM BAYAR')){
    inputs.forEach(inp=>{inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff';});
   } else if(ketVal.includes('LUNAS') || ketVal.includes('SUDAH BAYAR') || ketVal.includes('SISA KAS')){
@@ -213,10 +210,13 @@ function saveData(){
 document.getElementById('adminBtn').onclick=()=>{
  if(!isAdmin){
   const u=prompt('USER'), p=prompt('PASS');
-  if(u==='ADMIN'&&p==='SANUMION'){
+  // LOGIKA LOGIN DISAMARKAN (Base64)
+  if(btoa(u)==='QURNSU4=' && btoa(p)==='U0FOVUlPTg=='){
    isAdmin=true; adminBtn.textContent='ADMIN ON'; adminBtn.className='primary';
    document.getElementById('pullBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 2500);
+  } else {
+   alert('USER/PASS SALAH!');
   }
  }else{
   isAdmin=false; adminBtn.textContent='ADMIN OFF'; adminBtn.className='off';
@@ -251,7 +251,7 @@ document.getElementById('cetakBtn').onclick=()=>{
 };
 
 document.addEventListener('input', recalc);
-updateUI(); // Inisialisasi tampilan pertama kali
+updateUI();
 </script>
 </body>
 </html>
