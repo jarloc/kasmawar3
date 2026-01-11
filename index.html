@@ -48,7 +48,7 @@ button {
     display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
 }
 #welcomeScreen h1 { font-size: 2.2rem; color: #00ffcc; text-shadow: 0 0 15px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
-#welcomeScreen p { font-size: 1rem; color: #aaa; text-transform: none; margin-bottom: 40px; font-family: Arial, sans-serif; }
+#welcomeScreen p { font-size: 1rem; color: #aaa; text-transform: none; margin-bottom: 40px; font-family: Arial, sans-serif; padding: 0 20px; }
 #enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 0 20px rgba(0,255,204,0.4); }
 
 /* --- STYLE MODAL PENGUNJUNG --- */
@@ -131,7 +131,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <div id="welcomeScreen">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>MASUKKAN KODE BLOK RUMAH ANDA UNTUK MELANJUTKAN.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
@@ -210,6 +210,10 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
   <div id="catatanPrint"></div>
 </div>
 
+<div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+</div>
+
 <div id="checklistModal">
     <div style="text-align:center; margin-bottom:10px;">
         <button onclick="closeChecklist()" style="background:#d9534f; color:#fff;">TUTUP [X]</button>
@@ -233,10 +237,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <tbody id="tbChecklist"></tbody>
         </table>
     </div>
-</div>
-
-<div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -275,12 +275,10 @@ function masukWeb() {
     if (!kunci) return;
     let bersih = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/\s+/g, '');
     
-    // Spesial Hilman
     if (bersih.includes("D2/20") || bersih.includes("D2/21") || bersih.includes("D220") || bersih.includes("D221")) {
         prosesMasuk("HILMAN", "D2/20-21"); return;
     }
     
-    // Koreksi Garis Miring Otomatis (D35 -> D3/5)
     if (!bersih.includes('/') && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
