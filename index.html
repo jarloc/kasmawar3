@@ -206,7 +206,7 @@ function saveData(){
 document.getElementById('adminBtn').onclick=()=>{
  if(!isAdmin){
   const u=prompt('USER'), p=prompt('PASS');
-  if(btoa(u)==='QURNSU4=' && btoa(p)==='U0FOVUlPTg=='){
+  if(u === 'ADMIN' && p === 'SANUMION'){
    isAdmin=true; adminBtn.textContent='ADMIN ON'; adminBtn.className='primary';
    document.getElementById('pullBtn').style.display='block';
    autoSaveTimer=setInterval(saveData, 3000);
@@ -267,3 +267,4 @@ updateUI();
 </script>
 </body>
 </html>
+
