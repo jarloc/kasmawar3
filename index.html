@@ -263,8 +263,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         </div>
 
         <table class="table-usulan">
-            <thead id="headUsulan">
-                </thead>
+            <thead id="headUsulan"></thead>
             <tbody id="tbUsulan"></tbody>
         </table>
     </div>
@@ -358,7 +357,6 @@ function loadUsulan() {
     const tb = document.getElementById('tbUsulan');
     const th = document.getElementById('headUsulan');
     
-    // Header dinamis agar aman dari kebocoran teks
     let headerHTML = `<tr><th style="width:15%">TANGGAL & JAM</th><th style="width:20%">NAMA</th><th style="width:35%">USULAN</th><th style="width:30%">RESPON</th>`;
     if(isAdmin) headerHTML += `<th style="width:50px">HPS</th>`;
     headerHTML += `</tr>`;
@@ -373,27 +371,39 @@ function loadUsulan() {
         
         Object.keys(d).reverse().forEach(id => {
             const u = d[id];
+            // Format nama murni tanpa blok
+            const namaPembuatMurni = u.nama.split(' (')[0];
             const setujus = u.setuju ? Object.values(u.setuju) : [];
             const tolaks = u.tolak ? Object.values(u.tolak) : [];
             
+            // Format daftar nama voter murni
+            const listSetujuMurni = setujus.map(n => n.split(' (')[0]);
+            const listTolakMurni = tolaks.map(n => n.split(' (')[0]);
+            
             const tr = document.createElement('tr');
+            
+            // Logika sembunyikan tombol jika: pembuat usulan, atau sudah voting
+            const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
+            const isOwner = (u.nama === currentUserName);
             
             let rowHTML = `
                 <td style="text-align:center">${u.waktu}</td>
-                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${u.nama}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${namaPembuatMurni}</td>
                 <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'usulan\', this.innerText)"' : ''}>${u.usulan}</td>
                 <td>
                     <div class="vote-box">
                         <div class="vote-count">✅ SETUJU: ${setujus.length}</div>
-                        <div class="vote-names">${setujus.join(', ')}</div>
+                        <div class="vote-names">${listSetujuMurni.join(', ')}</div>
                         <div class="vote-count" style="color:#d9534f">❌ TOLAK: ${tolaks.length}</div>
-                        <div class="vote-names">${tolaks.join(', ')}</div>
-                        ${modeRespon ? `
+                        <div class="vote-names">${listTolakMurni.join(', ')}</div>
+                        ${(modeRespon && !isOwner && !sudahVoting) ? `
                             <div style="margin-top:5px; display:flex; gap:5px;">
                                 <button onclick="vote('${id}', 'setuju')" style="background:#28a745; color:#fff; font-size:0.7rem; padding:4px 8px;">✅</button>
                                 <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
                             </div>
                         ` : ''}
+                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, SUARA ANDA SUDAH TERECORD.</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN.</div>` : ''}
                     </div>
                 </td>
             `;
@@ -409,7 +419,10 @@ function loadUsulan() {
 }
 
 function vote(id, tipe) {
-    db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
+    const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
+    if(confirm(`YAKIN ${teksTipe}, TUAN?`)) {
+        db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
+    }
 }
 
 function hapusUsulan(id) {
