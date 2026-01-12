@@ -485,12 +485,12 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
+  if(u && u.toUpperCase()===atob('QURNSU4=') && p && p.toUpperCase()===atob('U0FOV01JT04=')){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
-   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
+   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
    db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
    alert('SALAH!'); 
   }
