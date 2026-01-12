@@ -486,7 +486,7 @@ document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
   if(u && u.toUpperCase()==='\x41\x44\x4d\x49\x4e' && p && p.toUpperCase()==='\x53\x41\x4e\x55\x4d\x49\x4f\x4e'){
-   isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
+   isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
@@ -495,7 +495,7 @@ document.getElementById('adminBtn').onclick = function() {
    alert('SALAH!'); 
   }
  } else {
-  isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
+  isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
   document.getElementById('adminTools').style.display='none';
   applyAdminLock();
  }
@@ -563,4 +563,5 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
 
