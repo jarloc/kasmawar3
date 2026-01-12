@@ -490,7 +490,7 @@ document.getElementById('adminBtn').onclick = function() {
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
-   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
+   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
    db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
    alert('SALAH!'); 
   }
