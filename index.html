@@ -95,13 +95,20 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
-#checklistModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
-.checklist-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
-.checklist-content h1 { text-align:center; margin:0; font-size:1.5rem; background:#92c694; padding:10px; }
-.checklist-content h2 { text-align:center; margin:0; font-size:1.2rem; background:#d9ead3; padding:5px; border-bottom:2px solid #000; }
-.table-checklist { width:100%; border:2px solid #000; margin-top:10px; }
-.table-checklist th, .table-checklist td { border:1px solid #000; text-align:center; padding:5px; font-weight:bold; font-size:0.9rem; }
-.table-checklist th { background:#9fc5e8; }
+#checklistModal, #usulanModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
+.checklist-content, .usulan-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:950px; margin:0 auto; }
+.usulan-content h1 { text-align:center; background:#ff9800; color:#fff; padding:10px; margin:0; }
+.usulan-btn-container { display:flex; justify-content:center; gap:10px; margin:15px 0; }
+.btn-buat { background:#2196F3; color:#fff; padding:10px 20px; }
+.btn-respon { background:#673AB7; color:#fff; padding:10px 20px; }
+.table-usulan { width:100%; border-collapse:collapse; margin-top:10px; }
+.table-usulan th { background:#333; color:#fff; }
+.table-usulan td { font-size:0.85rem; text-transform:none; }
+.vote-box { display:flex; flex-direction:column; gap:4px; font-size:0.75rem; }
+.vote-count { font-weight:bold; color:#28a745; }
+.vote-names { font-style:italic; color:#666; font-size:0.7rem; }
+#formInputUsulan { display:none; border:2px solid #2196F3; padding:15px; margin-bottom:15px; border-radius:8px; }
+
 .status-v { background:#93c47d; color:#000; }
 .status-x { background:#e06666; color:#000; }
 
@@ -160,6 +167,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
         </div>
+        <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
         <button id="themeBtn" class="primary">🎨 GANTI TEMA</button>
         <button id="cetakBtn" class="primary">🖨️ CETAK LAPORAN</button>
@@ -210,8 +218,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px;">CETAK GAMBAR</button>
     </div>
     <div class="checklist-content" id="checklistPrintArea">
-        <h1 id="judulChecklist">CHECKLIST KAS GANG MAWAR 3</h1>
-        <h2 id="subJudulChecklist">PERIODE 2026</h2>
+        <h1 id="judulChecklist" style="text-align:center; background:#92c694; padding:10px; margin:0;">CHECKLIST KAS GANG MAWAR 3</h1>
+        <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0;">PERIODE 2026</h2>
         <table class="table-checklist">
             <thead>
                 <tr>
@@ -225,6 +233,45 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
                 </tr>
             </thead>
             <tbody id="tbChecklist"></tbody>
+        </table>
+    </div>
+</div>
+
+<div id="usulanModal">
+    <div style="text-align:center; margin-bottom:10px;">
+        <button onclick="document.getElementById('usulanModal').style.display='none'" style="background:#d9534f; color:#fff;"> TUTUP </button>
+    </div>
+    <div class="usulan-content">
+        <h1>📝 FORM USULAN WARGA</h1>
+        <div class="usulan-btn-container">
+            <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN</button>
+            <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 IKUT RESPON</button>
+        </div>
+
+        <div id="formInputUsulan">
+            <h4 style="margin-top:0;">TULIS USULAN ANDA:</h4>
+            <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Tulis usulan bapak/ibu di sini..."></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                <button onclick="batalUsulan()" style="background:#aaa; font-size:0.9rem; padding:8px 15px;">BATAL</button>
+                <button onclick="kirimUsulan()" style="background:#2196F3; color:#fff; font-size:0.9rem; padding:8px 15px;">KIRIM USULAN</button>
+            </div>
+        </div>
+
+        <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
+            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF: Klik ✅ atau ❌ pada tabel di bawah.</p>
+            <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
+        </div>
+
+        <table class="table-usulan">
+            <thead>
+                <tr>
+                    <th style="width:15%">TANGGAL & JAM</th>
+                    <th style="width:20%">NAMA</th>
+                    <th style="width:35%">USULAN</th>
+                    <th style="width:30%">RESPON</th>
+                </tr>
+            </thead>
+            <tbody id="tbUsulan"></tbody>
         </table>
     </div>
 </div>
@@ -256,7 +303,7 @@ const daftarKunci = {
 
 const skrg = new Date();
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
-let isAdmin=false, autoSaveTimer=null, currentTheme='', currentUserName='';
+let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
@@ -274,17 +321,95 @@ function masukWeb() {
 
 function prosesMasuk(namaUser, kode) {
     currentUserName = namaUser + " (" + kode + ")";
-    const skrgLog = new Date();
-    const tglLog = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear();
-    const jamLog = skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: tglLog + ", PUKUL " + jamLog + " WIB" });
-    window.addEventListener('beforeunload', function (e) { e.preventDefault(); e.returnValue = ''; });
+    db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID') });
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
+// ================= FORM USULAN WARGA =================
+function openUsulan() {
+    toggleMenu();
+    document.getElementById('usulanModal').style.display = 'block';
+    loadUsulan();
+}
+
+function showInputUsulan() { document.getElementById('formInputUsulan').style.display = 'block'; }
+function batalUsulan() { document.getElementById('formInputUsulan').style.display = 'none'; document.getElementById('txtUsulan').value = ''; }
+
+function kirimUsulan() {
+    const teks = document.getElementById('txtUsulan').value;
+    if(!teks) return alert("Usulan tidak boleh kosong!");
+    const skrgLog = new Date();
+    const tglJam = skrgLog.getDate() + "/" + (skrgLog.getMonth()+1) + "/" + skrgLog.getFullYear() + " " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
+    
+    db.ref('usulan_warga').push({
+        waktu: tglJam,
+        nama: currentUserName,
+        usulan: teks,
+        setuju: [],
+        tolak: []
+    }).then(() => {
+        alert("USULAN TERKIRIM!");
+        batalUsulan();
+        loadUsulan();
+    });
+}
+
+function aktifkanModeRespon() { modeRespon = true; document.getElementById('containerVotingRespon').style.display = 'block'; loadUsulan(); }
+function selesaiRespon() { modeRespon = false; document.getElementById('containerVotingRespon').style.display = 'none'; loadUsulan(); }
+
+function loadUsulan() {
+    const tb = document.getElementById('tbUsulan');
+    tb.innerHTML = "<tr><td colspan='4' style='text-align:center'>Memuat data usulan...</td></tr>";
+    db.ref('usulan_warga').once('value', s => {
+        const d = s.val();
+        tb.innerHTML = "";
+        if(!d) return tb.innerHTML = "<tr><td colspan='4' style='text-align:center'>Belum ada usulan masuk.</td></tr>";
+        
+        Object.keys(d).reverse().forEach(id => {
+            const u = d[id];
+            const setujus = u.setuju ? Object.values(u.setuju) : [];
+            const tolaks = u.tolak ? Object.values(u.tolak) : [];
+            
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="text-align:center">${u.waktu}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${u.nama}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'usulan\', this.innerText)"' : ''}>${u.usulan}</td>
+                <td>
+                    <div class="vote-box">
+                        <div class="vote-count">✅ SETUJU: ${setujus.length}</div>
+                        <div class="vote-names">${setujus.join(', ')}</div>
+                        <div class="vote-count" style="color:#d9534f">❌ TOLAK: ${tolaks.length}</div>
+                        <div class="vote-names">${tolaks.join(', ')}</div>
+                        ${modeRespon ? `
+                            <div style="margin-top:5px; display:flex; gap:5px;">
+                                <button onclick="vote('${id}', 'setuju')" style="background:#28a745; color:#fff; font-size:0.7rem; padding:4px 8px;">✅</button>
+                                <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
+            tb.appendChild(tr);
+        });
+    });
+}
+
+function vote(id, tipe) {
+    db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => {
+        loadUsulan();
+    });
+}
+
+function updateUsulanAdmin(id, field, value) {
+    if(!isAdmin) return;
+    db.ref(`usulan_warga/${id}`).update({ [field]: value });
+}
+
+// ================= LOGIKA KAS ASLI =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
@@ -301,17 +426,6 @@ function openPengunjung() {
             list.innerHTML = html + "</table>";
         }
     });
-
-    if(isAdmin) {
-        db.ref('percobaan_admin_gagal').limitToLast(20).once('value', s => {
-            const d = s.val();
-            if(d) {
-                let html = "<table style='width:100%;'>";
-                Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #ffcccc;'><td style='padding:5px;'>⚠️ <b>${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
-                listLog.innerHTML = html + "</table>";
-            }
-        });
-    }
 }
 
 function hapusRiwayatPengunjung() {
@@ -416,7 +530,6 @@ function loadData(){
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   
-  // LOGIKA OTOMATISASI BARIS PERTAMA (SISA KAS)
   let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
   db.ref('kas_data/'+pm+'-'+pt).once('value', sPrev=>{
     const dPrev=sPrev.val(); let sL=0;
@@ -428,16 +541,12 @@ function loadData(){
     }
     const trSisa = document.querySelector('#tbMasuk tr');
     if(trSisa && trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA'){
-        // 1. TANGGAL OTOMATIS (Awal Bulan)
         trSisa.children[0].firstChild.value = `${tahun}-${(bulan + 1).toString().padStart(2, '0')}-01`;
-        // 2. KETERANGAN OTOMATIS
         trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
-        // 3. SALDO OTOMATIS
         trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
         recalc();
     }
   });
-
   recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
@@ -461,11 +570,6 @@ function saveData(){
     db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
     btn.textContent = originalText;
     alert("✅ DATA BERHASIL DISIMPAN KE SERVER, TUAN!");
- })
- .catch((error) => {
-    btn.textContent = originalText;
-    alert("⚠️ GAGAL MENYIMPAN! KONEKSI BERMASALAH. SILAKAN KLIK SIMPAN LAGI, TUAN!");
-    console.error(error);
  });
 }
 
@@ -512,8 +616,7 @@ document.getElementById('adminBtn').onclick = function() {
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
-   const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
-   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
+   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID') });
    alert('SALAH!'); 
   }
  } else {
