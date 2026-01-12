@@ -9,14 +9,6 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
-/* --- INDIKATOR SIMPAN (NEW) --- */
-#saveIndicator {
-    position: fixed; top: 0; left: 0; width: 0%; height: 3px; 
-    background: linear-gradient(90deg, #00ffcc, #00ff00); 
-    z-index: 9999; transition: width 0.3s, opacity 0.5s; opacity: 0;
-    box-shadow: 0 0 10px #00ffcc;
-}
-
 /* --- LOGO STYLING --- */
 .logo-mawar-container {
     position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; align-items: center;
@@ -118,8 +110,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </style>
 </head>
 <body>
-
-<div id="saveIndicator"></div>
 
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
@@ -267,7 +257,6 @@ const daftarKunci = {
 const skrg = new Date();
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
 let isAdmin=false, autoSaveTimer=null, currentTheme='', currentUserName='';
-let lastDataLengthMasuk = 0; // Guard variable
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
@@ -416,7 +405,6 @@ function loadData(){
     tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
-   lastDataLengthMasuk = d.masuk.length; // Guard update
    if(d.keluar) {
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
@@ -426,8 +414,6 @@ function loadData(){
     });
    }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
-  } else {
-    lastDataLengthMasuk = 0;
   }
   recalc();
  });
@@ -437,50 +423,13 @@ function loadData(){
  });
 }
 
-function showIndicator() {
-    const ind = document.getElementById('saveIndicator');
-    ind.style.width = "70%"; ind.style.opacity = "1";
-    ind.style.background = "linear-gradient(90deg, #00ffcc, #0077ff)";
-}
-
-function hideIndicator() {
-    const ind = document.getElementById('saveIndicator');
-    ind.style.width = "100%"; ind.style.background = "#00ff00";
-    setTimeout(() => { ind.style.opacity = "0"; setTimeout(() => ind.style.width = "0%", 500); }, 1000);
-}
-
 function saveData(){
  if(!isAdmin) return;
-
+ const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
-
- // GUARD LOGIC (NEW)
- let isDataSuspect = false;
- if (lastDataLengthMasuk > 0 && m.length < lastDataLengthMasuk) isDataSuspect = true;
- 
- // Cek jika ada baris yang nominalnya jadi 0 atau kosong padahal sebelumnya ada (simple sampling)
- let totalNominal = m.reduce((acc, curr) => acc + (parseInt(curr.uang.replace(/[^0-9]/g,'')) || 0), 0);
- if (lastDataLengthMasuk > 0 && totalNominal === 0) isDataSuspect = true;
-
- if (isDataSuspect) {
-    let tannya = confirm("TUAN, SISTEM MENDETEKSI DATA YANG AKAN DISIMPAN LEBIH SEDIKIT ATAU KOSONG DARI SEBELUMNYA. APAKAH TUAN YAKIN INGIN MENIMPA DATA LAMA DENGAN DATA KOSONG INI?");
-    if (!tannya) return; // Batalkan proses simpan
- }
-
- showIndicator();
- const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
- 
- Promise.all([
-    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}),
-    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value)
- ]).then(() => {
-    hideIndicator();
-    lastDataLengthMasuk = m.length; // Update guard reference
- }).catch(err => {
-    document.getElementById('saveIndicator').style.background = "red";
-    console.error(err);
- });
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
+ db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
 }
 
 async function openChecklist() {
