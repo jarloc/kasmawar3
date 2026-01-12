@@ -158,7 +158,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">📥 TAMBAH PEMASUKAN</button>
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
-            <button id="pullBtn" class="warning" onclick="tarikSaldo()">📝 TEMPEL SISA KAS</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
         </div>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
@@ -416,6 +415,29 @@ function loadData(){
    }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
+  
+  // LOGIKA OTOMATISASI BARIS PERTAMA (SISA KAS)
+  let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
+  db.ref('kas_data/'+pm+'-'+pt).once('value', sPrev=>{
+    const dPrev=sPrev.val(); let sL=0;
+    if(dPrev && dPrev.masuk){
+        let mt=0, kt=0;
+        dPrev.masuk.forEach(r=>{ if(r.uang) mt += parseInt(r.uang.replace(/[^0-9]/g,'')) || 0; });
+        if(dPrev.keluar) dPrev.keluar.forEach(r=>{ let q = parseInt(r.qty.replace(/[^0-9]/g,'')) || 0, h = parseInt(r.harga.replace(/[^0-9]/g,'')) || 0; kt += (q * h); });
+        sL = mt - kt;
+    }
+    const trSisa = document.querySelector('#tbMasuk tr');
+    if(trSisa && trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA'){
+        // 1. TANGGAL OTOMATIS (Awal Bulan)
+        trSisa.children[0].firstChild.value = `${tahun}-${(bulan + 1).toString().padStart(2, '0')}-01`;
+        // 2. KETERANGAN OTOMATIS
+        trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
+        // 3. SALDO OTOMATIS
+        trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
+        recalc();
+    }
+  });
+
   recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
@@ -502,31 +524,6 @@ document.getElementById('adminBtn').onclick = function() {
  toggleMenu();
 };
 
-function tarikSaldo(){
-    let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
-    const btn = document.getElementById('pullBtn');
-    const originalText = btn.textContent;
-    btn.textContent = "PROSES...";
-    db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
-        const d=s.val(); let sL=0;
-        if(d && d.masuk){
-            let mt=0, kt=0;
-            d.masuk.forEach(r=>{ if(r.uang) mt += parseInt(r.uang.replace(/[^0-9]/g,'')) || 0; });
-            if(d.keluar) d.keluar.forEach(r=>{ let q = parseInt(r.qty.replace(/[^0-9]/g,'')) || 0, h = parseInt(r.harga.replace(/[^0-9]/g,'')) || 0; kt += (q * h); });
-            sL = mt - kt;
-        }
-        const trSisa = document.querySelector('#tbMasuk tr');
-        if(trSisa){ 
-            trSisa.children[0].firstChild.value = tahun + "-" + (bulan + 1).toString().padStart(2, '0') + "-01";
-            trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
-            trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
-            recalc(); 
-            btn.textContent = originalText; alert("SALDO BERHASIL DITARIK! JANGAN LUPA KLIK SIMPAN DATA.");
-        }
-    });
-    toggleMenu();
-}
-
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -563,7 +560,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
-
-
-
