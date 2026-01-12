@@ -121,7 +121,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar V9.6 Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
@@ -209,7 +209,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V9.6 Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -301,14 +301,22 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAHKAN MASUKKAN NOMOR BLOK RUMBAH ANDA:");
+    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
-    let bersih = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/\s+/g, '');
-    if (bersih.includes("D2/20") || bersih.includes("D2/21") || bersih.includes("D220") || bersih.includes("D221")) { prosesMasuk("HILMAN", "D2/20-21"); return; }
+    
+    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
+    let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
+    
+    // Jika warga ngetik D220, D221, dll (Hilman)
+    if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { prosesMasuk("HILMAN", "D2/20-21"); return; }
+    
+    // Logika menyisipkan "/" jika belum ada (Misal D223 -> D2/23)
+    let bersih = raw;
     if (!bersih.includes('/') && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
+    
     if (daftarKunci[bersih]) { prosesMasuk(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR!"); }
 }
 
@@ -668,9 +676,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar kas gang yaa ⚠️</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas gang ditunggu sampai tanggal 7 yaa ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas gang harap untuk segera melakukan pembayaran dan pelunasan jika masih ada tunggakan 🛑</span>`;
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom catatan penting pada bagian bawah halaman ini! 🛑 </span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
