@@ -262,7 +262,7 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
+    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     let bersih = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/\s+/g, '');
     if (bersih.includes("D2/20") || bersih.includes("D2/21") || bersih.includes("D220") || bersih.includes("D221")) { prosesMasuk("HILMAN", "D2/20-21"); return; }
@@ -563,6 +563,7 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
 
 
 
