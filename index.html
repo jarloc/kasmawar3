@@ -157,6 +157,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button onclick="tambahBaris('WARGA')" style="background:#28a745; color:#fff;">TAMBAH WARGA</button>
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">TAMBAH PEMASUKAN</button>
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">TAMBAH PENGELUARAN</button>
+            <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="pullBtn" class="warning" onclick="tarikSaldo()">TEMPEL SISA KAS </button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">DAFTAR PENGUNJUNG</button>
         </div>
@@ -349,7 +350,7 @@ function tambahBaris(tipe) {
 }
 
 function hapusBaris(btn) {
-    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); saveData(); }
+    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); }
 }
 
 function buildTables(){
@@ -425,11 +426,25 @@ function loadData(){
 
 function saveData(){
  if(!isAdmin) return;
+ const btn = document.getElementById('saveBtnManual');
+ const originalText = btn.textContent;
+ btn.textContent = "PROSES...";
+ 
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
- db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
+ 
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate})
+ .then(() => {
+    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
+    btn.textContent = originalText;
+    alert("✅ DATA BERHASIL DISIMPAN KE SERVER, TUAN!");
+ })
+ .catch((error) => {
+    btn.textContent = originalText;
+    alert("⚠️ GAGAL MENYIMPAN! KONEKSI BERMASALAH. SILAKAN KLIK SIMPAN LAGI, TUAN!");
+    console.error(error);
+ });
 }
 
 async function openChecklist() {
@@ -473,7 +488,7 @@ document.getElementById('adminBtn').onclick = function() {
   if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
-   autoSaveTimer=setInterval(saveData, 3000); applyAdminLock(); recalc(); alert('BERHASIL!');
+   applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
    const skrgLog = new Date(), waktuGagal = skrgLog.getDate() + " " + namaBulan[skrgLog.getMonth()] + " " + skrgLog.getFullYear() + ", " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0') + " WIB";
    db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: waktuGagal });
@@ -482,7 +497,7 @@ document.getElementById('adminBtn').onclick = function() {
  } else {
   isAdmin=false; this.textContent='ADMIN OFF'; this.className='off';
   document.getElementById('adminTools').style.display='none';
-  clearInterval(autoSaveTimer); applyAdminLock();
+  applyAdminLock();
  }
  toggleMenu();
 };
@@ -506,7 +521,7 @@ function tarikSaldo(){
             trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
             trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
             recalc(); 
-            setTimeout(() => { saveData(); btn.textContent = originalText; alert("SALDO BERHASIL DITARIK!"); }, 800);
+            btn.textContent = originalText; alert("SALDO BERHASIL DITARIK! JANGAN LUPA KLIK SIMPAN DATA.");
         }
     });
     toggleMenu();
@@ -521,7 +536,7 @@ function updateDeadlineBanner() {
     const banner = document.getElementById('deadline-text');
     if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar kas gang yaa ⚠️</span>`; 
     else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas gang ditunggu sampai tanggal 7 yaa ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Untuk yang belum bayar kas gang diharapkan untuk segera melakukan pembayaran dan pelunasan jika masih menunggak 🛑</span>`;
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas gang harap untuk segera melakukan pembayaran dan pelunasan jika masih ada tunggakan 🛑</span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
