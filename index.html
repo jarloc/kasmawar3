@@ -301,7 +301,7 @@ const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUST
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
 function masukWeb() {
-    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
+    let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAHKAN MASUKKAN NOMOR BLOK RUMBAH ANDA:");
     if (!kunci) return;
     let bersih = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/\s+/g, '');
     if (bersih.includes("D2/20") || bersih.includes("D2/21") || bersih.includes("D220") || bersih.includes("D221")) { prosesMasuk("HILMAN", "D2/20-21"); return; }
@@ -371,18 +371,13 @@ function loadUsulan() {
         
         Object.keys(d).reverse().forEach(id => {
             const u = d[id];
-            // Format nama murni tanpa blok
             const namaPembuatMurni = u.nama.split(' (')[0];
             const setujus = u.setuju ? Object.values(u.setuju) : [];
             const tolaks = u.tolak ? Object.values(u.tolak) : [];
-            
-            // Format daftar nama voter murni
             const listSetujuMurni = setujus.map(n => n.split(' (')[0]);
             const listTolakMurni = tolaks.map(n => n.split(' (')[0]);
             
             const tr = document.createElement('tr');
-            
-            // Logika sembunyikan tombol jika: pembuat usulan, atau sudah voting
             const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
             const isOwner = (u.nama === currentUserName);
             
@@ -407,11 +402,7 @@ function loadUsulan() {
                     </div>
                 </td>
             `;
-            
-            if(isAdmin) {
-                rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>`;
-            }
-            
+            if(isAdmin) rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>`;
             tr.innerHTML = rowHTML;
             tb.appendChild(tr);
         });
@@ -437,7 +428,7 @@ function updateUsulanAdmin(id, field, value) {
     db.ref(`usulan_warga/${id}`).update({ [field]: value });
 }
 
-// ================= LOGIKA KAS ASLI =================
+// ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
@@ -454,6 +445,20 @@ function openPengunjung() {
             list.innerHTML = html + "</table>";
         }
     });
+
+    if(isAdmin) {
+        listLog.innerHTML = "Memindai riwayat penyusup...";
+        db.ref('percobaan_admin_gagal').limitToLast(20).once('value', s => {
+            const d = s.val();
+            if(d) {
+                let html = "<table style='width:100%;'>";
+                Object.values(d).reverse().forEach(v => { html += `<tr style='border-bottom:1px solid #ffcccc; color:#d9534f;'><td style='padding:5px;'><b>[GAGAL] ${v.nama}</b><br><small>${v.waktu}</small></td></tr>`; });
+                listLog.innerHTML = html + "</table>";
+            } else {
+                listLog.innerHTML = "<p style='text-align:center; color:green;'>TIDAK ADA PERCOBAAN ILEGAL.</p>";
+            }
+        });
+    }
 }
 
 function hapusRiwayatPengunjung() {
@@ -464,6 +469,7 @@ function hapusRiwayatPengunjung() {
     }
 }
 
+// ================= LOGIKA KAS ASLI =================
 function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
         const tb = document.getElementById('tbKeluar');
