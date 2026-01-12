@@ -378,7 +378,7 @@ function recalc(){
   const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
   if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); }
   else if(keywordsSuccess.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); }
-  else { inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }
+  else { inputs.forEach(inp=>{ inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
@@ -485,7 +485,7 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==="ADMIN" && p && p.toUpperCase()==="SANUMION"){
+  if(u && u.toUpperCase()==='\x41\x44\x4d\x49\x4e' && p && p.toUpperCase()==='\x53\x41\x4e\x55\x4d\x49\x4f\x4e'){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
