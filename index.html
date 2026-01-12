@@ -8,50 +8,25 @@
 :root{
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
-
-/* --- INDIKATOR SIMPAN (NEW) --- */
 #saveIndicator {
     position: fixed; top: 0; left: 0; width: 0%; height: 3px; 
     background: linear-gradient(90deg, #00ffcc, #00ff00); 
     z-index: 9999; transition: width 0.3s, opacity 0.5s; opacity: 0;
     box-shadow: 0 0 10px #00ffcc;
 }
-
-/* --- LOGO STYLING --- */
-.logo-mawar-container {
-    position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; align-items: center;
-}
-.logo-img {
-    width: 100px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s;
-}
-.logo-welcome {
-    width: 450px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px #00ffcc);
-}
-
-/* --- SAFARI FIX --- */
-input:disabled {
-  -webkit-text-fill-color: currentcolor !important; color: inherit !important; opacity: 1 !important; background-color: inherit; border-color: transparent;
-}
-
-button {
-  padding: 20px 32px; font-size: 1.2rem; border-radius: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; border: 0; transition: all 0.2s;
-}
+.logo-mawar-container { position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; align-items: center; }
+.logo-img { width: 100px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s; }
+.logo-welcome { width: 450px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px #00ffcc); }
+input:disabled { -webkit-text-fill-color: currentcolor !important; color: inherit !important; opacity: 1 !important; background-color: inherit; border-color: transparent; }
+button { padding: 20px 32px; font-size: 1.2rem; border-radius: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; border: 0; transition: all 0.2s; }
 .menu-items button { width: 100%; margin-bottom: 12px; }
-
-@media screen and (max-width: 768px) {
-  #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir { font-weight: 800 !important; font-size: 0.9rem; }
-}
-
-#welcomeScreen {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-}
+@media screen and (max-width: 768px) { #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir { font-weight: 800 !important; font-size: 0.9rem; } }
+#welcomeScreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 #welcomeScreen h1 { font-size: 2.2rem; color: #00ffcc; text-shadow: 0 0 15px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
 #welcomeScreen p { font-size: 1rem; color: #aaa; text-transform: none; margin-bottom: 40px; font-family: Arial, sans-serif; padding: 0 20px; }
 #enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 0 20px rgba(0,255,204,0.4); }
-
 #modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; box-sizing:border-box; }
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
-
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);-webkit-font-smoothing: antialiased;}
 header{text-align:center;font-size:2rem;margin-bottom:5px}
 .update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
@@ -85,7 +60,7 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
-/* --- CYBERPUNK THEME --- */
+/* --- THEMES --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
@@ -99,7 +74,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
 .theme-cyberpunk .menu-items button { background: #ff00ff !important; color: #000000 !important; box-shadow: 0 0 15px #ff00ff; border: 2px solid #00ffcc; }
 .theme-cyberpunk #adminBtn.primary { background: #00ffcc !important; color: #000000 !important; box-shadow: 0 0 15px #00ffcc; }
-
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
@@ -112,7 +86,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .table-checklist th { background:#9fc5e8; }
 .status-v { background:#93c47d; color:#000; }
 .status-x { background:#e06666; color:#000; }
-
 .admin-action { display: none; width: 40px; text-align: center; }
 #adminTools { display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; }
 </style>
@@ -267,9 +240,11 @@ const daftarKunci = {
 const skrg = new Date();
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
 let isAdmin=false, autoSaveTimer=null, currentTheme='', currentUserName='';
-let lastDataLengthMasuk = 0; // Guard variable
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
+
+let lastSavedString = ""; // PEMBANDING DATA CERDAS
+let lastDataLengthMasuk = 0; // PENJAGA JUMLAH BARIS
 
 function masukWeb() {
     let kunci = prompt("UNTUK MELIHAT LAPORAN KAS, SILAKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
@@ -303,7 +278,6 @@ function openPengunjung() {
     secLog.style.display = isAdmin ? 'block' : 'none';
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
-
     db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
         const d = s.val();
         if(d) {
@@ -312,7 +286,6 @@ function openPengunjung() {
             list.innerHTML = html + "</table>";
         }
     });
-
     if(isAdmin) {
         db.ref('percobaan_admin_gagal').limitToLast(20).once('value', s => {
             const d = s.val();
@@ -337,31 +310,19 @@ function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
         const tb = document.getElementById('tbKeluar');
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td>
-                        <td><input class='editable'></td>
-                        <td><input class='editable' value='0'></td>
-                        <td><input class='editable' value='0'></td>
-                        <td class='total'>0</td>
-                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     } else {
         const tb = document.getElementById('tbMasuk');
         const tr = document.createElement('tr');
         const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
-        tr.innerHTML = `<td><input class='editable' type='date'></td>
-                        <td><input class='editable' value='${namaDefault}'></td>
-                        <td><input class='editable'></td>
-                        <td><input class='editable' value='0'></td>
-                        <td class='saldo'>0</td>
-                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${namaDefault}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     }
     recalc();
 }
 
-function hapusBaris(btn) {
-    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); saveData(); }
-}
+function hapusBaris(btn) { if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); saveData(); } }
 
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -416,7 +377,7 @@ function loadData(){
     tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
-   lastDataLengthMasuk = d.masuk.length; // Guard update
+   lastDataLengthMasuk = d.masuk.length;
    if(d.keluar) {
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
@@ -426,9 +387,8 @@ function loadData(){
     });
    }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
-  } else {
-    lastDataLengthMasuk = 0;
-  }
+  } else { lastDataLengthMasuk = 0; }
+  lastSavedString = JSON.stringify(getCurrentDataState()); // Inisialisasi state awal
   recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
@@ -437,10 +397,16 @@ function loadData(){
  });
 }
 
+function getCurrentDataState() {
+    const m = [...document.querySelectorAll('#tbMasuk tr')].map(tr=>({t:tr.children[0].firstChild.value, n:tr.children[1].firstChild.value, k:tr.children[2].firstChild.value, u:tr.children[3].firstChild.value}));
+    const k = [...document.querySelectorAll('#tbKeluar tr')].map(tr=>({t:tr.children[0].firstChild.value, k:tr.children[1].firstChild.value, q:tr.children[2].firstChild.value, h:tr.children[3].firstChild.value}));
+    const note = document.getElementById('catatanWarga').value;
+    return { m, k, note };
+}
+
 function showIndicator() {
     const ind = document.getElementById('saveIndicator');
-    ind.style.width = "70%"; ind.style.opacity = "1";
-    ind.style.background = "linear-gradient(90deg, #00ffcc, #0077ff)";
+    ind.style.width = "70%"; ind.style.opacity = "1"; ind.style.background = "linear-gradient(90deg, #00ffcc, #0077ff)";
 }
 
 function hideIndicator() {
@@ -452,31 +418,33 @@ function hideIndicator() {
 function saveData(){
  if(!isAdmin) return;
 
- const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+ const currentState = getCurrentDataState();
+ const currentString = JSON.stringify(currentState);
 
- // GUARD LOGIC (NEW)
- let isDataSuspect = false;
- if (lastDataLengthMasuk > 0 && m.length < lastDataLengthMasuk) isDataSuspect = true;
- 
- // Cek jika ada baris yang nominalnya jadi 0 atau kosong padahal sebelumnya ada (simple sampling)
- let totalNominal = m.reduce((acc, curr) => acc + (parseInt(curr.uang.replace(/[^0-9]/g,'')) || 0), 0);
- if (lastDataLengthMasuk > 0 && totalNominal === 0) isDataSuspect = true;
+ // CERDAS: JIKA TIDAK ADA PERUBAHAN, JANGAN SIMPAN APAPUN
+ if (currentString === lastSavedString) return;
 
- if (isDataSuspect) {
-    let tannya = confirm("TUAN, SISTEM MENDETEKSI DATA YANG AKAN DISIMPAN LEBIH SEDIKIT ATAU KOSONG DARI SEBELUMNYA. APAKAH TUAN YAKIN INGIN MENIMPA DATA LAMA DENGAN DATA KOSONG INI?");
-    if (!tannya) return; // Batalkan proses simpan
+ // PENJAGA: CEK DATA KOSONG/HILANG
+ let isSuspect = false;
+ if (lastDataLengthMasuk > 0 && currentState.m.length < lastDataLengthMasuk) isSuspect = true;
+ let totalNominal = currentState.m.reduce((acc, curr) => acc + (parseInt(curr.u.replace(/[^0-9]/g,'')) || 0), 0);
+ if (lastDataLengthMasuk > 0 && totalNominal === 0) isSuspect = true;
+
+ if (isSuspect) {
+    if (!confirm("TUAN, DATA YANG AKAN DISIMPAN LEBIH SEDIKIT ATAU KOSONG. LANJUTKAN MENIMPA DATA LAMA?")) return;
  }
 
  showIndicator();
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  
  Promise.all([
-    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}),
-    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value)
+    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:currentState.m, keluar:currentState.k, updated:formatUpdate}),
+    db.ref('kas_data/catatan_umum').set(currentState.note)
  ]).then(() => {
     hideIndicator();
-    lastDataLengthMasuk = m.length; // Update guard reference
+    lastSavedString = currentString;
+    lastDataLengthMasuk = currentState.m.length;
+    document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + formatUpdate;
  }).catch(err => {
     document.getElementById('saveIndicator').style.background = "red";
     console.error(err);
@@ -490,9 +458,7 @@ async function openChecklist() {
     let listWarga = [...namaAnggotaAwal];
     for(let m=0; m<=11; m++){
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
-        if(d && d.masuk) d.masuk.forEach(r => { 
-            if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama);
-        });
+        if(d && d.masuk) d.masuk.forEach(r => { if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama); });
     }
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
@@ -514,7 +480,6 @@ async function openChecklist() {
         tr.innerHTML = html; tb.appendChild(tr);
     });
 }
-
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
 function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
 
@@ -541,7 +506,6 @@ document.getElementById('adminBtn').onclick = function() {
 function tarikSaldo(){
     let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
     const btn = document.getElementById('pullBtn');
-    const originalText = btn.textContent;
     btn.textContent = "PROSES...";
     db.ref('kas_data/'+pm+'-'+pt).once('value', s=>{
         const d=s.val(); let sL=0;
@@ -557,12 +521,11 @@ function tarikSaldo(){
             trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`; 
             trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID'); 
             recalc(); 
-            setTimeout(() => { saveData(); btn.textContent = originalText; alert("SALDO BERHASIL DITARIK!"); }, 800);
+            setTimeout(() => { saveData(); btn.textContent = "TEMPEL SISA KAS"; alert("SALDO BERHASIL DITARIK!"); }, 800);
         }
     });
     toggleMenu();
 }
-
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -574,14 +537,12 @@ function updateDeadlineBanner() {
     else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas gang ditunggu sampai tanggal 7 yaa ⚠️</span>`; 
     else banner.innerHTML = `<span class="tgl-lewat">🛑 Untuk yang belum bayar kas gang diharapkan untuk segera melakukan pembayaran dan pelunasan jika masih menunggak 🛑</span>`;
 }
-
 document.getElementById('themeBtn').onclick=()=>{
  const th=['theme-cyberpunk','theme-dark','theme-blue',''];
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
 };
-
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
  const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
@@ -593,7 +554,6 @@ document.getElementById('cetakBtn').onclick=()=>{
   });
  },500);
 };
-
 document.addEventListener('input', recalc);
 updateUI(); updateDeadlineBanner();
 </script>
