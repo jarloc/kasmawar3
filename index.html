@@ -485,7 +485,7 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()===atob('QURNSU4=') && p && p.toUpperCase()===atob('U0FOV01JT04=')){
+  if(u && u.toUpperCase()==="ADMIN" && p && p.toUpperCase()==="SANUMION"){
    isAdmin=true; this.textContent='ADMIN ON'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
