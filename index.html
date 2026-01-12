@@ -678,7 +678,7 @@ function updateDeadlineBanner() {
     const banner = document.getElementById('deadline-text');
     if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
     else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom catatan penting pada bagian bawah halaman ini! 🛑 </span>`;
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek nama anda apakah tertera pada kolom "CATATAN PENTING" di bagian bawah halaman ini! 🛑 </span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
@@ -705,3 +705,4 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
