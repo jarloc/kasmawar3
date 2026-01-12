@@ -9,6 +9,14 @@
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
 
+/* --- INDIKATOR SIMPAN (NEW) --- */
+#saveIndicator {
+    position: fixed; top: 0; left: 0; width: 0%; height: 3px; 
+    background: linear-gradient(90deg, #00ffcc, #00ff00); 
+    z-index: 9999; transition: width 0.3s, opacity 0.5s; opacity: 0;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
 /* --- LOGO STYLING --- */
 .logo-mawar-container {
     position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; align-items: center;
@@ -110,6 +118,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </style>
 </head>
 <body>
+
+<div id="saveIndicator"></div>
 
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
@@ -423,13 +433,34 @@ function loadData(){
  });
 }
 
+function showIndicator() {
+    const ind = document.getElementById('saveIndicator');
+    ind.style.width = "70%"; ind.style.opacity = "1";
+    ind.style.background = "linear-gradient(90deg, #00ffcc, #0077ff)";
+}
+
+function hideIndicator() {
+    const ind = document.getElementById('saveIndicator');
+    ind.style.width = "100%"; ind.style.background = "#00ff00";
+    setTimeout(() => { ind.style.opacity = "0"; setTimeout(() => ind.style.width = "0%", 500); }, 1000);
+}
+
 function saveData(){
  if(!isAdmin) return;
+ showIndicator();
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate});
- db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
+ 
+ Promise.all([
+    db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}),
+    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value)
+ ]).then(() => {
+    hideIndicator();
+ }).catch(err => {
+    document.getElementById('saveIndicator').style.background = "red";
+    console.error(err);
+ });
 }
 
 async function openChecklist() {
