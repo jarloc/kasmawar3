@@ -263,15 +263,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         </div>
 
         <table class="table-usulan">
-            <thead>
-                <tr>
-                    <th style="width:15%">TANGGAL & JAM</th>
-                    <th style="width:20%">NAMA</th>
-                    <th style="width:35%">USULAN</th>
-                    <th style="width:30%">RESPON</th>
-                    ${isAdmin ? '<th style="width:50px">HPS</th>' : ''}
-                </tr>
-            </thead>
+            <thead id="headUsulan">
+                </thead>
             <tbody id="tbUsulan"></tbody>
         </table>
     </div>
@@ -363,7 +356,16 @@ function selesaiRespon() { modeRespon = false; document.getElementById('containe
 
 function loadUsulan() {
     const tb = document.getElementById('tbUsulan');
+    const th = document.getElementById('headUsulan');
+    
+    // Header dinamis agar aman dari kebocoran teks
+    let headerHTML = `<tr><th style="width:15%">TANGGAL & JAM</th><th style="width:20%">NAMA</th><th style="width:35%">USULAN</th><th style="width:30%">RESPON</th>`;
+    if(isAdmin) headerHTML += `<th style="width:50px">HPS</th>`;
+    headerHTML += `</tr>`;
+    th.innerHTML = headerHTML;
+
     tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Memuat data usulan...</td></tr>";
+    
     db.ref('usulan_warga').on('value', s => {
         const d = s.val();
         tb.innerHTML = "";
@@ -375,7 +377,8 @@ function loadUsulan() {
             const tolaks = u.tolak ? Object.values(u.tolak) : [];
             
             const tr = document.createElement('tr');
-            tr.innerHTML = `
+            
+            let rowHTML = `
                 <td style="text-align:center">${u.waktu}</td>
                 <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${u.nama}</td>
                 <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'usulan\', this.innerText)"' : ''}>${u.usulan}</td>
@@ -393,8 +396,13 @@ function loadUsulan() {
                         ` : ''}
                     </div>
                 </td>
-                ${isAdmin ? `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>` : ''}
             `;
+            
+            if(isAdmin) {
+                rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>`;
+            }
+            
+            tr.innerHTML = rowHTML;
             tb.appendChild(tr);
         });
     });
