@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1024">
-<title>LAPORAN KAS GANG MAWAR 3 - V10.2 SUPREME</title>
+<title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
 :root{
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
@@ -80,9 +80,6 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
-/* --- NEW ADMIN STYLES --- */
-.btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
-
 /* --- CYBERPUNK THEME --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
@@ -122,6 +119,9 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 .admin-action { display: none; width: 40px; text-align: center; }
 #adminTools { display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; }
+
+/* --- NEW HARDWARE SECURITY STYLE --- */
+.btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
 </style>
 </head>
 <body>
@@ -135,7 +135,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <div class="logo-mawar-container">
     <img src="logo.png" alt="LOGO" class="logo-img">
-    <div id="userGreeting">SELAMAT DATANG...</div>
+    <div id="userGreeting">SELAMAT DATANG, BPK. ...</div>
 </div>
 
 <div id="modalPengunjung">
@@ -148,7 +148,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
             <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ BERSIHKAN LOG PELANGGARAN</button>
         </div>
-        <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff; margin-top:10px;">TUTUP</button>
+        <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.2 Security Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.2 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -257,6 +257,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN BARU</button>
             <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 BERI RESPON PADA USULAN</button>
         </div>
+
         <div id="formInputUsulan">
             <h4 style="margin-top:0;">TULIS USULAN ANDA:</h4>
             <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Tulis usulan bapak/ibu di sini..."></textarea>
@@ -265,10 +266,12 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
                 <button onclick="kirimUsulan()" style="background:#2196F3; color:#fff; font-size:0.9rem; padding:8px 15px;">KIRIM USULAN</button>
             </div>
         </div>
+
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
             <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF: Klik ✅ atau ❌ pada usulan di bawah:</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
+
         <table class="table-usulan">
             <thead id="headUsulan"></thead>
             <tbody id="tbUsulan"></tbody>
@@ -282,10 +285,14 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 <script>
 const firebaseConfig = {
-    apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk", authDomain: "kasmawar3-59c18.firebaseapp.com",
+    apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
+    authDomain: "kasmawar3-59c18.firebaseapp.com",
     databaseURL: "https://kasmawar3-59c18-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "kasmawar3-59c18", storageBucket: "kasmawar3-59c18.firebasestorage.app",
-    messagingSenderId: "643313437210", appId: "1:643313437210:web:7377bbd6e4cd9aa33b5fa3", measurementId: "G-KY0GS26WNT"
+    projectId: "kasmawar3-59c18",
+    storageBucket: "kasmawar3-59c18.firebasestorage.app",
+    messagingSenderId: "643313437210",
+    appId: "1:643313437210:web:7377bbd6e4cd9aa33b5fa3",
+    measurementId: "G-KY0GS26WNT"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
@@ -303,136 +310,265 @@ let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-// --- SMART LOGIN & HARDWARE SECURITY ---
-async function generateFingerprint() {
+/* --- SUPREME SECURITY HARDWARE GENERATOR --- */
+async function getSupremeFingerprint() {
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-    ctx.fillText("Mawar3-V10.2-Supreme", 2, 2);
+    ctx.fillText("Mawar3-V10.2-Supreme-Sec", 2, 2);
     const b64 = canvas.toDataURL(); let hash = 0;
     for (let i = 0; i < b64.length; i++) { hash = ((hash << 5) - hash) + b64.charCodeAt(i); hash |= 0; }
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
 }
 
 async function masukWeb() {
-    let kunci = prompt("SILAHKAN MASUKKAN NOMOR RUMAH (Contoh: D3 NO 7, atau ketik 7 saja):");
+    let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     
+    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
     let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
     
-    // Hilman Case (v9.8)
-    if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasuk("HILMAN", "D2/20-21"); return; }
+    // Jika warga ngetik D220, D221, dll (Hilman)
+    if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
     
-    let foundKey = Object.keys(daftarKunci).find(key => {
-        let angkaSaja = key.split('/')[1]; 
-        let blokAngka = key.replace('/', '');
-        return raw === angkaSaja || raw === blokAngka || raw === key;
-    });
-
-    if (foundKey) { await prosesMasuk(daftarKunci[foundKey], foundKey); } 
-    else { alert("NOMOR BLOK TIDAK TERDAFTAR!"); }
+    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
+    let bersih = raw;
+    if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
+        if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
+        else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
+    }
+    
+    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
+    if (!isNaN(bersih)) {
+        let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
+        if (foundKey) bersih = foundKey;
+    }
+    
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar"); }
 }
 
-async function prosesMasuk(namaUser, kode) {
-    const fPrint = await generateFingerprint();
-    const namaTarget = namaUser + " (" + kode + ")";
+async function prosesMasukHardware(namaUser, kode) {
+    const fPrint = await getSupremeFingerprint();
+    const namaIdentitas = namaUser + " (" + kode + ")";
     
-    // Cek Keamanan Perangkat
-    const snap = await db.ref('perangkat_terdaftar/' + fPrint).once('value');
-    const pemilikAsli = snap.val();
+    // Check if hardware is already registered to another user
+    const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
+    const snap = await hardwareRef.once('value');
+    const registeredUser = snap.val();
 
-    if (pemilikAsli && pemilikAsli !== namaTarget) {
-        alert("🛑 AKSES DITOLAK!\nHP ini terdaftar milik " + pemilikAsli + ".\nLapor Bpk. Fajar untuk Reset HP.");
-        db.ref('log_pelanggaran_hardware').push({ penyamar: namaTarget, pemilik_asli: pemilikAsli, hw: fPrint, waktu: new Date().toLocaleString() });
+    if (registeredUser && registeredUser !== namaIdentitas) {
+        alert("🛑 AKSES DITOLAK!\nPerangkat/HP ini sudah terdaftar milik " + registeredUser + ".\nSilahkan hubungi Bpk. Fajar untuk Reset Identitas HP.");
+        db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
         return;
     }
 
-    if (!pemilikAsli) db.ref('perangkat_terdaftar/' + fPrint).set(namaTarget);
+    if (!registeredUser) {
+        hardwareRef.set(namaIdentitas);
+    }
     
-    currentUserName = namaTarget;
+    currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, waktu: new Date().toLocaleString('id-ID') });
     
+    // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
+    
     document.getElementById('welcomeScreen').remove();
-    loadData();
+    window.scrollTo(0,0);
 }
 
-// --- FUNGSI ADMIN BARU (RESET HP) ---
+// --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
-        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("BERHASIL!"); openPengunjung(); });
+        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
+    }
+}
+function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
+
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
+
+// ================= FORM USULAN WARGA =================
+function openUsulan() {
+    toggleMenu();
+    document.getElementById('usulanModal').style.display = 'block';
+    loadUsulan();
+}
+
+function showInputUsulan() { document.getElementById('formInputUsulan').style.display = 'block'; }
+function batalUsulan() { document.getElementById('formInputUsulan').style.display = 'none'; document.getElementById('txtUsulan').value = ''; }
+
+function kirimUsulan() {
+    const teks = document.getElementById('txtUsulan').value;
+    if(!teks) return alert("Usulan tidak boleh kosong!");
+    const skrgLog = new Date();
+    const tglJam = skrgLog.getDate() + "/" + (skrgLog.getMonth()+1) + "/" + skrgLog.getFullYear() + " " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
+    
+    db.ref('usulan_warga').push({
+        waktu: tglJam,
+        nama: currentUserName,
+        usulan: teks,
+        setuju: [],
+        tolak: []
+    }).then(() => {
+        alert("USULAN TERKIRIM!");
+        batalUsulan();
+        loadUsulan();
+    });
+}
+
+function aktifkanModeRespon() { modeRespon = true; document.getElementById('containerVotingRespon').style.display = 'block'; loadUsulan(); }
+function selesaiRespon() { modeRespon = false; document.getElementById('containerVotingRespon').style.display = 'none'; loadUsulan(); }
+
+function loadUsulan() {
+    const tb = document.getElementById('tbUsulan');
+    const th = document.getElementById('headUsulan');
+    
+    let headerHTML = `<tr><th style="width:15%">TANGGAL & JAM</th><th style="width:20%">NAMA</th><th style="width:35%">USULAN</th><th style="width:30%">RESPON</th>`;
+    if(isAdmin) headerHTML += `<th style="width:50px">HPS</th>`;
+    headerHTML += `</tr>`;
+    th.innerHTML = headerHTML;
+
+    tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Memuat data usulan...</td></tr>";
+    
+    db.ref('usulan_warga').on('value', s => {
+        const d = s.val();
+        tb.innerHTML = "";
+        if(!d) return tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Belum ada usulan masuk.</td></tr>";
+        
+        Object.keys(d).reverse().forEach(id => {
+            const u = d[id];
+            const namaPembuatMurni = u.nama.split(' (')[0];
+            const setujus = u.setuju ? Object.values(u.setuju) : [];
+            const tolaks = u.tolak ? Object.values(u.tolak) : [];
+            const listSetujuMurni = setujus.map(n => n.split(' (')[0]);
+            const listTolakMurni = tolaks.map(n => n.split(' (')[0]);
+            
+            const tr = document.createElement('tr');
+            const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
+            const isOwner = (u.nama === currentUserName);
+            
+            let rowHTML = `
+                <td style="text-align:center">${u.waktu}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${namaPembuatMurni}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'usulan\', this.innerText)"' : ''}>${u.usulan}</td>
+                <td>
+                    <div class="vote-box">
+                        <div class="vote-count">✅ SETUJU: ${setujus.length}</div>
+                        <div class="vote-names">${listSetujuMurni.join(', ')}</div>
+                        <div class="vote-count" style="color:#d9534f">❌ TOLAK: ${tolaks.length}</div>
+                        <div class="vote-names">${listTolakMurni.join(', ')}</div>
+                        ${(modeRespon && !isOwner && !sudahVoting) ? `
+                            <div style="margin-top:5px; display:flex; gap:5px;">
+                                <button onclick="vote('${id}', 'setuju')" style="background:#28a745; color:#fff; font-size:0.7rem; padding:4px 8px;">✅</button>
+                                <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
+                            </div>
+                        ` : ''}
+                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, SUARA ANDA SUDAH TERECORD.</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN.</div>` : ''}
+                    </div>
+                </td>
+            `;
+            if(isAdmin) rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>`;
+            tr.innerHTML = rowHTML;
+            tb.appendChild(tr);
+        });
+    });
+}
+
+function vote(id, tipe) {
+    const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
+    if(confirm(`YAKIN ${teksTipe}, TUAN?`)) {
+        db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
     }
 }
 
-function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
+function hapusUsulan(id) {
+    if(!isAdmin) return;
+    if(confirm("HAPUS USULAN INI, TUAN?")) {
+        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("TERHAPUS!"); });
+    }
+}
 
-// --- MODIFIKASI DAFTAR PENGUNJUNG ---
+function updateUsulanAdmin(id, field, value) {
+    if(!isAdmin) return;
+    db.ref(`usulan_warga/${id}`).update({ [field]: value });
+}
+
+// ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
     btnHapus.style.display = isAdmin ? 'block' : 'none';
     secLog.style.display = isAdmin ? 'block' : 'none';
+    list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
-    db.ref('pengunjung_situs').limitToLast(15).once('value', s => {
+    db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
         const d = s.val();
         if(d) {
-            let html = "<table style='width:100%;'><tr><th>NAMA</th><th>AKSI</th></tr>";
+            let html = "<table style='width:100%;'><tr><th>NAMA & TANGGAL</th><th>AKSI HP</th></tr>";
             Object.values(d).reverse().forEach(v => { 
-                html += `<tr style='border-bottom:1px solid #eee;'><td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td>
-                <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td></tr>`; 
+                html += `<tr style='border-bottom:1px solid #eee;'>
+                    <td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td>
+                    <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td>
+                </tr>`; 
             });
             list.innerHTML = html + "</table>";
         }
     });
 
     if(isAdmin) {
+        listLog.innerHTML = "Memindai riwayat penyusup...";
         db.ref('log_pelanggaran_hardware').limitToLast(10).once('value', s => {
             const d = s.val(); let h = "";
-            if(d) Object.values(d).reverse().forEach(v => { h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem;'>⚠️ <b>${v.penyamar}</b> mencoba masuk di HP <b>${v.pemilik_asli}</b><br><small>${v.waktu}</small></p>`; });
-            listLog.innerHTML = h || "<p style='color:green'>Tidak ada pelanggaran.</p>";
+            if(d) {
+                Object.values(d).reverse().forEach(v => { 
+                    h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ <b>${v.penyamar}</b> mencoba masuk di HP <b>${v.pemilik_asli}</b><br><small>${v.waktu}</small></p>`; 
+                });
+                listLog.innerHTML = h;
+            } else {
+                listLog.innerHTML = "<p style='text-align:center; color:green;'>TIDAK ADA PERCOBAAN ILEGAL.</p>";
+            }
         });
     }
 }
 
-// ================= SISANYA TETAP SEPERTI KODE ASLI TUAN (TIDAK DIHAPUS) =================
-function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
+function hapusRiwayatPengunjung() {
+    if (!isAdmin) return;
+    if (confirm("HAPUS SEMUA RIWAYAT, TUAN?")) {
+        db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
+        alert("BERSIH!"); openPengunjung(); 
+    }
+}
 
-document.getElementById('adminBtn').onclick = function() {
- if(!isAdmin){
-  let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
-   isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
-   document.getElementById('adminTools').style.display='flex';
-   applyAdminLock(); recalc(); alert('BERHASIL!');
-  } else { 
-   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID'), u:u, p:p });
-   alert('SALAH!'); 
-  }
- } else {
-  isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
-  document.getElementById('adminTools').style.display='none';
-  applyAdminLock();
- }
- toggleMenu();
-};
-
+// ================= LOGIKA KAS ASLI =================
 function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
         const tb = document.getElementById('tbKeluar');
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='total'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     } else {
         const tb = document.getElementById('tbMasuk');
         const tr = document.createElement('tr');
         const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${namaDefault}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable' value='${namaDefault}'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='saldo'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     }
     recalc();
 }
 
-function hapusBaris(btn) { if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); } }
+function hapusBaris(btn) {
+    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); }
+}
 
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -459,7 +595,7 @@ function recalc(){
   const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
   if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); }
   else if(keywordsSuccess.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); }
-  else { inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='inherit'; }); }
+  else { inputs.forEach(inp=>{ inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
@@ -497,6 +633,24 @@ function loadData(){
    }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
+  
+  let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
+  db.ref('kas_data/'+pm+'-'+pt).once('value', sPrev=>{
+    const dPrev=sPrev.val(); let sL=0;
+    if(dPrev && dPrev.masuk){
+        let mt=0, kt=0;
+        dPrev.masuk.forEach(r=>{ if(r.uang) mt += parseInt(r.uang.replace(/[^0-9]/g,'')) || 0; });
+        if(dPrev.keluar) dPrev.keluar.forEach(r=>{ let q = parseInt(r.qty.replace(/[^0-9]/g,'')) || 0, h = parseInt(r.harga.replace(/[^0-9]/g,'')) || 0; kt += (q * h); });
+        sL = mt - kt;
+    }
+    const trSisa = document.querySelector('#tbMasuk tr');
+    if(trSisa && trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA'){
+        trSisa.children[0].firstChild.value = `${tahun}-${(bulan + 1).toString().padStart(2, '0')}-01`;
+        trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
+        trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
+        recalc();
+    }
+  });
   recalc();
  });
  db.ref('kas_data/catatan_umum').once('value', snapshot => {
@@ -508,57 +662,85 @@ function loadData(){
 function saveData(){
  if(!isAdmin) return;
  const btn = document.getElementById('saveBtnManual');
+ const originalText = btn.textContent;
  btn.textContent = "PROSES...";
+ 
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
  const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}).then(() => {
+ 
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate})
+ .then(() => {
     db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
-    btn.textContent = "💾 SIMPAN DATA"; alert("✅ BERHASIL!");
+    btn.textContent = originalText;
+    alert("✅ DATA BERHASIL DISIMPAN KE SERVER, TUAN!");
  });
-}
-
-// (Fungsi Usulan & Checklist Tetap Ada)
-function openUsulan() { toggleMenu(); document.getElementById('usulanModal').style.display = 'block'; loadUsulan(); }
-function showInputUsulan() { document.getElementById('formInputUsulan').style.display = 'block'; }
-function batalUsulan() { document.getElementById('formInputUsulan').style.display = 'none'; document.getElementById('txtUsulan').value = ''; }
-function kirimUsulan() {
-    const teks = document.getElementById('txtUsulan').value;
-    if(!teks) return alert("Kosong!");
-    db.ref('usulan_warga').push({ waktu: new Date().toLocaleString(), nama: currentUserName, usulan: teks, setuju: [], tolak: [] }).then(() => { alert("TERKIRIM!"); batalUsulan(); loadUsulan(); });
-}
-function loadUsulan() {
-    const tb = document.getElementById('tbUsulan'), th = document.getElementById('headUsulan');
-    th.innerHTML = `<tr><th>TANGGAL</th><th>NAMA</th><th>USULAN</th><th>RESPON</th>${isAdmin?'<th>HPS</th>':''}</tr>`;
-    db.ref('usulan_warga').on('value', s => {
-        const d = s.val(); tb.innerHTML = "";
-        if(!d) return;
-        Object.keys(d).reverse().forEach(id => {
-            const u = d[id], setujus = u.setuju ? Object.values(u.setuju) : [], tolaks = u.tolak ? Object.values(u.tolak) : [];
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td>${u.waktu}</td><td>${u.nama.split(' (')[0]}</td><td>${u.usulan}</td><td>✅ ${setujus.length} | ❌ ${tolaks.length}</td>${isAdmin?`<td><button onclick="db.ref('usulan_warga/${id}').remove()">🗑️</button></td>`:''}`;
-            tb.appendChild(tr);
-        });
-    });
 }
 
 async function openChecklist() {
     toggleMenu(); const modal = document.getElementById('checklistModal'), tb = document.getElementById('tbChecklist');
-    modal.style.display = 'block'; tb.innerHTML = '<tr><td colspan="14">Memuat...</td></tr>';
-    // (Logika checklist v9.8 tetap berjalan sempurna)
+    document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
+    tb.innerHTML = '<tr><td colspan="14">Memindai Data...</td></tr>'; modal.style.display = 'block';
+    let listWarga = [...namaAnggotaAwal];
+    for(let m=0; m<=11; m++){
+        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
+        if(d && d.masuk) d.masuk.forEach(r => { 
+            if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama);
+        });
+    }
+    const matrix = {};
+    for (let m = 0; m <= 11; m++) {
+        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
+        listWarga.forEach((nama, idx) => {
+            if (idx === 0) return;
+            if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
+            if (d && d.masuk) {
+                const row = d.masuk.find(r => r.nama === nama);
+                if (row && ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+            }
+        });
+    }
+    tb.innerHTML = '';
+    Object.keys(matrix).forEach((nama, i) => {
+        const tr = document.createElement('tr');
+        let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
+        matrix[nama].forEach(status => { html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
+        tr.innerHTML = html; tb.appendChild(tr);
+    });
 }
+
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
+
+document.getElementById('adminBtn').onclick = function() {
+ if(!isAdmin){
+  let u=prompt('USER'), p=prompt('PASS');
+  if(u && u.toUpperCase()==='\x41\x44\x4d\x49\x4e' && p && p.toUpperCase()==='\x53\x41\x4e\x55\x4d\x49\x4f\x4e'){
+   isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
+   document.getElementById('adminTools').style.display='flex';
+   applyAdminLock(); recalc(); alert('BERHASIL!');
+  } else { 
+   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID') });
+   alert('SALAH!'); 
+  }
+ } else {
+  isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
+  document.getElementById('adminTools').style.display='none';
+  applyAdminLock();
+ }
+ toggleMenu();
+};
 
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
 function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
-
 function updateDeadlineBanner() {
-    const hariIni = new Date().getDate(); const banner = document.getElementById('deadline-text');
+    const hariIni = new Date().getDate();
+    const banner = document.getElementById('deadline-text');
     if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Segera lakukan pembayaran! Cek "CATATAN PENTING" di bawah! 🛑</span>`;
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom "CATATAN PENTING" pada bagian bawah halaman ini! 🛑 </span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
@@ -570,15 +752,20 @@ document.getElementById('themeBtn').onclick=()=>{
 
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
- const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint');
- areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
+ banner.style.display = 'none'; areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  setTimeout(()=>{
   html2canvas(document.body,{scale:2}).then(c=>{
-   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+   banner.style.display = 'block'; areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
   });
  },500);
 };
+
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+});
 
 document.addEventListener('input', recalc);
 updateUI(); updateDeadlineBanner();
