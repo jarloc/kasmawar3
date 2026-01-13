@@ -521,7 +521,7 @@ function openPengunjung() {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
-                    h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ <b>${v.penyamar}</b> mencoba masuk di HP <b>${v.pemilik_asli}</b><br><small>${v.waktu}</small></p>`; 
+                    h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br><small>${v.waktu}</small></p>`; 
                 });
                 listLog.innerHTML = h;
             } else {
@@ -772,4 +772,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
