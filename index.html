@@ -11,13 +11,16 @@
 
 /* --- LOGO STYLING --- */
 .logo-mawar-container {
-    position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; align-items: center;
+    position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; flex-direction: column; align-items: flex-start;
 }
 .logo-img {
     width: 100px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s;
 }
 .logo-welcome {
     width: 450px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px #00ffcc);
+}
+#userGreeting {
+    font-size: 0.75rem; font-weight: bold; margin-top: 5px; color: var(--text); text-shadow: 1px 1px 2px rgba(0,0,0,0.1); display: none; background: rgba(255,255,255,0.6); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border);
 }
 
 /* --- SAFARI FIX --- */
@@ -91,8 +94,10 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
 .theme-cyberpunk .menu-items button { background: #ff00ff !important; color: #000000 !important; box-shadow: 0 0 15px #ff00ff; border: 2px solid #00ffcc; }
 .theme-cyberpunk #adminBtn.primary { background: #00ffcc !important; color: #000000 !important; box-shadow: 0 0 15px #00ffcc; }
+.theme-cyberpunk #userGreeting { background: rgba(0,255,204,0.2); border-color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
 
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
+.theme-dark #userGreeting { background: rgba(0,0,0,0.5); border-color: #444; }
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
 #checklistModal, #usulanModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
@@ -121,12 +126,13 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar V9.6 Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
 <div class="logo-mawar-container">
     <img src="logo.png" alt="LOGO" class="logo-img">
+    <div id="userGreeting">SELAMAT DATANG, BPK. ...</div>
 </div>
 
 <div id="modalPengunjung">
@@ -209,7 +215,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V9.6 Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -310,14 +316,14 @@ function masukWeb() {
     // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { prosesMasuk("HILMAN", "D2/20-21"); return; }
     
-    // Logika menyisipkan "/" jika ketikan diawali D2/D3 tapi tanpa garis miring
+    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
     let bersih = raw;
     if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
     
-    // FITUR BARU: Jika warga cuma ngetik ANGKA saja (Misal: "23")
+    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
     if (!isNaN(bersih)) {
         let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
         if (foundKey) bersih = foundKey;
@@ -329,6 +335,11 @@ function masukWeb() {
 function prosesMasuk(namaUser, kode) {
     currentUserName = namaUser + " (" + kode + ")";
     db.ref('pengunjung_situs').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID') });
+    
+    // Munculkan teks sapaan di bawah logo
+    document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
+    document.getElementById('userGreeting').style.display = 'block';
+    
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
@@ -682,9 +693,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">⚠️ REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar kas gang yaa ⚠️</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran kas gang ditunggu sampai tanggal 7 yaa ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas gang harap untuk segera melakukan pembayaran dan pelunasan jika masih ada tunggakan 🛑</span>`;
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek nama anda apakah tertera pada kolom "CATATAN PENTING" di bagian bawah halaman ini! 🛑 </span>`;
 }
 
 document.getElementById('themeBtn').onclick=()=>{
