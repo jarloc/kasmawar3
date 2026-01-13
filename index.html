@@ -250,8 +250,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <div class="usulan-content">
         <h1>📝 FORM USULAN WARGA</h1>
         <div class="usulan-btn-container">
-            <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN</button>
-            <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 IKUT RESPON</button>
+            <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN BARU</button>
+            <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 BERI RESPON PADA USULAN</button>
         </div>
 
         <div id="formInputUsulan">
@@ -264,7 +264,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         </div>
 
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
-            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF: Klik ✅ atau ❌ pada tabel di bawah.</p>
+            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF: Klik ✅ atau ❌ pada usulan di bawah:</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
 
@@ -329,7 +329,7 @@ function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { prosesMasuk(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR!"); }
+    if (daftarKunci[bersih]) { prosesMasuk(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! PASTIKAN NOMOR BLOK ANDA BENAR"); }
 }
 
 function prosesMasuk(namaUser, kode) {
@@ -722,4 +722,5 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
 
