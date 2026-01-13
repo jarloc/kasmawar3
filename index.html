@@ -355,7 +355,7 @@ async function prosesMasukHardware(namaUser, kode) {
     const registeredUser = snap.val();
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nPerangkat/HP ini sudah terdaftar milik " + registeredUser + ".\nSilahkan hubungi Bpk. Fajar untuk Reset Identitas HP.");
+        alert("🛑 AKSES DITOLAK!\nSebelumnya anda login sebagai " + registeredUser + ".\nJika itu bukan anda silahkan hubungi bendahara untuk melakukan reset");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
         return;
     }
@@ -772,3 +772,4 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
