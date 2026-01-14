@@ -123,6 +123,15 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
+<span onclick="openPrivacy()" style="position:fixed; top:10px; right:15px; color:#aaa; font-size:0.65rem; cursor:pointer; z-index:100001; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px;">Kebijakan Privasi</span>
+
+<div id="privacyModal">
+    <div class="privacy-box">
+        <h3>KEBIJAKAN PRIVASI & KETENTUAN KEAMANAN</h3>
+        Bahwasanya dalam rangka upaya preventif guna memelihara integritas struktural database sistem pelaporan finansial pada lingkup administrasi Kas Gang Mawar 3, maka dengan ini ditetapkan bahwa setiap entitas perangkat elektronik yang melakukan akses interaktif ke dalam domain ini akan melalui proses identifikasi parameter teknis secara otomatis dan komprehensif. Parameter ini mencakup namun tidak terbatas pada jejak digital alamat protokol internet (IP Address), identifikasi metadata perangkat keras (Hardware Fingerprint), spesifikasi sistem operasi beserta versinya, serta rincian teknis peramban (browser) yang digunakan. Seluruh rangkaian protokol intelijen keamanan ini diimplementasikan semata-mata untuk memvalidasi otentisitas pengguna guna meminimalisir risiko anomali akses ilegal atau intrusi pihak ketiga yang tidak bertanggung jawab. Dengan melanjutkan akses dan menekan elemen interaktif pada halaman penyambutan ini, maka Anda secara sadar, tanpa paksaan, dan bersifat absolut memberikan konsesi serta persetujuan penuh terhadap pengumpulan data teknis tersebut di atas demi kemaslahatan dan keamanan stabilitas ekonomi mikro lingkungan kita bersama secara berkelanjutan dan berkesinambungan sesuai dengan standar operasional yang telah ditetapkan oleh pengelola sistem.
+        <button class="btn-close-privacy" onclick="closePrivacy()">SAYA MENGERTI & SETUJU</button>
+    </div>
+</div>
 </style>
 </head>
 <body>
@@ -130,7 +139,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.4.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.4.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -221,7 +230,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.4.4 Supreme Security | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.4.5 Supreme Security | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -832,9 +841,16 @@ window.addEventListener('beforeunload', function (e) {
 
 document.addEventListener('input', recalc);
 updateUI(); updateDeadlineBanner(); startClock();
+function openPrivacy() {
+    document.getElementById('privacyModal').style.display = 'flex';
+}
+function closePrivacy() {
+    document.getElementById('privacyModal').style.display = 'none';
+}
 </script>
 </body>
 </html>
+
 
 
 
