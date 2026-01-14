@@ -14,7 +14,7 @@
     position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; flex-direction: column; align-items: flex-start;
 }
 .logo-img {
-    width: 100px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s;
+    width: 200px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s;
 }
 .logo-welcome {
     width: 450px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px #00ffcc);
@@ -48,8 +48,9 @@ button {
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);-webkit-font-smoothing: antialiased;}
-header{text-align:center;font-size:2rem;margin-bottom:5px}
-.update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:10px; font-weight:normal; text-transform:none;}
+header{text-align:center;font-size:2rem;margin-bottom:30px; padding: 40px 20px; background: rgba(0,0,0,0.02); border-radius: 0 0 20px 20px;}
+.update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:5px; font-weight:normal; text-transform:none;}
+.current-time-info {text-align:center; font-size:0.85rem; color:var(--accent); margin-bottom:10px; font-weight:bold; text-transform:none;}
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
 .tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
@@ -122,40 +123,21 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
-
-/* --- FITUR TAMBAHAN TUAN --- */
-.clock-container { position: fixed; top: 120px; left: 15px; z-index: 1001; font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.2rem; color: var(--text); background: rgba(255,255,255,0.7); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); display: none; }
-.theme-cyberpunk .clock-container { color: #00ffcc; background: rgba(0,0,0,0.5); border-color: #ff00ff; box-shadow: 0 0 10px #00ffcc; }
-#camOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; }
-#videoFeed { width:100%; height:100%; object-fit: cover; }
-.cam-ui { position:absolute; top:20px; left:20px; color:#00ff00; font-family:monospace; text-shadow: 0 0 5px #00ff00; }
 </style>
 </head>
 <body>
 
-<div id="camOverlay">
-    <video id="videoFeed" autoplay playsinline></video>
-    <div class="cam-ui">
-        <div>● REC [LIVE]</div>
-        <div id="camTime"></div>
-        <div>SCANNING HARDWARE... OK</div>
-    </div>
-    <button onclick="stopCam()" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:red; color:#fff;">MATIKAN KAMERA</button>
-</div>
-
 <div id="welcomeScreen">
-    <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome" id="logoWelcome">
+    <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.3 </b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.3</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
-<div class="logo-mawar-container">
-    <img src="logo.png" alt="LOGO" class="logo-img" id="logoMain" onclick="this.style.width='300px'; setTimeout(()=>this.style.width='100px', 3000)">
+<div class="logo-mawar-container" id="logoHeaderContainer">
+    <img src="logo.png" alt="LOGO" class="logo-img">
     <div id="userGreeting">Selamat datang Bpk. ...</div>
 </div>
-
-<div id="realtimeClock" class="clock-container">00:00:00</div>
 
 <div id="modalPengunjung">
     <div class="pengunjung-content">
@@ -179,13 +161,14 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <button onclick="nextMonth()">▶</button>
   </div>
   <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
+  <div class="current-time-info" id="currentTime">WAKTU SAAT INI ADALAH : -</div>
 </header>
 
 <div id="deadline-banner">
     <marquee id="deadline-text" scrollamount="5">Mengecek tanggal...</marquee>
 </div>
 
-<div class="menu-container">
+<div class="menu-container" id="mainMenuContainer">
     <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
     <div class="menu-items" id="menuItems">
         <button id="adminBtn" class="off">⛔ ADMIN OFF 🔒</button>
@@ -195,7 +178,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
-            <button onclick="mulaiCam()" style="background:#673AB7; color:#fff;">📷 KAMERA PENGAWAS</button>
         </div>
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
@@ -239,7 +221,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.3 Supreme Security and Extended pool Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.4.3 Supreme Security | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -330,30 +312,6 @@ let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
-/* --- JS FITUR BARU TUAN --- */
-function updateJam() {
-    const n = new Date();
-    const j = n.getHours().toString().padStart(2,'0'), m = n.getMinutes().toString().padStart(2,'0'), d = n.getSeconds().toString().padStart(2,'0');
-    const jamFull = `${j}:${m}:${d}`;
-    document.getElementById('realtimeClock').innerText = jamFull;
-    if(document.getElementById('camTime')) document.getElementById('camTime').innerText = n.toLocaleString('id-ID');
-}
-setInterval(updateJam, 1000);
-
-let streamRef = null;
-async function mulaiCam() {
-    if(!isAdmin) return;
-    const overlay = document.getElementById('camOverlay'), video = document.getElementById('videoFeed');
-    try {
-        streamRef = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        video.srcObject = streamRef; overlay.style.display = 'block';
-    } catch(e) { alert("GAGAL AKSES KAMERA!"); }
-}
-function stopCam() {
-    if(streamRef) { streamRef.getTracks().forEach(t => t.stop()); }
-    document.getElementById('camOverlay').style.display = 'none';
-}
-
 /* --- SUPREME SECURITY HARDWARE GENERATOR --- */
 async function getSupremeFingerprint() {
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
@@ -391,15 +349,20 @@ async function masukWeb() {
     let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     
+    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
     let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
+    
+    // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
     
+    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
     let bersih = raw;
     if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
     
+    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
     if (!isNaN(bersih)) {
         let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
         if (foundKey) bersih = foundKey;
@@ -408,12 +371,13 @@ async function masukWeb() {
     if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); }
 }
 
-async function prosesMasukHardware(namaUser, kode) {
+async function prosesMasukHardware(namaUser, kunci) {
     const fPrint = await getSupremeFingerprint();
     const net = await getNetworkIntel();
     const sys = getSystemIntel();
-    const namaIdentitas = namaUser + " (" + kode + ")";
+    const namaIdentitas = namaUser + " (" + kunci + ")";
     
+    // Check if hardware is already registered to another user
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
     const registeredUser = snap.val();
@@ -431,14 +395,15 @@ async function prosesMasukHardware(namaUser, kode) {
     currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
     
+    // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
-    document.getElementById('realtimeClock').style.display = 'block';
     
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
 
+// --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
         db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
@@ -827,6 +792,15 @@ function updateDeadlineBanner() {
     else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom "CATATAN PENTING" pada bagian bawah halaman ini! 🛑 </span>`;
 }
 
+function startClock() {
+    setInterval(() => {
+        const n = new Date();
+        const d = n.getDate().toString().padStart(2,'0') + " " + namaBulan[n.getMonth()] + " " + n.getFullYear();
+        const t = n.getHours().toString().padStart(2,'0') + ":" + n.getMinutes().toString().padStart(2,'0') + ":" + n.getSeconds().toString().padStart(2,'0');
+        document.getElementById('currentTime').innerText = "WAKTU SAAT INI ADALAH : " + d + " | " + t + " WIB";
+    }, 1000);
+}
+
 document.getElementById('themeBtn').onclick=()=>{
  const th=['theme-cyberpunk','theme-dark','theme-blue',''];
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
@@ -837,11 +811,16 @@ document.getElementById('themeBtn').onclick=()=>{
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
  const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
- banner.style.display = 'none'; areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ const logoGrt = document.getElementById('userGreeting'), jamGr = document.getElementById('currentTime'), menuGr = document.getElementById('mainMenuContainer');
+ 
+ banner.style.display = 'none'; logoGrt.style.display = 'none'; jamGr.style.display = 'none'; menuGr.style.display = 'none';
+ areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ 
  setTimeout(()=>{
   html2canvas(document.body,{scale:2}).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   banner.style.display = 'block'; areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+   banner.style.display = 'block'; logoGrt.style.display = 'block'; jamGr.style.display = 'block'; menuGr.style.display = 'flex';
+   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
   });
  },500);
 };
@@ -852,7 +831,7 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 document.addEventListener('input', recalc);
-updateUI(); updateDeadlineBanner();
+updateUI(); updateDeadlineBanner(); startClock();
 </script>
 </body>
 </html>
