@@ -774,7 +774,7 @@ function saveData(){
 async function openChecklist() {
     toggleMenu(); const modal = document.getElementById('checklistModal'), tb = document.getElementById('tbChecklist');
     document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
-    tb.innerHTML = '<tr><td colspan="14">Memindai Data...</td></tr>'; modal.style.display = 'block';
+    tb.innerHTML = '<tr><td colspan="14">Memuat Data...</td></tr>'; modal.style.display = 'block';
     let listWarga = [...namaAnggotaAwal];
     for(let m=0; m<=11; m++){
         const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
@@ -888,6 +888,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
