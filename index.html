@@ -122,21 +122,40 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
+
+/* --- FITUR TAMBAHAN TUAN --- */
+.clock-container { position: fixed; top: 120px; left: 15px; z-index: 1001; font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.2rem; color: var(--text); background: rgba(255,255,255,0.7); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border); display: none; }
+.theme-cyberpunk .clock-container { color: #00ffcc; background: rgba(0,0,0,0.5); border-color: #ff00ff; box-shadow: 0 0 10px #00ffcc; }
+#camOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:10000; }
+#videoFeed { width:100%; height:100%; object-fit: cover; }
+.cam-ui { position:absolute; top:20px; left:20px; color:#00ff00; font-family:monospace; text-shadow: 0 0 5px #00ff00; }
 </style>
 </head>
 <body>
 
+<div id="camOverlay">
+    <video id="videoFeed" autoplay playsinline></video>
+    <div class="cam-ui">
+        <div>● REC [LIVE]</div>
+        <div id="camTime"></div>
+        <div>SCANNING HARDWARE... OK</div>
+    </div>
+    <button onclick="stopCam()" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); background:red; color:#fff;">MATIKAN KAMERA</button>
+</div>
+
 <div id="welcomeScreen">
-    <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
+    <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome" id="logoWelcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.2 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.3 </b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
 <div class="logo-mawar-container">
-    <img src="logo.png" alt="LOGO" class="logo-img">
+    <img src="logo.png" alt="LOGO" class="logo-img" id="logoMain" onclick="this.style.width='300px'; setTimeout(()=>this.style.width='100px', 3000)">
     <div id="userGreeting">Selamat datang Bpk. ...</div>
 </div>
+
+<div id="realtimeClock" class="clock-container">00:00:00</div>
 
 <div id="modalPengunjung">
     <div class="pengunjung-content">
@@ -176,6 +195,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
+            <button onclick="mulaiCam()" style="background:#673AB7; color:#fff;">📷 KAMERA PENGAWAS</button>
         </div>
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
@@ -219,7 +239,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.2 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.3 Supreme Security and Extended pool Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -310,6 +330,30 @@ let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
+/* --- JS FITUR BARU TUAN --- */
+function updateJam() {
+    const n = new Date();
+    const j = n.getHours().toString().padStart(2,'0'), m = n.getMinutes().toString().padStart(2,'0'), d = n.getSeconds().toString().padStart(2,'0');
+    const jamFull = `${j}:${m}:${d}`;
+    document.getElementById('realtimeClock').innerText = jamFull;
+    if(document.getElementById('camTime')) document.getElementById('camTime').innerText = n.toLocaleString('id-ID');
+}
+setInterval(updateJam, 1000);
+
+let streamRef = null;
+async function mulaiCam() {
+    if(!isAdmin) return;
+    const overlay = document.getElementById('camOverlay'), video = document.getElementById('videoFeed');
+    try {
+        streamRef = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        video.srcObject = streamRef; overlay.style.display = 'block';
+    } catch(e) { alert("GAGAL AKSES KAMERA!"); }
+}
+function stopCam() {
+    if(streamRef) { streamRef.getTracks().forEach(t => t.stop()); }
+    document.getElementById('camOverlay').style.display = 'none';
+}
+
 /* --- SUPREME SECURITY HARDWARE GENERATOR --- */
 async function getSupremeFingerprint() {
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
@@ -347,20 +391,15 @@ async function masukWeb() {
     let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     
-    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
     let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
-    
-    // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
     
-    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
     let bersih = raw;
     if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
     
-    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
     if (!isNaN(bersih)) {
         let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
         if (foundKey) bersih = foundKey;
@@ -375,7 +414,6 @@ async function prosesMasukHardware(namaUser, kode) {
     const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kode + ")";
     
-    // Check if hardware is already registered to another user
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
     const registeredUser = snap.val();
@@ -393,15 +431,14 @@ async function prosesMasukHardware(namaUser, kode) {
     currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
     
-    // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
+    document.getElementById('realtimeClock').style.display = 'block';
     
     document.getElementById('welcomeScreen').remove();
     window.scrollTo(0,0);
 }
 
-// --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
         db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
