@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.5 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -143,6 +143,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
         <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
+        <div id="paginationPengunjung" style="text-align:center; margin-bottom:15px;"></div>
         <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
             <h3 style="text-align:center; color:red;">🚨 LOG KEAMANAN SISTEM 🚨</h3>
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
@@ -219,7 +220,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.5 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -493,31 +494,45 @@ function updateUsulanAdmin(id, field, value) {
 }
 
 // ================= LOGIKA PENGUNJUNG =================
+let limitTampilVisitor = 50;
 function openPengunjung() {
     toggleMenu();
-    const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
+    const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung'), pagin = document.getElementById('paginationPengunjung');
     btnHapus.style.display = isAdmin ? 'block' : 'none';
     secLog.style.display = isAdmin ? 'block' : 'none';
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
-    db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
+    db.ref('pengunjung_situs').limitToLast(500).once('value', s => {
         const d = s.val();
         if(d) {
+            let allData = Object.values(d).reverse();
             let html = "<table style='width:100%;'><tr><th>NAMA & TANGGAL</th><th>AKSI HP</th></tr>";
-            Object.values(d).reverse().forEach(v => { 
+            
+            // Render hanya sejumlah limitTampilVisitor
+            allData.slice(0, limitTampilVisitor).forEach(v => { 
                 html += `<tr style='border-bottom:1px solid #eee;'>
                     <td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td>
                     <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td>
                 </tr>`; 
             });
             list.innerHTML = html + "</table>";
+
+            // Munculkan tombol load more jika data masih ada
+            if(allData.length > limitTampilVisitor) {
+                pagin.innerHTML = `<button onclick="limitTampilVisitor+=50; openPengunjung();" style="background:#eee; color:#000; font-size:0.8rem; padding:10px 20px; border:1px solid #ccc;">➕ TAMPILKAN 50 DATA LAGI</button>`;
+            } else {
+                pagin.innerHTML = `<small style='color:grey;'>Menampilkan ${allData.length} data terbaru.</small>`;
+            }
+        } else {
+            list.innerHTML = "Belum ada riwayat pengunjung.";
+            pagin.innerHTML = "";
         }
     });
 
     if(isAdmin) {
         listLog.innerHTML = "Memindai riwayat penyusup...";
-        db.ref('log_pelanggaran_hardware').limitToLast(10).once('value', s => {
+        db.ref('log_pelanggaran_hardware').limitToLast(500).once('value', s => {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
@@ -539,7 +554,7 @@ function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
     if (confirm("HAPUS SEMUA RIWAYAT, TUAN?")) {
         db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
-        alert("BERSIH!"); openPengunjung(); 
+        alert("BERSIH!"); limitTampilVisitor = 50; openPengunjung(); 
     }
 }
 
@@ -719,7 +734,7 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
+  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4O\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
@@ -776,5 +791,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
-
