@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by <b>Fajar Ilmanosa Viar</b> V10.2 Supreme Security Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.3 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">ENTER</button>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.2 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.3 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -521,7 +521,11 @@ function openPengunjung() {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
-                    h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br><small>${v.waktu}</small></p>`; 
+                    if(v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL"){
+                        h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>🚨 <b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!<br><small>${v.waktu}</small></p>`;
+                    } else {
+                        h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br><small>${v.waktu}</small></p>`; 
+                    }
                 });
                 listLog.innerHTML = h;
             } else {
@@ -715,12 +719,12 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='\x41\x44\x4d\x49\x4e' && p && p.toUpperCase()==='\x53\x41\x4e\x55\x4d\x49\x4f\x4e'){
+  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
-   db.ref('percobaan_admin_gagal').push({ nama: currentUserName, waktu: new Date().toLocaleString('id-ID') });
+   db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", waktu: new Date().toLocaleString() });
    alert('SALAH!'); 
   }
  } else {
