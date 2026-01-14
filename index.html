@@ -49,8 +49,8 @@ button {
 
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);-webkit-font-smoothing: antialiased;}
 header{text-align:center;font-size:2rem;margin-bottom:30px; padding: 40px 20px; background: rgba(0,0,0,0.02); border-radius: 0 0 20px 20px;}
-.update-info {text-align:center; font-size:0.85rem; color:#666; margin-bottom:5px; font-weight:normal; text-transform:none;}
-.current-time-info {text-align:center; font-size:0.85rem; color:var(--accent); margin-bottom:10px; font-weight:bold; text-transform:none;}
+.update-info {text-align:center; font-size:0.85rem; color: var(--accent); margin-bottom:10px; font-weight:bold; text-transform:none;}
+.current-time-info {text-align:center; font-size:0.85rem; color: #666; margin-bottom:5px; font-weight:normal; text-transform:none;}
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
 #deadline-banner marquee { font-size: 1.1rem; }
 .tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
@@ -160,8 +160,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <span id="periode" style="min-width:180px; display:inline-block">...</span>
     <button onclick="nextMonth()">▶</button>
   </div>
-  <div class="update-info" id="lastUpdate">TERAKHIR DI UPDATE PADA: -</div>
-  <div class="current-time-info" id="currentTime">WAKTU SAAT INI ADALAH : -</div>
+  <div class="update-info" id="lastUpdate">Laporan terakhir di update pada: -</div>
+  <div class="current-time-info" id="currentTime">Waktu saat ini adalah: -</div>
 </header>
 
 <div id="deadline-banner">
@@ -835,4 +835,5 @@ updateUI(); updateDeadlineBanner(); startClock();
 </script>
 </body>
 </html>
+
 
