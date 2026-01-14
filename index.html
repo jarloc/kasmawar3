@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.3 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.3 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -260,7 +260,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
         <div id="formInputUsulan">
             <h4 style="margin-top:0;">TULIS USULAN ANDA:</h4>
-            <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Tulis usulan bapak/ibu di sini..."></textarea>
+            <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Silahkan tulis usulan anda di sini..."></textarea>
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
                 <button onclick="batalUsulan()" style="background:#aaa; font-size:0.9rem; padding:8px 15px;">BATAL</button>
                 <button onclick="kirimUsulan()" style="background:#2196F3; color:#fff; font-size:0.9rem; padding:8px 15px;">KIRIM USULAN</button>
@@ -268,7 +268,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         </div>
 
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
-            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : Klik ✅ SETUJU / ❌ TOLAK pada usulan di bawah.</p>
+            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : KLIK TOMBOL ✅ / ❌ PADA USULAN YG ADA. JIKA SUDAH, KLIK TOMBOL SELESAI RESPON</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
 
@@ -342,7 +342,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); }
 }
 
 async function prosesMasukHardware(namaUser, kode) {
@@ -776,4 +776,5 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
 
