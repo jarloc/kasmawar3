@@ -130,12 +130,12 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
     <p>Built and developed by Fajar Ilmanosa Viar <b>V10.3 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
-    <button id="enterBtn" onclick="masukWeb()">ENTER</button>
+    <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
 <div class="logo-mawar-container">
     <img src="logo.png" alt="LOGO" class="logo-img">
-    <div id="userGreeting">SELAMAT DATANG, BPK. ...</div>
+    <div id="userGreeting">Selamat datang Bpk. ...</div>
 </div>
 
 <div id="modalPengunjung">
@@ -268,7 +268,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         </div>
 
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
-            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF: Klik ✅ atau ❌ pada usulan di bawah:</p>
+            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : Klik ✅ SETUJU / ❌ TOLAK pada usulan di bawah.</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
 
@@ -355,7 +355,7 @@ async function prosesMasukHardware(namaUser, kode) {
     const registeredUser = snap.val();
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nSebelumnya anda login sebagai " + registeredUser + ".\nJika itu bukan anda silahkan hubungi bendahara untuk melakukan reset");
+        alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
         return;
     }
@@ -461,8 +461,8 @@ function loadUsulan() {
                                 <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
                             </div>
                         ` : ''}
-                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, SUARA ANDA SUDAH TERECORD.</div>` : ''}
-                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN.</div>` : ''}
+                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, RESPON ANDA SUDAH MASUK.</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN INI, ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN SENDIRI.</div>` : ''}
                     </div>
                 </td>
             `;
@@ -475,14 +475,14 @@ function loadUsulan() {
 
 function vote(id, tipe) {
     const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
-    if(confirm(`YAKIN ${teksTipe}, TUAN?`)) {
+    if(confirm(`YAKIN ${teksTipe}, PAK?`)) {
         db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
     }
 }
 
 function hapusUsulan(id) {
     if(!isAdmin) return;
-    if(confirm("HAPUS USULAN INI, TUAN?")) {
+    if(confirm("HAPUS USULAN INI, PAK?")) {
         db.ref(`usulan_warga/${id}`).remove().then(() => { alert("TERHAPUS!"); });
     }
 }
@@ -776,3 +776,4 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
