@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.1 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.1 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -501,7 +501,7 @@ function openPengunjung() {
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
 
-    db.ref('pengunjung_situs').limitToLast(30).once('value', s => {
+    db.ref('pengunjung_situs').limitToLast(100).once('value', s => {
         const d = s.val();
         if(d) {
             let html = "<table style='width:100%;'><tr><th>NAMA & TANGGAL</th><th>AKSI HP</th></tr>";
@@ -517,7 +517,7 @@ function openPengunjung() {
 
     if(isAdmin) {
         listLog.innerHTML = "Memindai riwayat penyusup...";
-        db.ref('log_pelanggaran_hardware').limitToLast(10).once('value', s => {
+        db.ref('log_pelanggaran_hardware').limitToLast(100).once('value', s => {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
@@ -776,4 +776,5 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
+
 
