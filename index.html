@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.6.1 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.6.1 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -323,69 +323,59 @@ async function masukWeb() {
     let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     
-    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash agar input fleksibel
+    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
     let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
     
-    // Jika warga ngetik D220, D221, dll (Hilman) - Logika khusus untuk nomor ganda
+    // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
     
-    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223 secara langsung
+    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
     let bersih = raw;
     if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
     
-    // Jika warga hanya ngetik angkanya saja (misal: 23), sistem akan mencari di daftarKunci secara otomatis
+    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
     if (!isNaN(bersih)) {
         let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
         if (foundKey) bersih = foundKey;
     }
     
-    // Validasi akhir sebelum proses hardware security supreme diaktifkan
-    if (daftarKunci[bersih]) { 
-        await prosesMasukHardware(daftarKunci[bersih], bersih); 
-    } else { 
-        alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); 
-    }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); }
 }
 
 async function prosesMasukHardware(namaUser, kode) {
-    try {
-        const btnEnt = document.getElementById('enterBtn');
-        btnEnt.innerText = "PROSES..."; 
-        const fPrint = await getSupremeFingerprint();
-        const namaIdentitas = namaUser + " (" + kode + ")";
-        
-        // Memeriksa status perangkat pada database Firebase secara real-time
-        const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
-        const snap = await hardwareRef.once('value');
-        const registeredUser = snap.val();
+    const fPrint = await getSupremeFingerprint();
+    const namaIdentitas = namaUser + " (" + kode + ")";
+    
+    // Check if hardware is already registered to another user
+    const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
+    const snap = await hardwareRef.once('value');
+    const registeredUser = snap.val();
 
-        if (registeredUser && registeredUser !== namaIdentitas) {
-            alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
-            db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
-            btnEnt.innerText = "MASUK"; return;
-        }
-
-        if (!registeredUser) { hardwareRef.set(namaIdentitas); }
-        
-        currentUserName = namaIdentitas;
-        db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, waktu: new Date().toLocaleString('id-ID') });
-        
-        // Menampilkan sapaan resmi pada antarmuka utama pengguna
-        document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
-        document.getElementById('userGreeting').style.display = 'block';
-        
-        document.getElementById('welcomeScreen').remove();
-        window.scrollTo(0,0);
-    } catch (e) {
-        alert("Gagal terhubung ke Server! Periksa internet anda.");
-        document.getElementById('enterBtn').innerText = "MASUK";
+    if (registeredUser && registeredUser !== namaIdentitas) {
+        alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
+        db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
+        return;
     }
+
+    if (!registeredUser) {
+        hardwareRef.set(namaIdentitas);
+    }
+    
+    currentUserName = namaIdentitas;
+    db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, waktu: new Date().toLocaleString('id-ID') });
+    
+    // Munculkan teks sapaan di bawah logo
+    document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
+    document.getElementById('userGreeting').style.display = 'block';
+    
+    document.getElementById('welcomeScreen').remove();
+    window.scrollTo(0,0);
 }
 
-// --- ADMIN RESET FUNCTIONS UNTUK KEAMANAN HARDWARE ---
+// --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
         db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
@@ -395,7 +385,7 @@ function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?
 
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
-// ================= FORM USULAN WARGA LOGIC =================
+// ================= FORM USULAN WARGA =================
 function openUsulan() {
     toggleMenu();
     document.getElementById('usulanModal').style.display = 'block';
@@ -502,7 +492,7 @@ function updateUsulanAdmin(id, field, value) {
     db.ref(`usulan_warga/${id}`).update({ [field]: value });
 }
 
-// ================= LOGIKA PENGUNJUNG DAN LOG KEAMANAN =================
+// ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
@@ -553,7 +543,7 @@ function hapusRiwayatPengunjung() {
     }
 }
 
-// ================= LOGIKA KAS ASLI DAN TABEL DATA =================
+// ================= LOGIKA KAS ASLI =================
 function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
         const tb = document.getElementById('tbKeluar');
@@ -729,7 +719,7 @@ function cetakChecklist() { html2canvas(document.getElementById('checklistPrintA
 document.getElementById('adminBtn').onclick = function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4O\x4E'){
+  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
