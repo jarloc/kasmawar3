@@ -123,7 +123,25 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
-<span onclick="openPrivacy()" style="position:fixed; top:10px; right:15px; color:#aaa; font-size:0.65rem; cursor:pointer; z-index:100001; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px;">Kebijakan Privasi</span>
+/* Pastikan ini ada di dalam <style> Tuan */
+#privacyModal { 
+    display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:rgba(0,0,0,0.8); z-index:100000; align-items:center; 
+    justify-content:center; padding:20px; 
+}
+.privacy-box { 
+    background:#fff; color:#333; padding:20px; border-radius:8px; 
+    max-width:400px; max-height:70vh; overflow-y:auto; text-align:justify; 
+    font-size:0.75rem; line-height:1.4; border: 2px solid #555; 
+}
+.btn-close-privacy { 
+    width:100%; margin-top:15px; background:#333; color:#fff; 
+    padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; 
+}
+</style>
+</head>
+<body>
+<span onclick="openPrivacy()" style="position:fixed; top:10px; right:15px; color:#aaa; font-size:0.65rem; cursor:pointer; z-index:100001; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px; text-transform:none;">Kebijakan Privasi</span>
 
 <div id="privacyModal">
     <div class="privacy-box">
@@ -132,10 +150,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
         <button class="btn-close-privacy" onclick="closePrivacy()">SAYA MENGERTI & SETUJU</button>
     </div>
 </div>
-</style>
-</head>
-<body>
-
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
