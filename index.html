@@ -129,7 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.1 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar <b>V10.4.2 Supreme Security</b> Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -219,7 +219,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.1 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> V10.4.2 Supreme Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -319,6 +319,30 @@ async function getSupremeFingerprint() {
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
 }
 
+/* --- SUPREME NETWORK INTEL ENGINE (NEW) --- */
+async function getNetworkIntel() {
+    try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        return { ip: data.ip, isp: data.org, loc: data.city + ", " + data.region };
+    } catch(e) { return { ip: 'Unknown', isp: 'Unknown', loc: 'Unknown' }; }
+}
+
+function getSystemIntel() {
+    const ua = navigator.userAgent;
+    let os = "Unknown OS", br = "Unknown Browser";
+    if (ua.indexOf("Win") != -1) os = "Windows";
+    if (ua.indexOf("Mac") != -1) os = "MacOS";
+    if (ua.indexOf("Linux") != -1) os = "Linux";
+    if (ua.indexOf("Android") != -1) os = "Android " + (ua.match(/Android\s([0-9\.]+)/) ? ua.match(/Android\s([0-9\.]+)/)[1] : "");
+    if (ua.indexOf("like Mac") != -1) os = "iOS";
+    if (ua.indexOf("Chrome") != -1) br = "Chrome";
+    else if (ua.indexOf("Safari") != -1) br = "Safari";
+    else if (ua.indexOf("Firefox") != -1) br = "Firefox";
+    else if (ua.indexOf("Opera") != -1 || ua.indexOf("OPR") != -1) br = "Opera";
+    return { os: os, br: br };
+}
+
 async function masukWeb() {
     let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
@@ -347,6 +371,8 @@ async function masukWeb() {
 
 async function prosesMasukHardware(namaUser, kode) {
     const fPrint = await getSupremeFingerprint();
+    const net = await getNetworkIntel();
+    const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kode + ")";
     
     // Check if hardware is already registered to another user
@@ -356,7 +382,7 @@ async function prosesMasukHardware(namaUser, kode) {
 
     if (registeredUser && registeredUser !== namaIdentitas) {
         alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
-        db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, waktu: new Date().toLocaleString() });
+        db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
 
@@ -365,7 +391,7 @@ async function prosesMasukHardware(namaUser, kode) {
     }
     
     currentUserName = namaIdentitas;
-    db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, waktu: new Date().toLocaleString('id-ID') });
+    db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
     
     // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
@@ -504,10 +530,16 @@ function openPengunjung() {
     db.ref('pengunjung_situs').limitToLast(100).once('value', s => {
         const d = s.val();
         if(d) {
-            let html = "<table style='width:100%;'><tr><th>NAMA & TANGGAL</th><th>AKSI HP</th></tr>";
+            let html = "<table style='width:100%; font-size:0.8rem;'><tr><th>INFO PENGUNJUNG</th><th>AKSI HP</th></tr>";
             Object.values(d).reverse().forEach(v => { 
                 html += `<tr style='border-bottom:1px solid #eee;'>
-                    <td style='padding:5px;'><b>${v.nama}</b><br><small>${v.waktu}</small></td>
+                    <td style='padding:8px;'>
+                        <b>${v.nama}</b><br>
+                        <small style="color:#666;">${v.waktu}</small><br>
+                        <span style="color:#007bff;">📱 ${v.os || 'N/A'} | 🌐 ${v.br || 'N/A'}</span><br>
+                        <span style="color:#28a745;">📶 ${v.isp || 'N/A'}</span><br>
+                        <span style="color:#d9534f;">📍 ${v.ip || 'N/A'} (${v.loc || 'N/A'})</span>
+                    </td>
                     <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td>
                 </tr>`; 
             });
@@ -522,9 +554,18 @@ function openPengunjung() {
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
                     if(v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL"){
-                        h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>🚨 <b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!<br><small>${v.waktu}</small></p>`;
+                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
+                                🚨 <b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!<br>
+                                <small>${v.waktu}</small><br>
+                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
+                                📱 ${v.os || 'N/A'} | ${v.br || 'N/A'}
+                              </div>`;
                     } else {
-                        h += `<p style='border-left:4px solid red; padding-left:10px; font-size:0.8rem; background:#fff1f1;'>⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br><small>${v.waktu}</small></p>`; 
+                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
+                                ⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br>
+                                <small>${v.waktu}</small><br>
+                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}
+                              </div>`; 
                     }
                 });
                 listLog.innerHTML = h;
@@ -716,7 +757,7 @@ async function openChecklist() {
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
 function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
 
-document.getElementById('adminBtn').onclick = function() {
+document.getElementById('adminBtn').onclick = async function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
   if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
@@ -724,7 +765,9 @@ document.getElementById('adminBtn').onclick = function() {
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
-   db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", waktu: new Date().toLocaleString() });
+   const net = await getNetworkIntel();
+   const sys = getSystemIntel();
+   db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
    alert('SALAH!'); 
   }
  } else {
@@ -776,5 +819,3 @@ updateUI(); updateDeadlineBanner();
 </script>
 </body>
 </html>
-
-
