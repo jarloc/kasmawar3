@@ -81,6 +81,12 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
+/* --- PHOTO MODAL --- */
+#photoModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; align-items:center; justify-content:center; }
+.photo-container { max-width:90%; max-height:90%; position:relative; }
+.photo-container img { width:100%; height:auto; border: 5px solid #fff; border-radius:10px; }
+.btn-close-photo { position:absolute; top:-40px; right:0; background:red; color:#fff; padding:10px 20px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; }
+
 /* --- CYBERPUNK THEME --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
@@ -123,7 +129,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
-/* Pastikan ini ada di dalam <style> Tuan */
 #privacyModal { 
     display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
     background:rgba(0,0,0,0.8); z-index:100000; align-items:center; 
@@ -138,8 +143,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     width:100%; margin-top:15px; background:#333; color:#fff; 
     padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; 
 }
-/* TOMBOL BUKTI STYLE */
-.btn-bukti { background:#007bff; color:#fff; padding:4px 8px; border-radius:4px; font-size:0.65rem; border:none; cursor:pointer; margin-top:2px; display:inline-block; }
 </style>
 </head>
 <body>
@@ -161,18 +164,26 @@ Bahwasanya pemanfaatan algoritma validasi identitas dalam domain ini bersifat no
 
 Penggunaan sumber daya komputasi oleh entitas pengguna saat mengakses portal ini wajib tunduk pada limitasi lebar pita (bandwidth) dan integritas kueri yang telah dikonfigurasi. Segala bentuk manipulasi terhadap kode sumber (source code) atau upaya dekompilasi terhadap skrip yang berjalan di latar belakang akan diklasifikasikan sebagai tindakan pelanggaran integritas digital. Pengelola sistem melepaskan diri dari segala tanggung jawab atas malfungsi perangkat keras milik pengguna yang diakibatkan oleh ketidakpatuhan terhadap standar spesifikasi minimal peramban yang telah direkomendasikan.
 
-Akhirul kalam, bahwa seluruh ketentuan yang tercantum dalam maklumat ini bersifat dinamis dan dapat mengalami penyesuaian struktural sewaktu-waktu mengikuti dinamika regulasi internal dan perkembangan arsitektur teknologi informasi. Dengan tetap berada pada laman ini, Anda dianggap telah melakukan asimilasi kognitif terhadap seluruh poin-poin tersebut dan sepakat untuk membebaskan pengelola dari segala tuntutan hukum di kemudian hari. Keputusan pengelola sistem terkait interpretasi atas pasal-pasal keamanan ini bersifat final, mengikat, dan tidak dapat diganggu gugat oleh pihak manapun.
+Akhirul kalam, bahwa seluruh ketentuan yang tercantum dalam maklumat ini bersifat dinamis dan dapat mengalami penyesuaian struktural sewaktu-waktu mengikuti dinamika regulasi internal and perkembangan arsitektur teknologi informasi. Dengan tetap berada pada laman ini, Anda dianggap telah melakukan asimilasi kognitif terhadap seluruh poin-poin tersebut dan sepakat untuk membebaskan pengelola dari segala tuntutan hukum di kemudian hari. Keputusan pengelola sistem terkait interpretasi atas pasal-pasal keamanan ini bersifat final, mengikat, and tidak dapat diganggu gugat oleh pihak manapun.
 
 ADENDUM PERLINDUNGAN YURIDIS & PENGAWASAN SIBER:
 
-Bahwasanya seluruh aktivitas transmisi data, manipulasi kode, dan upaya eskalasi hak akses pada domain ini berada di bawah pemantauan protokol integritas digital yang berafiliasi dengan standar keamanan informasi nasional. Setiap pelanggaran yang terdeteksi, termasuk namun tidak terbatas pada upaya penggandaan tanpa izin (copyright infringement) terhadap arsitektur sistem Kas Gang Mawar 3, akan secara otomatis teregistrasi dalam pangkalan data pelanggaran administratif siber.
+Bahwasanya seluruh aktivitas transmisi data, manipulasi kode, and upaya eskalasi hak akses pada domain ini berada di bawah pemantauan protokol integritas digital yang berafiliasi dengan standar keamanan informasi nasional. Setiap pelanggaran yang terdeteksi, termasuk namun tidak terbatas pada upaya penggandaan tanpa izin (copyright infringement) terhadap arsitektur sistem Kas Gang Mawar 3, akan secara otomatis teregistrasi dalam pangkalan data pelanggaran administratif siber.
 
-Ketahuilah bahwa sistem ini telah mengadopsi prinsip perlindungan karya intelektual yang bersifat imperatif, di mana setiap entitas yang terbukti melakukan tindakan destruktif atau penggunaan materi tanpa otorisasi tertulis dari Pengelola, dapat diproses melalui mekanisme penegakan hukum sesuai dengan ketentuan perundang-undangan yang berlaku tentang Informasi dan Transaksi Elektronik (UU ITE). Pengelola memiliki hak mutlak untuk melakukan penangguhan akses dan menyerahkan log identifikasi perangkat kepada pihak berwenang guna kepentingan audit investigatif jika ditemukan indikasi kerugian finansial maupun struktural pada ekosistem Kas Gang Mawar 3.
+Ketahuilah bahwa sistem ini telah mengadopsi prinsip perlindungan karya intelektual yang bersifat imperatif, di mana setiap entitas yang terbukti melakukan tindakan destruktif atau penggunaan materi tanpa otorisasi tertulis dari Pengelola, dapat diproses melalui mekanisme penegakan hukum sesuai dengan ketentuan perundang-undangan yang berlaku tentang Informasi and Transaksi Elektronik (UU ITE). Pengelola memiliki hak mutlak untuk melakukan penangguhan akses and menyerahkan log identifikasi perangkat kepada pihak berwenang guna kepentingan audit investigatif jika ditemukan indikasi kerugian finansial maupun struktural pada ekosistem Kas Gang Mawar 3.
 Sistem Laporan Finansial Kas Gang Mawar 3 adalah karya intelektual yang dilindungi secara otomatis oleh Undang-Undang Hak Cipta Republik Indonesia. Segala bentuk duplikasi tanpa izin akan diproses melalui jalur administratif internal.
 Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Undang-Undang. Penggandaan atau penggunaan kode tanpa izin tertulis dari pengelola adalah pelanggaran integritas digital.
         <button class="btn-close-privacy" onclick="closePrivacy()">SAYA MENGERTI & SETUJU</button>
     </div>
 </div>
+
+<div id="photoModal">
+    <div class="photo-container">
+        <button class="btn-close-photo" onclick="closePhoto()">TUTUP [X]</button>
+        <img id="imgBukti" src="" alt="BUKTI PENGELUARAN">
+    </div>
+</div>
+
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
@@ -248,7 +259,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <h2>PENGELUARAN</h2>
 <div class="pulse-line"></div>
 <table>
-<tr><th style="width:30px">Tgl</th><th style="width:30%">Keterangan</th><th style="width:5%">Qty</th><th style="width:15%">Harga</th><th style="width:15%">Total</th><th style="width:15%">BUKTI</th><th class="admin-action">HPS</th></tr>
+<tr><th style="width:30px">Tgl</th><th style="width:30%">Keterangan</th><th style="width:15%">BUKTI</th><th style="width:8%">Qty</th><th style="width:20%">Harga</th><th style="width:20%">Total</th><th class="admin-action">HPS</th></tr>
 <tbody id="tbKeluar"></tbody>
 </table>
 </div>
@@ -270,7 +281,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.4 Supreme Transparency | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.4 Supreme Security and Evidence | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -312,6 +323,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
             <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN BARU</button>
             <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 BERI RESPON PADA USULAN</button>
         </div>
+
         <div id="formInputUsulan">
             <h4 style="margin-top:0;">TULIS USULAN ANDA:</h4>
             <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Silahkan tulis usulan anda di sini..."></textarea>
@@ -320,10 +332,12 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
                 <button onclick="kirimUsulan()" style="background:#2196F3; color:#fff; font-size:0.9rem; padding:8px 15px;">KIRIM USULAN</button>
             </div>
         </div>
+
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
             <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : KLIK TOMBOL ✅ / ❌ PADA USULAN YG ADA. JIKA SUDAH, KLIK TOMBOL SELESAI RESPON</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
+
         <table class="table-usulan">
             <thead id="headUsulan"></thead>
             <tbody id="tbUsulan"></tbody>
@@ -362,6 +376,7 @@ let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
+/* --- SUPREME SECURITY HARDWARE GENERATOR --- */
 async function getSupremeFingerprint() {
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
     ctx.fillText("Mawar3-V10.2-Supreme-Sec", 2, 2);
@@ -370,6 +385,7 @@ async function getSupremeFingerprint() {
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
 }
 
+/* --- SUPREME NETWORK INTEL ENGINE (NEW) --- */
 async function getNetworkIntel() {
     try {
         const res = await fetch('https://ipapi.co/json/');
@@ -435,12 +451,26 @@ async function prosesMasukHardware(namaUser, kunci) {
 
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
-        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("DIRESET!"); openPengunjung(); });
+        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
     }
 }
 function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
+// ================= PHOTO BUKTI LOGIC =================
+function showPhoto(link) {
+    if(!link) return;
+    let directLink = link;
+    if(link.includes('drive.google.com')){
+        const fileId = link.split('/d/')[1]?.split('/')[0] || link.split('id=')[1]?.split('&')[0];
+        if(fileId) directLink = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
+    }
+    document.getElementById('imgBukti').src = directLink;
+    document.getElementById('photoModal').style.display = 'flex';
+}
+function closePhoto() { document.getElementById('photoModal').style.display = 'none'; }
+
+// ================= FORM USULAN WARGA =================
 function openUsulan() {
     toggleMenu();
     document.getElementById('usulanModal').style.display = 'block';
@@ -448,65 +478,78 @@ function openUsulan() {
 }
 function showInputUsulan() { document.getElementById('formInputUsulan').style.display = 'block'; }
 function batalUsulan() { document.getElementById('formInputUsulan').style.display = 'none'; document.getElementById('txtUsulan').value = ''; }
+
 function kirimUsulan() {
     const teks = document.getElementById('txtUsulan').value;
-    if(!teks) return alert("Kosong!");
+    if(!teks) return alert("Usulan tidak boleh kosong!");
     const skrgLog = new Date();
     const tglJam = skrgLog.getDate() + "/" + (skrgLog.getMonth()+1) + "/" + skrgLog.getFullYear() + " " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    db.ref('usulan_warga').push({ waktu: tglJam, nama: currentUserName, usulan: teks, setuju: [], tolak: [] }).then(() => { alert("TERKIRIM!"); batalUsulan(); loadUsulan(); });
+    db.ref('usulan_warga').push({ waktu: tglJam, nama: currentUserName, usulan: teks, setuju: [], tolak: [] }).then(() => {
+        alert("USULAN TERKIRIM!"); batalUsulan(); loadUsulan();
+    });
 }
+
 function aktifkanModeRespon() { modeRespon = true; document.getElementById('containerVotingRespon').style.display = 'block'; loadUsulan(); }
 function selesaiRespon() { modeRespon = false; document.getElementById('containerVotingRespon').style.display = 'none'; loadUsulan(); }
+
 function loadUsulan() {
-    const tb = document.getElementById('tbUsulan');
-    const th = document.getElementById('headUsulan');
-    let headerHTML = `<tr><th>TANGGAL</th><th>NAMA</th><th>USULAN</th><th>RESPON</th>${isAdmin ? '<th>HPS</th>' : ''}</tr>`;
-    th.innerHTML = headerHTML;
-    tb.innerHTML = "<tr><td colspan='5'>Memuat...</td></tr>";
+    const tb = document.getElementById('tbUsulan'), th = document.getElementById('headUsulan');
+    let headerHTML = `<tr><th style="width:15%">TANGGAL & JAM</th><th style="width:20%">NAMA</th><th style="width:35%">USULAN</th><th style="width:30%">RESPON</th>`;
+    if(isAdmin) headerHTML += `<th style="width:50px">HPS</th>`;
+    headerHTML += `</tr>`; th.innerHTML = headerHTML;
+    tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Memuat data usulan...</td></tr>";
     db.ref('usulan_warga').on('value', s => {
         const d = s.val(); tb.innerHTML = "";
-        if(!d) return tb.innerHTML = "<tr><td colspan='5'>Kosong.</td></tr>";
+        if(!d) return tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Belum ada usulan masuk.</td></tr>";
         Object.keys(d).reverse().forEach(id => {
-            const u = d[id]; const setujus = u.setuju ? Object.values(u.setuju) : []; const tolaks = u.tolak ? Object.values(u.tolak) : [];
-            const tr = document.createElement('tr'); const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
-            tr.innerHTML = `<td>${u.waktu}</td><td>${u.nama.split(' (')[0]}</td><td>${u.usulan}</td>
-                <td><div class="vote-box"><div class="vote-count">✅: ${setujus.length}</div><div class="vote-count" style="color:#d9534f">❌: ${tolaks.length}</div>
-                ${(modeRespon && u.nama !== currentUserName && !sudahVoting) ? `<button onclick="vote('${id}', 'setuju')">✅</button><button onclick="vote('${id}', 'tolak')">❌</button>` : ''}</div></td>
-                ${isAdmin ? `<td><button onclick="hapusUsulan('${id}')">🗑️</button></td>` : ''}`;
-            tb.appendChild(tr);
+            const u = d[id], namaPembuatMurni = u.nama.split(' (')[0];
+            const setujus = u.setuju ? Object.values(u.setuju) : [], tolaks = u.tolak ? Object.values(u.tolak) : [];
+            const tr = document.createElement('tr');
+            const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
+            const isOwner = (u.nama === currentUserName);
+            let rowHTML = `<td style="text-align:center">${u.waktu}</td><td>${namaPembuatMurni}</td><td>${u.usulan}</td><td><div class="vote-box"><b>✅ SETUJU: ${setujus.length}</b><br><small>${setujus.map(n=>n.split(' (')[0]).join(', ')}</small><br><b>❌ TOLAK: ${tolaks.length}</b><br><small>${tolaks.map(n=>n.split(' (')[0]).join(', ')}</small>${(modeRespon && !isOwner && !sudahVoting) ? `<div style="margin-top:5px;"><button onclick="vote('${id}', 'setuju')">✅</button><button onclick="vote('${id}', 'tolak')">❌</button></div>` : ''}</div></td>`;
+            if(isAdmin) rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')">🗑️</button></td>`;
+            tr.innerHTML = rowHTML; tb.appendChild(tr);
         });
     });
 }
-function vote(id, tipe) { if(confirm("YAKIN?")) db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => loadUsulan()); }
+function vote(id, tipe) { if(confirm(`YAKIN?`)) db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => loadUsulan()); }
 function hapusUsulan(id) { if(isAdmin && confirm("HAPUS?")) db.ref(`usulan_warga/${id}`).remove(); }
 
+// ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
     btnHapus.style.display = isAdmin ? 'block' : 'none'; secLog.style.display = isAdmin ? 'block' : 'none';
-    list.innerHTML = "Memuat..."; modal.style.display = 'block';
+    list.innerHTML = "Memuat daftar..."; modal.style.display = 'block';
     db.ref('pengunjung_situs').limitToLast(100).once('value', s => {
-        const d = s.val(); if(d) {
-            let html = "<table><tr><th>INFO</th><th>AKSI</th></tr>";
-            Object.values(d).reverse().forEach(v => { html += `<tr><td><b>${v.nama}</b><br><small>${v.waktu}</small></td><td>${isAdmin ? `<button onclick="resetHardware('${v.hw}','${v.nama}')">RESET</button>` : '-'}</td></tr>`; });
+        const d = s.val();
+        if(d) {
+            let html = "<table style='width:100%; font-size:0.8rem;'><tr><th>INFO</th><th>AKSI</th></tr>";
+            Object.values(d).reverse().forEach(v => { 
+                html += `<tr><td><b>${v.nama}</b><br><small>${v.waktu}</small><br><span style="color:blue;">📱 ${v.os} | 🌐 ${v.br}</span></td><td>${isAdmin ? `<button onclick="resetHardware('${v.hw}','${v.nama}')">RESET</button>` : '-'}</td></tr>`; 
+            });
             list.innerHTML = html + "</table>";
         }
     });
 }
-function hapusRiwayatPengunjung() { if (isAdmin && confirm("HAPUS?")) db.ref('pengunjung_situs').remove().then(()=>openPengunjung()); }
+function hapusRiwayatPengunjung() { if (isAdmin && confirm("HAPUS SEMUA?")) db.ref('pengunjung_situs').remove().then(()=>openPengunjung()); }
 
+// ================= LOGIKA KAS ASLI =================
 function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
-        const tb = document.getElementById('tbKeluar'); const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td><input class='editable' placeholder='Link Drive'></td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+        const tb = document.getElementById('tbKeluar'), tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable bukti-link' placeholder='Link Drive'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
         tb.appendChild(tr);
     } else {
-        const tb = document.getElementById('tbMasuk'); const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${tipe === 'WARGA' ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN'}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+        const tb = document.getElementById('tbMasuk'), tr = document.createElement('tr');
+        const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
+        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${namaDefault}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
         tb.appendChild(tr);
     }
     recalc();
 }
+
 function hapusBaris(btn) { if(confirm("HAPUS?")) { btn.parentElement.parentElement.remove(); recalc(); } }
 
 function buildTables(){
@@ -518,7 +561,7 @@ function buildTables(){
  });
  for(let i=0;i<5;i++){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td><input class='editable' placeholder='Link Drive'></td><td class='admin-action' style='display:${isAdmin?"table-cell":"none"}'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable bukti-link' placeholder='Link Drive'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
   document.getElementById('tbKeluar').appendChild(tr);
  }
 }
@@ -528,24 +571,30 @@ function recalc(){
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
   let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID'); tr.children[4].textContent=runM.toLocaleString('id-ID');
-  const ketI = tr.children[2].firstChild; const ketV = ketI.value.toUpperCase(); const inps = tr.querySelectorAll('input');
-  if(ketV.includes('BELUM BAYAR')) inps.forEach(i=>{i.style.backgroundColor='var(--danger)'; i.style.color='#fff';});
-  else if(["LUNAS", "SUDAH BAYAR", "SISA KAS", "TUNAI", "TRANSFER"].some(k=>ketV.includes(k))) inps.forEach(i=>{i.style.backgroundColor='var(--success)'; i.style.color='#fff';});
-  else inps.forEach(i=>{i.style.backgroundColor='transparent'; i.style.color='var(--text)';});
+  const ketVal=tr.children[2].firstChild.value.toUpperCase();
+  const inputs=tr.querySelectorAll('input');
+  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>inp.style.backgroundColor='#ffcccc'); }
+  else if(["LUNAS","SUDAH BAYAR","SISA KAS"].some(k=>ketVal.includes(k))){ inputs.forEach(inp=>inp.style.backgroundColor='#ccffcc'); }
+  else { inputs.forEach(inp=>inp.style.backgroundColor='transparent'); }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
-  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
-  // LOGIKA TOMBOL BUKTI DINAMIS
-  const link = tr.children[5].firstChild.value; 
-  let btnL = tr.children[5].querySelector('.btn-bukti');
-  if(link && !btnL){
-      const b = document.createElement('button'); b.className='btn-bukti'; b.innerText='LIHAT BUKTI'; b.onclick=()=>window.open(link,'_blank');
-      tr.children[5].appendChild(b);
-  } else if(!link && btnL) btnL.remove();
+  let q=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[4].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
+  tr.children[3].firstChild.value=q.toLocaleString('id-ID'); tr.children[4].firstChild.value=h.toLocaleString('id-ID'); tr.children[5].textContent=t.toLocaleString('id-ID');
+  
+  // Logic for Evidence Button (Warga Mode)
+  const buktiInput = tr.querySelector('.bukti-link');
+  const cellBukti = tr.children[2];
+  if(!isAdmin){
+    const linkVal = buktiInput.value;
+    if(linkVal && linkVal.trim() !== ""){
+        cellBukti.innerHTML = `<button onclick="showPhoto('${linkVal}')" style="background:blue; color:#fff; padding:5px; font-size:0.7rem;">🖼️ LIHAT BUKTI</button><input class="bukti-link" type="hidden" value="${linkVal}">`;
+    } else { cellBukti.innerHTML = `<span style="color:#ccc; font-size:0.7rem;">TIDAK ADA FOTO</span><input class="bukti-link" type="hidden" value="">`; }
+  }
  });
- document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID'); document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
- document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID'); applyAdminLock();
+ document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
+ document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
+ document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
+ applyAdminLock();
 }
 
 function applyAdminLock(){ 
@@ -560,64 +609,90 @@ function loadData(){
   if(d && d.masuk){
    document.getElementById('tbMasuk').innerHTML='';
    d.masuk.forEach(r=>{
-    let stO = (tahun < 2026) ? "LUNAS" : "BELUM BAYAR";
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||stO}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)'>X</button></td>`;
+    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
    if(d.keluar) {
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td><input class='editable' value='${r.bukti||''}' placeholder='Link Drive'></td><td class='admin-action'><button onclick='hapusBaris(this)'>X</button></td>`;
+        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable bukti-link' value='${r.bukti||''}' placeholder='Link Drive'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
         document.getElementById('tbKeluar').appendChild(tr);
     });
    }
+   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE: " + d.updated;
   }
   recalc();
  });
+ db.ref('kas_data/catatan_umum').once('value', s => { if(s.val()) document.getElementById('catatanWarga').value = s.val(); });
 }
 
 function saveData(){
  if(!isAdmin) return;
+ const btn = document.getElementById('saveBtnManual'); btn.textContent = "PROSES...";
+ const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value, bukti:tr.children[5].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:new Date().toLocaleString()}).then(()=>alert("TERSESESAIKAN, TUAN!"));
+ const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, bukti:tr.querySelector('.bukti-link').value, qty:tr.children[3].firstChild.value, harga:tr.children[4].firstChild.value}));
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}).then(() => {
+    db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
+    btn.textContent = "💾 SIMPAN DATA"; alert("BERHASIL!");
+ });
 }
 
-let tahunChecklist = tahun; 
-function changeChecklistYear(arah) { tahunChecklist += arah; document.getElementById('txtTahunChecklist').innerText = `PERIODE ${tahunChecklist}`; renderChecklistData(tahunChecklist); }
-async function openChecklist() { toggleMenu(); document.getElementById('checklistModal').style.display = 'block'; renderChecklistData(tahunChecklist); }
+function openChecklist() { toggleMenu(); document.getElementById('checklistModal').style.display = 'block'; renderChecklistData(tahun); }
 async function renderChecklistData(thn) {
     const tb = document.getElementById('tbChecklist'); tb.innerHTML = '<tr><td>Memuat...</td></tr>';
-    const matrix = {}; let listWarga = [...namaAnggotaAwal];
+    let listWarga = [...namaAnggotaAwal];
+    const matrix = {};
     for (let m = 0; m <= 11; m++) {
         const snap = await db.ref(`kas_data/${m}-${thn}`).once('value'), d = snap.val();
-        listWarga.forEach(nama => { if(!matrix[nama]) matrix[nama]=Array(12).fill('X'); if(d && d.masuk){ const r=d.masuk.find(x=>x.nama===nama); if(r && ["LUNAS","SUDAH"].some(k=>(r.ket||'').toUpperCase().includes(k))) matrix[nama][m]='✓'; } });
+        listWarga.forEach((nama, idx) => {
+            if (idx === 0) return; if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
+            if (d && d.masuk) {
+                const row = d.masuk.find(r => r.nama === nama);
+                if (row && ["LUNAS", "SUDAH BAYAR"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+            }
+        });
     }
-    tb.innerHTML = ''; Object.keys(matrix).forEach((n,i)=>{ if(i===0)return; const tr=document.createElement('tr'); tr.innerHTML=`<td>${i}</td><td>${n}</td>`+matrix[n].map(s=>`<td class="${s==='✓'?'status-v':'status-x'}">${s}</td>`).join(''); tb.appendChild(tr); });
+    tb.innerHTML = '';
+    Object.keys(matrix).forEach((nama, i) => {
+        const tr = document.createElement('tr');
+        let html = `<td>${i+1}</td><td>${nama}</td>`;
+        matrix[nama].forEach(status => { html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
+        tr.innerHTML = html; tb.appendChild(tr);
+    });
 }
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-
-function downloadBackup() { db.ref('kas_data').once('value', s=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(s.val())],{type:'application/json'})); a.download='BACKUP.json'; a.click(); }); }
-function uploadBackup(e) { const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=x=>{ db.ref('kas_data').set(JSON.parse(x.target.result)).then(()=>location.reload()); }; r.readAsText(f); }
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea')).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST.jpg`; l.href = c.toDataURL(); l.click(); }); }
 
 document.getElementById('adminBtn').onclick = async function() {
  if(!isAdmin){
-  let p=prompt('PASS'); if(p && p.toUpperCase()==='SANUMION'){ isAdmin=true; applyAdminLock(); recalc(); }
- } else { isAdmin=false; applyAdminLock(); }
+  let u=prompt('USER'), p=prompt('PASS');
+  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
+   isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
+   document.getElementById('adminTools').style.display='flex'; applyAdminLock(); loadData();
+  } else { alert('SALAH!'); }
+ } else { isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off'; document.getElementById('adminTools').style.display='none'; loadData(); }
  toggleMenu();
 };
 
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
-function autoHeight(e) { e.style.height='auto'; e.style.height=e.scrollHeight+'px'; }
-function startClock() { setInterval(() => { const n=new Date(); document.getElementById('currentTime').innerText = n.toLocaleString(); }, 1000); }
-document.getElementById('themeBtn').onclick=()=>{ const th=['theme-cyberpunk','theme-dark','theme-blue','']; currentTheme=th[(th.indexOf(currentTheme)+1)%th.length]; document.body.className=currentTheme; };
+function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
+function startClock() { setInterval(() => { const n = new Date(); document.getElementById('currentTime').innerText = "WAKTU: " + n.toLocaleString(); }, 1000); }
+
+document.getElementById('themeBtn').onclick=()=>{
+ const th=['theme-cyberpunk','theme-dark','theme-blue',''];
+ let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
+ if(currentTheme) document.body.classList.remove(currentTheme);
+ currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
+};
+
+updateUI(); startClock();
 function openPrivacy() { document.getElementById('privacyModal').style.display = 'flex'; }
 function closePrivacy() { document.getElementById('privacyModal').style.display = 'none'; }
-updateUI(); startClock();
 </script>
 </body>
 </html>
