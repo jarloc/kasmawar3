@@ -174,7 +174,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -222,6 +222,11 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
+         <div id="admin-data-tools" style="display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; margin-top:5px;">
+    <button onclick="downloadBackup()" style="background:#2196F3; color:#fff; font-size:0.8rem; padding:10px;">💾 BACKUP DATA (JSON)</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="uploadBackup(event)">
+    <button onclick="document.getElementById('importFile').click()" style="background:#ff9800; color:#fff; font-size:0.8rem; padding:10px;">📥 RESTORE DATA (JSON)</button>
+</div>
         </div>
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
@@ -265,7 +270,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -812,6 +817,7 @@ document.getElementById('adminBtn').onclick = async function() {
   if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
+   document.getElementById('admin-data-tools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
    const net = await getNetworkIntel();
@@ -885,9 +891,40 @@ function openPrivacy() {
 function closePrivacy() {
     document.getElementById('privacyModal').style.display = 'none';
 }
+// --- FITUR GUDANG CADANGAN TUAN ---
+function downloadBackup() {
+    db.ref('kas_data').once('value', s => {
+        const data = JSON.stringify(s.val(), null, 2);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const l = document.createElement('a');
+        l.href = url;
+        l.download = `BACKUP_KAS_MAWAR_TOTAL_${new Date().toLocaleDateString()}.json`;
+        l.click();
+    });
+}
+
+function uploadBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const dataImg = JSON.parse(e.target.result);
+            if(confirm("Tuan, apakah Anda yakin ingin menimpa seluruh database dengan file cadangan ini?")) {
+                db.ref('kas_data').set(dataImg).then(() => {
+                    alert("DATA BERHASIL DIPULIHKAN, TUAN!");
+                    location.reload();
+                });
+            }
+        } catch(err) { alert("FILE TIDAK VALID, TUAN!"); }
+    };
+    reader.readAsText(file);
+}
 </script>
 </body>
 </html>
+
 
 
 
