@@ -151,7 +151,7 @@ Bahwasanya dalam rangka upaya preventif guna memelihara integritas struktural da
 
 Lebih lanjut, sistem akan melakukan sinkronisasi data secara periodik terhadap log aktivitas guna memastikan sinkronisitas antara input data dengan protokol validasi yang telah ditetapkan dalam standarisasi manajemen risiko digital. Proses audit teknis ini dilaksanakan tanpa interupsi guna menjamin keberlangsungan operasional (business continuity) serta memitigasi potensi divergensi data yang dapat berimplikasi pada akurasi pelaporan kolektif. Setiap fragmen informasi teknis yang terhimpun diklasifikasikan sebagai data restriktif yang tunduk pada kebijakan enkripsi berlapis sesuai dengan arsitektur keamanan yang diimplementasikan oleh pengelola.
 
-Seluruh rangkaian protokol keamanan ini diimplementasikan semata-mata untuk memvalidasi otentisitas pengguna untuk meminimalisir risiko anomali akses ilegal atau intrusi pihak ketiga yang tidak bertanggung jawab yang dapat mengancam stabilitas sistem informasi lingkungan. Dengan melanjutkan akses dan menekan elemen interaktif pada halaman penyambutan ini, maka Anda secara sadar dan bersifat absolut memberikan konsesi serta persetujuan penuh terhadap pengumpulan data teknis tersebut di atas demi kemaslahatan dan keamanan stabilitas ekonomi mikro lingkungan kita bersama secara berkelanjutan dan berkesinambungan sesuai dengan standar operasional yang telah ditetapkan oleh pengelola sistem. Pelanggaran terhadap ketentuan ini atau upaya manipulasi parameter identitas digital akan ditindaklanjuti sesuai dengan kewenangan administratif yang berlaku pada yurisdiksi internal Kas Gang Mawar 3.
+Seluruh rangkaian protokol keamanan ini diimplementasikan semata-mata untuk memvalidasi otentisitas pengguna untuk meminimalisir risiko anomali akses ilegal atau intrusi pihak ketiga yang tidak bertanggung jawab yang dapat mengancam stabilitas sistem informasi lingkungan. Dengan melanjutkan akses dan menekan elemen interaktif pada halaman penyambutan ini, maka Anda secara sadar dan bersifat absolut memberikan konsesi serta persetujuan penuh terhadap pengumpulan data teknis tersebut di atas demi kemaslahatan dan keamanan stabilitas ekonomi mikro lingkungan kita bersama secara berkelanjutan dan berkesambungan sesuai dengan standar operasional yang telah ditetapkan oleh pengelola sistem. Pelanggaran terhadap ketentuan ini atau upaya manipulasi parameter identitas digital akan ditindaklanjuti sesuai dengan kewenangan administratif yang berlaku pada yurisdiksi internal Kas Gang Mawar 3.
 
 Terkait dengan prosedur retensi data, sistem secara periodik akan melakukan purifikasi terhadap rekaman aktivitas (access logs) yang dianggap tidak relevan dengan matriks stabilitas sistem. Namun demikian, enkapsulasi data primer tetap akan dipertahankan dalam repositori terisolasi guna memenuhi standar akuntabilitas pelaporan kas. Hal ini mencakup sinkronisasi berkelanjutan antara server-side scripting dengan client-side interface guna meminimalisir latensi informasi yang dapat mengaburkan transparansi nominal finansial yang tertera dalam sistem administrasi Kas Gang Mawar 3.
 
@@ -222,11 +222,9 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
-         <div id="admin-data-tools" style="display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; margin-top:5px;">
-    <button onclick="downloadBackup()" style="background:#2196F3; color:#fff; font-size:0.8rem; padding:10px;">💾 BACKUP DATA (JSON)</button>
-    <input type="file" id="importFile" accept=".json" style="display:none" onchange="uploadBackup(event)">
-    <button onclick="document.getElementById('importFile').click()" style="background:#ff9800; color:#fff; font-size:0.8rem; padding:10px;">📥 RESTORE DATA (JSON)</button>
-</div>
+            <button onclick="downloadBackup()" style="background:#6c757d; color:#fff;">📥 BACKUP DATABASE</button>
+            <button onclick="document.getElementById('fileRestore').click()" style="background:#6c757d; color:#fff;">📤 RESTORE DATABASE</button>
+            <input type="file" id="fileRestore" style="display:none" onchange="uploadBackup(event)">
         </div>
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
@@ -280,7 +278,11 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
     </div>
     <div class="checklist-content" id="checklistPrintArea">
         <h1 id="judulChecklist" style="text-align:center; background:#92c694; padding:10px; margin:0;">CHECKLIST KAS GANG MAWAR 3</h1>
-        <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0;">PERIODE 2026</h2>
+        <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0; display:flex; justify-content:center; align-items:center; gap:20px;">
+            <button onclick="changeChecklistYear(-1)" style="padding:5px 15px; font-size:1rem; background:#333; color:#fff;">◀</button>
+            <span id="txtTahunChecklist">PERIODE 2026</span>
+            <button onclick="changeChecklistYear(1)" style="padding:5px 15px; font-size:1rem; background:#333; color:#fff;">▶</button>
+        </h2>
         <table class="table-checklist">
             <thead>
                 <tr>
@@ -689,12 +691,22 @@ function recalc(){
   let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
-  const ketVal=tr.children[2].firstChild.value.toUpperCase();
+  
+  // LOGIKA WARNA OTOMATIS BERDASARKAN TITAH TUAN
+  const ketInput = tr.children[2].firstChild;
+  const ketVal=ketInput.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
   const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); }
-  else if(keywordsSuccess.some(k => ketVal.includes(k))){ inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); }
-  else { inputs.forEach(inp=>{ inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); }); }
+  
+  if(ketVal.includes('BELUM BAYAR')){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); 
+  }
+  else if(keywordsSuccess.some(k => ketVal.includes(k))){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); 
+  }
+  else { 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); 
+  }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
@@ -718,8 +730,12 @@ function loadData(){
   if(d && d.masuk){
    document.getElementById('tbMasuk').innerHTML='';
    d.masuk.forEach(r=>{
+    // LOGIKA STATUS OTOMATIS BERDASARKAN TAHUN
+    let statusOto = (tahun < 2026) ? "LUNAS" : "BELUM BAYAR";
+    let ketTampil = r.ket || statusOto;
+
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${ketTampil}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
    if(d.keluar) {
@@ -776,22 +792,43 @@ function saveData(){
  });
 }
 
+// LOGIKA NAVIGASI TAHUN CHECKLIST
+let tahunChecklist = tahun; 
+
+function changeChecklistYear(arah) {
+    tahunChecklist += arah;
+    document.getElementById('txtTahunChecklist').innerText = `PERIODE ${tahunChecklist}`;
+    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahunChecklist}`;
+    renderChecklistData(tahunChecklist);
+}
+
 async function openChecklist() {
-    toggleMenu(); const modal = document.getElementById('checklistModal'), tb = document.getElementById('tbChecklist');
-    document.getElementById('subJudulChecklist').innerText = `PERIODE ${tahun}`;
-    tb.innerHTML = '<tr><td colspan="14">Memuat Data...</td></tr>'; modal.style.display = 'block';
+    toggleMenu(); 
+    const modal = document.getElementById('checklistModal');
+    tahunChecklist = tahun; 
+    document.getElementById('txtTahunChecklist').innerText = `PERIODE ${tahunChecklist}`;
+    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahunChecklist}`;
+    modal.style.display = 'block';
+    renderChecklistData(tahunChecklist);
+}
+
+async function renderChecklistData(thn) {
+    const tb = document.getElementById('tbChecklist');
+    tb.innerHTML = '<tr><td colspan="14">Memuat Data Tahun ' + thn + '...</td></tr>';
+    
     let listWarga = [...namaAnggotaAwal];
     for(let m=0; m<=11; m++){
-        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
+        const snap = await db.ref(`kas_data/${m}-${thn}`).once('value'), d = snap.val();
         if(d && d.masuk) d.masuk.forEach(r => { 
             if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama);
         });
     }
+
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
-        const snap = await db.ref(`kas_data/${m}-${tahun}`).once('value'), d = snap.val();
+        const snap = await db.ref(`kas_data/${m}-${thn}`).once('value'), d = snap.val();
         listWarga.forEach((nama, idx) => {
-            if (idx === 0) return;
+            if (idx === 0) return; 
             if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
             if (d && d.masuk) {
                 const row = d.masuk.find(r => r.nama === nama);
@@ -799,17 +836,50 @@ async function openChecklist() {
             }
         });
     }
+
     tb.innerHTML = '';
     Object.keys(matrix).forEach((nama, i) => {
         const tr = document.createElement('tr');
         let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
         matrix[nama].forEach(status => { html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
-        tr.innerHTML = html; tb.appendChild(tr);
+        tr.innerHTML = html; 
+        tb.appendChild(tr);
     });
 }
 
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahun}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahunChecklist}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
+
+// FITUR GUDANG CADANGAN (BACKUP & RESTORE)
+function downloadBackup() {
+    db.ref('kas_data').once('value', s => {
+        const data = JSON.stringify(s.val(), null, 2);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const l = document.createElement('a');
+        l.href = url;
+        l.download = `BACKUP_KAS_TOTAL_${new Date().toLocaleDateString()}.json`;
+        l.click();
+    });
+}
+
+function uploadBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const dataImg = JSON.parse(e.target.result);
+            if(confirm("Tuan, apakah Anda yakin ingin menimpa database dengan cadangan ini?")) {
+                db.ref('kas_data').set(dataImg).then(() => {
+                    alert("DATA BERHASIL DIPULIHKAN, TUAN!");
+                    location.reload();
+                });
+            }
+        } catch(err) { alert("FILE TIDAK VALID!"); }
+    };
+    reader.readAsText(file);
+}
 
 document.getElementById('adminBtn').onclick = async function() {
  if(!isAdmin){
@@ -817,7 +887,6 @@ document.getElementById('adminBtn').onclick = async function() {
   if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
-   document.getElementById('admin-data-tools').style.display='flex';
    applyAdminLock(); recalc(); alert('BERHASIL!');
   } else { 
    const net = await getNetworkIntel();
@@ -891,50 +960,6 @@ function openPrivacy() {
 function closePrivacy() {
     document.getElementById('privacyModal').style.display = 'none';
 }
-// --- FITUR GUDANG CADANGAN TUAN ---
-function downloadBackup() {
-    db.ref('kas_data').once('value', s => {
-        const data = JSON.stringify(s.val(), null, 2);
-        const blob = new Blob([data], {type: 'application/json'});
-        const url = URL.createObjectURL(blob);
-        const l = document.createElement('a');
-        l.href = url;
-        l.download = `BACKUP_KAS_MAWAR_TOTAL_${new Date().toLocaleDateString()}.json`;
-        l.click();
-    });
-}
-
-function uploadBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const dataImg = JSON.parse(e.target.result);
-            if(confirm("Tuan, apakah Anda yakin ingin menimpa seluruh database dengan file cadangan ini?")) {
-                db.ref('kas_data').set(dataImg).then(() => {
-                    alert("DATA BERHASIL DIPULIHKAN, TUAN!");
-                    location.reload();
-                });
-            }
-        } catch(err) { alert("FILE TIDAK VALID, TUAN!"); }
-    };
-    reader.readAsText(file);
-}
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
