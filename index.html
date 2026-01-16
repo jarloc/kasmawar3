@@ -987,13 +987,11 @@ document.getElementById('adminBtn').onclick = async function() {
         let u = prompt('USER ADMIN:'), p = prompt('PASSWORD ADMIN:');
         
         if(u && p){
-            // Algoritma Enkripsi Mandiri (Langsung di dalam Fungsi)
+            // Mesin Enkripsi Internal (Diciptakan khusus agar tidak error lagi)
             const getHash = async (teks) => {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(teks.trim().toUpperCase());
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                const msgBuffer = new TextEncoder().encode(teks.trim().toUpperCase());
+                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
             };
 
             const userHash = await getHash(u);
@@ -1012,15 +1010,15 @@ document.getElementById('adminBtn').onclick = async function() {
                 recalc(); 
                 alert('ADMIN ON - Hormat saya, Tuan.');
             } else { 
-                // Protokol Intelijen Keamanan Otomatis
+                // Fitur Intelijen Pelaporan Pelanggaran
                 const net = await getNetworkIntel();
                 const sys = getSystemIntel();
                 db.ref('log_pelanggaran_hardware').push({ 
                     penyamar: currentUserName, 
                     pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
                     hw: "ADMIN_SEC", 
-                    ip: net.ip || 'Unknown', 
-                    isp: net.isp || 'Unknown', 
+                    ip: net.ip, 
+                    isp: net.isp, 
                     os: sys.os, 
                     br: sys.br, 
                     waktu: new Date().toLocaleString() 
@@ -1099,6 +1097,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
