@@ -187,7 +187,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -281,7 +281,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -984,33 +984,43 @@ async function sha256(plain) {
 }
  document.getElementById('adminBtn').onclick = async function() {
     if(!isAdmin){
-        let u=prompt('USER ADMIN:'), p=prompt('PASSWORD ADMIN:');
+        let u = prompt('USER ADMIN:'), p = prompt('PASSWORD ADMIN:');
         
-        // Kode Hash Rahasia untuk "ADMIN" dan "SANUMION"
-const userTarget = "c1c224b03d40ffa419b48f95f488e07b46ca79d63f0d4b9987f17b9b0068a05c";
-const passTarget = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a4698";
         if(u && p){
-            const userHash = await sha256(u);
-            const passHash = await sha256(p);
+            // Fungsi Enkripsi Mandiri yang Paling Akurat (Anti-Gagal)
+            const getHash = async (teks) => {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(teks.trim().toUpperCase());
+                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            };
 
-            if(userHash === userTarget && passHash === passTarget){
-                isAdmin=true; 
-                this.textContent='✅ ADMIN ON 🔓'; 
-                this.className='primary';
-                document.getElementById('adminTools').style.display='flex';
+            const userHash = await getHash(u);
+            const passHash = await getHash(p);
+
+            // Perisai Hash untuk "ADMIN" dan "SANUMION"
+            const uT = "c1c224b03d40ffa419b48f95f488e07b46ca79d63f0d4b9987f17b9b0068a05c";
+            const pT = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a4698";
+
+            if(userHash === uT && passHash === pT){
+                isAdmin = true; 
+                this.textContent = '✅ ADMIN ON 🔓'; 
+                this.className = 'primary';
+                document.getElementById('adminTools').style.display = 'flex';
                 applyAdminLock(); 
                 recalc(); 
                 alert('ADMIN ON - Hormat saya, Tuan.');
             } else { 
-                // Fitur Intelijen tetap bekerja otomatis
+                // Protokol Intelijen Keamanan
                 const net = await getNetworkIntel();
                 const sys = getSystemIntel();
                 db.ref('log_pelanggaran_hardware').push({ 
                     penyamar: currentUserName, 
                     pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
                     hw: "ADMIN_SEC", 
-                    ip: net.ip, 
-                    isp: net.isp, 
+                    ip: (net && net.ip) ? net.ip : 'unknown', 
+                    isp: (net && net.isp) ? net.isp : 'unknown', 
                     os: sys.os, 
                     br: sys.br, 
                     waktu: new Date().toLocaleString() 
@@ -1019,15 +1029,15 @@ const passTarget = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a
             }
         }
     } else {
-        isAdmin=false; 
-        this.textContent='⛔ ADMIN OFF 🔒'; 
-        this.className='off';
-        document.getElementById('adminTools').style.display='none';
+        isAdmin = false; 
+        this.textContent = '⛔ ADMIN OFF 🔒'; 
+        this.className = 'off';
+        document.getElementById('adminTools').style.display = 'none';
         applyAdminLock();
     }
     toggleMenu();
 };
-
+ 
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -1089,6 +1099,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
