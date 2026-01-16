@@ -259,7 +259,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <h2>PENGELUARAN</h2>
 <div class="pulse-line"></div>
 <table>
-<tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th><th class="admin-action">HPS</th></tr>
+<tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th><th style="width:100px">Bukti</th><th class="admin-action">HPS</th></tr>
 <tbody id="tbKeluar"></tbody>
 </table>
 </div>
@@ -707,11 +707,12 @@ function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
         const tb = document.getElementById('tbKeluar');
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td>
+tr.innerHTML = `<td><input class='editable' type='date'></td>
                         <td><input class='editable'></td>
                         <td><input class='editable' value='0'></td>
                         <td><input class='editable' value='0'></td>
                         <td class='total'>0</td>
+                        <td><input class='editable' placeholder='Link Drive...'></td>
                         <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     } else {
@@ -770,9 +771,40 @@ function recalc(){
       inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); 
   }
  });
- document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
-  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
+document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
+  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, 
+      h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, 
+      t=q*h; 
+  tK+=t;
+  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); 
+  tr.children[3].firstChild.value=h.toLocaleString('id-ID'); 
+  tr.children[4].textContent=t.toLocaleString('id-ID');
+
+  // --- MULAI GANTI/TAMBAH DI SINI (LOGIKA BUKTI) ---
+  const linkInp = tr.children[5].querySelector('input'); 
+  if(linkInp){
+      const val = linkInp.value.trim();
+      if(!isAdmin){
+          linkInp.style.display = "none";
+          let btnLihat = tr.querySelector('.btn-lihat-bukti');
+          if(val !== ""){
+              if(!btnLihat){
+                  btnLihat = document.createElement('button');
+                  btnLihat.className = 'btn-lihat-bukti';
+                  btnLihat.innerText = '👁️ BUKTI';
+                  btnLihat.onclick = function(){ openBukti(this); };
+                  tr.children[5].appendChild(btnLihat);
+              }
+              btnLihat.setAttribute('data-link', val);
+              btnLihat.style.display = "inline-block";
+          } else if(btnLihat) { btnLihat.style.display = "none"; }
+      } else {
+          linkInp.style.display = "block";
+          let btnLihat = tr.querySelector('.btn-lihat-bukti');
+          if(btnLihat) btnLihat.style.display = "none";
+      }
+  }
+  // --- SELESAI LOGIKA BUKTI ---
  });
  document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
  document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
@@ -804,8 +836,8 @@ function loadData(){
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
-        document.getElementById('tbKeluar').appendChild(tr);
+tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td><input class='editable' value='${r.bukti||''}' placeholder='Link Drive...'></td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+     document.getElementById('tbKeluar').appendChild(tr);
     });
    }
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
@@ -844,7 +876,7 @@ function saveData(){
  
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+ const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value, bukti:tr.children[5].firstChild.value}));
  
  db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate})
  .then(() => {
@@ -1025,3 +1057,4 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
