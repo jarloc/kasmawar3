@@ -187,7 +187,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -281,7 +281,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -975,19 +975,12 @@ function uploadBackup(event) {
     reader.readAsText(file);
 }
 
-async function sha256(plain) {
-// .trim() akan menghapus spasi yang tidak sengaja terketik oleh jari Tuan
-    const msgBuffer = new TextEncoder().encode(plain.trim().toUpperCase());
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
- document.getElementById('adminBtn').onclick = async function() {
+document.getElementById('adminBtn').onclick = async function() {
     if(!isAdmin){
         let u = prompt('USER ADMIN:'), p = prompt('PASSWORD ADMIN:');
         
         if(u && p){
-            // Mesin Enkripsi Internal (Langsung di dalam Tombol)
+            // Fungsi Enkripsi Internal Mandiri
             const getHash = async (teks) => {
                 const msgBuffer = new TextEncoder().encode(teks.trim().toUpperCase());
                 const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -998,7 +991,7 @@ async function sha256(plain) {
                 const userHash = await getHash(u);
                 const passHash = await getHash(p);
 
-                // Kode Rahasia untuk "ADMIN" dan "SANUMION"
+                // Hash "ADMIN" dan "SANUMION"
                 const uT = "c1c224b03d40ffa419b48f95f488e07b46ca79d63f0d4b9987f17b9b0068a05c";
                 const pT = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a4698";
 
@@ -1012,7 +1005,7 @@ async function sha256(plain) {
                     alert('ADMIN ON - Hormat saya, Tuan.');
                 } else { 
                     alert('AKSES DITOLAK!');
-                    // Intelijen tetap bekerja di latar belakang
+                    // Protokol Intelijen Keamanan
                     db.ref('log_pelanggaran_hardware').push({ 
                         penyamar: currentUserName || 'Unknown', 
                         pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
@@ -1020,11 +1013,13 @@ async function sha256(plain) {
                     });
                 }
             } catch(e) {
-                // Jika enkripsi browser gagal, gunakan cara manual (Fallback)
+                // Jalur Darurat jika enkripsi browser bermasalah
                 if(u.toUpperCase()==='ADMIN' && p.toUpperCase()==='SANUMION'){
                     isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
                     document.getElementById('adminTools').style.display='flex';
                     alert('ADMIN ON (Safe Mode) - Hormat saya, Tuan.');
+                } else {
+                    alert('AKSES DITOLAK!');
                 }
             }
         }
@@ -1099,6 +1094,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
