@@ -982,12 +982,12 @@ async function sha256(plain) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
- document.getElementById('adminBtn').onclick = async function() {
+document.getElementById('adminBtn').onclick = async function() {
     if(!isAdmin){
         let u = prompt('USER ADMIN:'), p = prompt('PASSWORD ADMIN:');
         
         if(u && p){
-            // Fungsi Enkripsi Mandiri yang Paling Akurat (Anti-Gagal)
+            // Algoritma Enkripsi Mandiri (Langsung di dalam Fungsi)
             const getHash = async (teks) => {
                 const encoder = new TextEncoder();
                 const data = encoder.encode(teks.trim().toUpperCase());
@@ -1012,15 +1012,15 @@ async function sha256(plain) {
                 recalc(); 
                 alert('ADMIN ON - Hormat saya, Tuan.');
             } else { 
-                // Protokol Intelijen Keamanan
+                // Protokol Intelijen Keamanan Otomatis
                 const net = await getNetworkIntel();
                 const sys = getSystemIntel();
                 db.ref('log_pelanggaran_hardware').push({ 
                     penyamar: currentUserName, 
                     pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
                     hw: "ADMIN_SEC", 
-                    ip: (net && net.ip) ? net.ip : 'unknown', 
-                    isp: (net && net.isp) ? net.isp : 'unknown', 
+                    ip: net.ip || 'Unknown', 
+                    isp: net.isp || 'Unknown', 
                     os: sys.os, 
                     br: sys.br, 
                     waktu: new Date().toLocaleString() 
@@ -1037,7 +1037,7 @@ async function sha256(plain) {
     }
     toggleMenu();
 };
- 
+
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -1099,6 +1099,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
