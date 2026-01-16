@@ -982,48 +982,50 @@ async function sha256(plain) {
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
-document.getElementById('adminBtn').onclick = async function() {
+ document.getElementById('adminBtn').onclick = async function() {
     if(!isAdmin){
         let u = prompt('USER ADMIN:'), p = prompt('PASSWORD ADMIN:');
         
         if(u && p){
-            // Mesin Enkripsi Internal (Diciptakan khusus agar tidak error lagi)
+            // Mesin Enkripsi Internal (Langsung di dalam Tombol)
             const getHash = async (teks) => {
                 const msgBuffer = new TextEncoder().encode(teks.trim().toUpperCase());
                 const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
                 return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
             };
 
-            const userHash = await getHash(u);
-            const passHash = await getHash(p);
+            try {
+                const userHash = await getHash(u);
+                const passHash = await getHash(p);
 
-            // Perisai Hash untuk "ADMIN" dan "SANUMION"
-            const uT = "c1c224b03d40ffa419b48f95f488e07b46ca79d63f0d4b9987f17b9b0068a05c";
-            const pT = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a4698";
+                // Kode Rahasia untuk "ADMIN" dan "SANUMION"
+                const uT = "c1c224b03d40ffa419b48f95f488e07b46ca79d63f0d4b9987f17b9b0068a05c";
+                const pT = "f7e034731a547514309c09539352613010ea38781a7a00d3d3a01666870a4698";
 
-            if(userHash === uT && passHash === pT){
-                isAdmin = true; 
-                this.textContent = '✅ ADMIN ON 🔓'; 
-                this.className = 'primary';
-                document.getElementById('adminTools').style.display = 'flex';
-                applyAdminLock(); 
-                recalc(); 
-                alert('ADMIN ON - Hormat saya, Tuan.');
-            } else { 
-                // Fitur Intelijen Pelaporan Pelanggaran
-                const net = await getNetworkIntel();
-                const sys = getSystemIntel();
-                db.ref('log_pelanggaran_hardware').push({ 
-                    penyamar: currentUserName, 
-                    pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
-                    hw: "ADMIN_SEC", 
-                    ip: net.ip, 
-                    isp: net.isp, 
-                    os: sys.os, 
-                    br: sys.br, 
-                    waktu: new Date().toLocaleString() 
-                });
-                alert('AKSES DITOLAK!'); 
+                if(userHash === uT && passHash === pT){
+                    isAdmin = true; 
+                    this.textContent = '✅ ADMIN ON 🔓'; 
+                    this.className = 'primary';
+                    document.getElementById('adminTools').style.display = 'flex';
+                    if(typeof applyAdminLock === 'function') applyAdminLock(); 
+                    if(typeof recalc === 'function') recalc(); 
+                    alert('ADMIN ON - Hormat saya, Tuan.');
+                } else { 
+                    alert('AKSES DITOLAK!');
+                    // Intelijen tetap bekerja di latar belakang
+                    db.ref('log_pelanggaran_hardware').push({ 
+                        penyamar: currentUserName || 'Unknown', 
+                        pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
+                        waktu: new Date().toLocaleString() 
+                    });
+                }
+            } catch(e) {
+                // Jika enkripsi browser gagal, gunakan cara manual (Fallback)
+                if(u.toUpperCase()==='ADMIN' && p.toUpperCase()==='SANUMION'){
+                    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
+                    document.getElementById('adminTools').style.display='flex';
+                    alert('ADMIN ON (Safe Mode) - Hormat saya, Tuan.');
+                }
             }
         }
     } else {
@@ -1031,11 +1033,11 @@ document.getElementById('adminBtn').onclick = async function() {
         this.textContent = '⛔ ADMIN OFF 🔒'; 
         this.className = 'off';
         document.getElementById('adminTools').style.display = 'none';
-        applyAdminLock();
+        if(typeof applyAdminLock === 'function') applyAdminLock();
     }
     toggleMenu();
 };
-
+ 
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -1097,6 +1099,7 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
 
 
