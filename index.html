@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=1024">
 <title>LAPORAN KAS GANG MAWAR 3</title>
 <style>
+ /* CSS UNTUK POPUP BUKTI DRIVE */
+#buktiModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:5000; align-items:center; justify-content:center; }
+.bukti-box { position:relative; max-width:90%; max-height:90%; background:#fff; padding:10px; border-radius:8px; display:flex; flex-direction:column; }
+.bukti-box img { max-width:100%; max-height:80vh; border:2px solid #333; }
+.btn-close-bukti { position:absolute; top:-40px; right:0; background:#ff4444; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold; }
+.btn-lihat-bukti { background:#007bff; color:white; font-size:0.7rem; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; }
 :root{
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
 }
@@ -81,12 +87,6 @@ th,td{border:1px solid var(--border);padding:6px;text-align:left}
 th{text-align:center; background:#eee; color:#000}
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
-/* --- PHOTO MODAL --- */
-#photoModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:10000; align-items:center; justify-content:center; }
-.photo-container { max-width:90%; max-height:90%; position:relative; }
-.photo-container img { width:100%; height:auto; border: 5px solid #fff; border-radius:10px; }
-.btn-close-photo { position:absolute; top:-40px; right:0; background:red; color:#fff; padding:10px 20px; border-radius:5px; border:none; cursor:pointer; font-weight:bold; }
-
 /* --- CYBERPUNK THEME --- */
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
 .theme-cyberpunk .pulse-line { display:block; }
@@ -129,6 +129,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 /* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
+/* Pastikan ini ada di dalam <style> Tuan */
 #privacyModal { 
     display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
     background:rgba(0,0,0,0.8); z-index:100000; align-items:center; 
@@ -146,6 +147,13 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 </style>
 </head>
 <body>
+ <div id="buktiModal">
+    <div class="bukti-box">
+        <button class="btn-close-bukti" onclick="closeBukti()">TUTUP [X]</button>
+        <img id="imgBukti" src="" alt="BUKTI">
+        <p id="txtBuktiKet" style="text-align:center; font-weight:bold; margin-top:10px; color:#000; text-transform:uppercase;"></p>
+    </div>
+</div>
 <span id="privacyLink" onclick="openPrivacy()" style="position:fixed; top:10px; right:15px; color:#aaa; font-size:0.65rem; cursor:pointer; z-index:100001; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px; text-transform:none;">Kebijakan Privasi</span>
 
 <div id="privacyModal">
@@ -164,26 +172,18 @@ Bahwasanya pemanfaatan algoritma validasi identitas dalam domain ini bersifat no
 
 Penggunaan sumber daya komputasi oleh entitas pengguna saat mengakses portal ini wajib tunduk pada limitasi lebar pita (bandwidth) dan integritas kueri yang telah dikonfigurasi. Segala bentuk manipulasi terhadap kode sumber (source code) atau upaya dekompilasi terhadap skrip yang berjalan di latar belakang akan diklasifikasikan sebagai tindakan pelanggaran integritas digital. Pengelola sistem melepaskan diri dari segala tanggung jawab atas malfungsi perangkat keras milik pengguna yang diakibatkan oleh ketidakpatuhan terhadap standar spesifikasi minimal peramban yang telah direkomendasikan.
 
-Akhirul kalam, bahwa seluruh ketentuan yang tercantum dalam maklumat ini bersifat dinamis dan dapat mengalami penyesuaian struktural sewaktu-waktu mengikuti dinamika regulasi internal and perkembangan arsitektur teknologi informasi. Dengan tetap berada pada laman ini, Anda dianggap telah melakukan asimilasi kognitif terhadap seluruh poin-poin tersebut dan sepakat untuk membebaskan pengelola dari segala tuntutan hukum di kemudian hari. Keputusan pengelola sistem terkait interpretasi atas pasal-pasal keamanan ini bersifat final, mengikat, and tidak dapat diganggu gugat oleh pihak manapun.
+Akhirul kalam, bahwa seluruh ketentuan yang tercantum dalam maklumat ini bersifat dinamis dan dapat mengalami penyesuaian struktural sewaktu-waktu mengikuti dinamika regulasi internal dan perkembangan arsitektur teknologi informasi. Dengan tetap berada pada laman ini, Anda dianggap telah melakukan asimilasi kognitif terhadap seluruh poin-poin tersebut dan sepakat untuk membebaskan pengelola dari segala tuntutan hukum di kemudian hari. Keputusan pengelola sistem terkait interpretasi atas pasal-pasal keamanan ini bersifat final, mengikat, dan tidak dapat diganggu gugat oleh pihak manapun.
 
 ADENDUM PERLINDUNGAN YURIDIS & PENGAWASAN SIBER:
 
-Bahwasanya seluruh aktivitas transmisi data, manipulasi kode, and upaya eskalasi hak akses pada domain ini berada di bawah pemantauan protokol integritas digital yang berafiliasi dengan standar keamanan informasi nasional. Setiap pelanggaran yang terdeteksi, termasuk namun tidak terbatas pada upaya penggandaan tanpa izin (copyright infringement) terhadap arsitektur sistem Kas Gang Mawar 3, akan secara otomatis teregistrasi dalam pangkalan data pelanggaran administratif siber.
+Bahwasanya seluruh aktivitas transmisi data, manipulasi kode, dan upaya eskalasi hak akses pada domain ini berada di bawah pemantauan protokol integritas digital yang berafiliasi dengan standar keamanan informasi nasional. Setiap pelanggaran yang terdeteksi, termasuk namun tidak terbatas pada upaya penggandaan tanpa izin (copyright infringement) terhadap arsitektur sistem Kas Gang Mawar 3, akan secara otomatis teregistrasi dalam pangkalan data pelanggaran administratif siber.
 
-Ketahuilah bahwa sistem ini telah mengadopsi prinsip perlindungan karya intelektual yang bersifat imperatif, di mana setiap entitas yang terbukti melakukan tindakan destruktif atau penggunaan materi tanpa otorisasi tertulis dari Pengelola, dapat diproses melalui mekanisme penegakan hukum sesuai dengan ketentuan perundang-undangan yang berlaku tentang Informasi and Transaksi Elektronik (UU ITE). Pengelola memiliki hak mutlak untuk melakukan penangguhan akses and menyerahkan log identifikasi perangkat kepada pihak berwenang guna kepentingan audit investigatif jika ditemukan indikasi kerugian finansial maupun struktural pada ekosistem Kas Gang Mawar 3.
+Ketahuilah bahwa sistem ini telah mengadopsi prinsip perlindungan karya intelektual yang bersifat imperatif, di mana setiap entitas yang terbukti melakukan tindakan destruktif atau penggunaan materi tanpa otorisasi tertulis dari Pengelola, dapat diproses melalui mekanisme penegakan hukum sesuai dengan ketentuan perundang-undangan yang berlaku tentang Informasi dan Transaksi Elektronik (UU ITE). Pengelola memiliki hak mutlak untuk melakukan penangguhan akses dan menyerahkan log identifikasi perangkat kepada pihak berwenang guna kepentingan audit investigatif jika ditemukan indikasi kerugian finansial maupun struktural pada ekosistem Kas Gang Mawar 3.
 Sistem Laporan Finansial Kas Gang Mawar 3 adalah karya intelektual yang dilindungi secara otomatis oleh Undang-Undang Hak Cipta Republik Indonesia. Segala bentuk duplikasi tanpa izin akan diproses melalui jalur administratif internal.
 Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Undang-Undang. Penggandaan atau penggunaan kode tanpa izin tertulis dari pengelola adalah pelanggaran integritas digital.
         <button class="btn-close-privacy" onclick="closePrivacy()">SAYA MENGERTI & SETUJU</button>
     </div>
 </div>
-
-<div id="photoModal">
-    <div class="photo-container">
-        <button class="btn-close-photo" onclick="closePhoto()">TUTUP [X]</button>
-        <img id="imgBukti" src="" alt="BUKTI PENGELUARAN">
-    </div>
-</div>
-
 <div id="welcomeScreen">
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
@@ -259,7 +259,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <h2>PENGELUARAN</h2>
 <div class="pulse-line"></div>
 <table>
-<tr><th style="width:30px">Tgl</th><th style="width:30%">Keterangan</th><th style="width:15%">BUKTI</th><th style="width:8%">Qty</th><th style="width:20%">Harga</th><th style="width:20%">Total</th><th class="admin-action">HPS</th></tr>
+<tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th><th class="admin-action">HPS</th></tr>
 <tbody id="tbKeluar"></tbody>
 </table>
 </div>
@@ -281,7 +281,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.4 Supreme Security and Evidence | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -350,6 +350,55 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
+ // FUNGSI PENGATUR BUKTI DRIVE
+function convertDriveLink(url) {
+    if(!url) return "";
+    if(url.includes("drive.google.com/file/d/")){
+        let id = url.split("/d/")[1].split("/")[0];
+        return `https://lh3.googleusercontent.com/u/0/d/${id}`;
+    }
+    return url;
+}
+
+function openBukti(btn) {
+    const url = btn.getAttribute('data-link');
+    const tr = btn.closest('tr');
+    const ket = tr.children[1].querySelector('input').value;
+    document.getElementById('imgBukti').src = convertDriveLink(url);
+    document.getElementById('txtBuktiKet').innerText = ket;
+    document.getElementById('buktiModal').style.display = 'flex';
+}
+
+function closeBukti() { document.getElementById('buktiModal').style.display = 'none'; }
+
+// SISIPKAN LOGIKA INI DI DALAM FUNGSI RECALC() TUAN (Bagian Pengeluaran)
+document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
+    const linkInp = tr.children[2].querySelector('input');
+    if(!linkInp) return;
+    const val = linkInp.value.trim();
+    
+    if(!isAdmin){
+        linkInp.style.display = "none"; // Sembunyikan input teks link dari warga
+        let btnLihat = tr.querySelector('.btn-lihat-bukti');
+        if(val !== ""){
+            if(!btnLihat){
+                btnLihat = document.createElement('button');
+                btnLihat.className = 'btn-lihat-bukti';
+                btnLihat.innerText = '👁️ LIHAT';
+                btnLihat.onclick = function(){ openBukti(this); };
+                tr.children[2].appendChild(btnLihat);
+            }
+            btnLihat.setAttribute('data-link', val);
+            btnLihat.style.display = "inline-block";
+        } else if(btnLihat) {
+            btnLihat.style.display = "none"; // Sembunyi jika link kosong
+        }
+    } else {
+        linkInp.style.display = "block"; // Admin tetap bisa melihat & mengisi link
+        let btnLihat = tr.querySelector('.btn-lihat-bukti');
+        if(btnLihat) btnLihat.style.display = "none";
+    }
+});
 const firebaseConfig = {
     apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
     authDomain: "kasmawar3-59c18.firebaseapp.com",
@@ -412,18 +461,27 @@ function getSystemIntel() {
 async function masukWeb() {
     let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
+    
+    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
     let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
+    
+    // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
+    
+    // Logika menyisipkan "/" jika warga hanya ngetik angka atau format D223
     let bersih = raw;
     if (!bersih.includes('/') && (bersih.startsWith('D3') || bersih.startsWith('D2')) && bersih.length >= 3) {
         if(bersih.startsWith('D3')) bersih = "D3/" + bersih.substring(2);
         else if(bersih.startsWith('D2')) bersih = "D2/" + bersih.substring(2);
     }
+    
+    // Jika warga hanya ngetik angkanya saja (misal: 23), kita cari di daftarKunci
     if (!isNaN(bersih)) {
         let foundKey = Object.keys(daftarKunci).find(key => key.split('/')[1] === bersih);
         if (foundKey) bersih = foundKey;
     }
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR!"); }
+    
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -431,44 +489,45 @@ async function prosesMasukHardware(namaUser, kunci) {
     const net = await getNetworkIntel();
     const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kunci + ")";
+    
+    // Check if hardware is already registered to another user
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
     const registeredUser = snap.val();
+
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!");
+        alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
-    if (!registeredUser) hardwareRef.set(namaIdentitas);
+
+    if (!registeredUser) {
+        hardwareRef.set(namaIdentitas);
+    }
+    
     currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
+    
+    // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
+    
     document.getElementById('welcomeScreen').remove();
+ 
     if(document.getElementById('privacyLink')) document.getElementById('privacyLink').remove();
+ 
     window.scrollTo(0,0);
 }
 
+// --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
     if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
         db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
     }
 }
 function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
-function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
-// ================= PHOTO BUKTI LOGIC =================
-function showPhoto(link) {
-    if(!link) return;
-    let directLink = link;
-    if(link.includes('drive.google.com')){
-        const fileId = link.split('/d/')[1]?.split('/')[0] || link.split('id=')[1]?.split('&')[0];
-        if(fileId) directLink = `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
-    }
-    document.getElementById('imgBukti').src = directLink;
-    document.getElementById('photoModal').style.display = 'flex';
-}
-function closePhoto() { document.getElementById('photoModal').style.display = 'none'; }
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 
 // ================= FORM USULAN WARGA =================
 function openUsulan() {
@@ -476,6 +535,7 @@ function openUsulan() {
     document.getElementById('usulanModal').style.display = 'block';
     loadUsulan();
 }
+
 function showInputUsulan() { document.getElementById('formInputUsulan').style.display = 'block'; }
 function batalUsulan() { document.getElementById('formInputUsulan').style.display = 'none'; document.getElementById('txtUsulan').value = ''; }
 
@@ -484,8 +544,17 @@ function kirimUsulan() {
     if(!teks) return alert("Usulan tidak boleh kosong!");
     const skrgLog = new Date();
     const tglJam = skrgLog.getDate() + "/" + (skrgLog.getMonth()+1) + "/" + skrgLog.getFullYear() + " " + skrgLog.getHours().toString().padStart(2,'0') + ":" + skrgLog.getMinutes().toString().padStart(2,'0');
-    db.ref('usulan_warga').push({ waktu: tglJam, nama: currentUserName, usulan: teks, setuju: [], tolak: [] }).then(() => {
-        alert("USULAN TERKIRIM!"); batalUsulan(); loadUsulan();
+    
+    db.ref('usulan_warga').push({
+        waktu: tglJam,
+        nama: currentUserName,
+        usulan: teks,
+        setuju: [],
+        tolak: []
+    }).then(() => {
+        alert("USULAN TERKIRIM!");
+        batalUsulan();
+        loadUsulan();
     });
 }
 
@@ -493,64 +562,176 @@ function aktifkanModeRespon() { modeRespon = true; document.getElementById('cont
 function selesaiRespon() { modeRespon = false; document.getElementById('containerVotingRespon').style.display = 'none'; loadUsulan(); }
 
 function loadUsulan() {
-    const tb = document.getElementById('tbUsulan'), th = document.getElementById('headUsulan');
+    const tb = document.getElementById('tbUsulan');
+    const th = document.getElementById('headUsulan');
+    
     let headerHTML = `<tr><th style="width:15%">TANGGAL & JAM</th><th style="width:20%">NAMA</th><th style="width:35%">USULAN</th><th style="width:30%">RESPON</th>`;
     if(isAdmin) headerHTML += `<th style="width:50px">HPS</th>`;
-    headerHTML += `</tr>`; th.innerHTML = headerHTML;
+    headerHTML += `</tr>`;
+    th.innerHTML = headerHTML;
+
     tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Memuat data usulan...</td></tr>";
+    
     db.ref('usulan_warga').on('value', s => {
-        const d = s.val(); tb.innerHTML = "";
+        const d = s.val();
+        tb.innerHTML = "";
         if(!d) return tb.innerHTML = "<tr><td colspan='5' style='text-align:center'>Belum ada usulan masuk.</td></tr>";
+        
         Object.keys(d).reverse().forEach(id => {
-            const u = d[id], namaPembuatMurni = u.nama.split(' (')[0];
-            const setujus = u.setuju ? Object.values(u.setuju) : [], tolaks = u.tolak ? Object.values(u.tolak) : [];
+            const u = d[id];
+            const namaPembuatMurni = u.nama.split(' (')[0];
+            const setujus = u.setuju ? Object.values(u.setuju) : [];
+            const tolaks = u.tolak ? Object.values(u.tolak) : [];
+            const listSetujuMurni = setujus.map(n => n.split(' (')[0]);
+            const listTolakMurni = tolaks.map(n => n.split(' (')[0]);
+            
             const tr = document.createElement('tr');
             const sudahVoting = setujus.includes(currentUserName) || tolaks.includes(currentUserName);
             const isOwner = (u.nama === currentUserName);
-            let rowHTML = `<td style="text-align:center">${u.waktu}</td><td>${namaPembuatMurni}</td><td>${u.usulan}</td><td><div class="vote-box"><b>✅ SETUJU: ${setujus.length}</b><br><small>${setujus.map(n=>n.split(' (')[0]).join(', ')}</small><br><b>❌ TOLAK: ${tolaks.length}</b><br><small>${tolaks.map(n=>n.split(' (')[0]).join(', ')}</small>${(modeRespon && !isOwner && !sudahVoting) ? `<div style="margin-top:5px;"><button onclick="vote('${id}', 'setuju')">✅</button><button onclick="vote('${id}', 'tolak')">❌</button></div>` : ''}</div></td>`;
-            if(isAdmin) rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')">🗑️</button></td>`;
-            tr.innerHTML = rowHTML; tb.appendChild(tr);
+            
+            let rowHTML = `
+                <td style="text-align:center">${u.waktu}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'nama\', this.innerText)"' : ''}>${namaPembuatMurni}</td>
+                <td ${isAdmin ? 'contentEditable="true" onblur="updateUsulanAdmin(\''+id+'\', \'usulan\', this.innerText)"' : ''}>${u.usulan}</td>
+                <td>
+                    <div class="vote-box">
+                        <div class="vote-count">✅ SETUJU: ${setujus.length}</div>
+                        <div class="vote-names">${listSetujuMurni.join(', ')}</div>
+                        <div class="vote-count" style="color:#d9534f">❌ TOLAK: ${tolaks.length}</div>
+                        <div class="vote-names">${listTolakMurni.join(', ')}</div>
+                        ${(modeRespon && !isOwner && !sudahVoting) ? `
+                            <div style="margin-top:5px; display:flex; gap:5px;">
+                                <button onclick="vote('${id}', 'setuju')" style="background:#28a745; color:#fff; font-size:0.7rem; padding:4px 8px;">✅</button>
+                                <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
+                            </div>
+                        ` : ''}
+                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, RESPON ANDA SUDAH MASUK.</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN INI, ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN SENDIRI.</div>` : ''}
+                    </div>
+                </td>
+            `;
+            if(isAdmin) rowHTML += `<td style="text-align:center"><button onclick="hapusUsulan('${id}')" style="background:#d9534f; color:#fff; border-radius:4px; padding:5px;">🗑️</button></td>`;
+            tr.innerHTML = rowHTML;
+            tb.appendChild(tr);
         });
     });
 }
-function vote(id, tipe) { if(confirm(`YAKIN?`)) db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => loadUsulan()); }
-function hapusUsulan(id) { if(isAdmin && confirm("HAPUS?")) db.ref(`usulan_warga/${id}`).remove(); }
+
+function vote(id, tipe) {
+    const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
+    if(confirm(`YAKIN ${teksTipe}, PAK?`)) {
+        db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
+    }
+}
+
+function hapusUsulan(id) {
+    if(!isAdmin) return;
+    if(confirm("HAPUS USULAN INI, PAK?")) {
+        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("TERHAPUS!"); });
+    }
+}
+
+function updateUsulanAdmin(id, field, value) {
+    if(!isAdmin) return;
+    db.ref(`usulan_warga/${id}`).update({ [field]: value });
+}
 
 // ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
     const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
-    btnHapus.style.display = isAdmin ? 'block' : 'none'; secLog.style.display = isAdmin ? 'block' : 'none';
-    list.innerHTML = "Memuat daftar..."; modal.style.display = 'block';
+    btnHapus.style.display = isAdmin ? 'block' : 'none';
+    secLog.style.display = isAdmin ? 'block' : 'none';
+    list.innerHTML = "Memuat daftar...";
+    modal.style.display = 'block';
+
     db.ref('pengunjung_situs').limitToLast(100).once('value', s => {
         const d = s.val();
         if(d) {
-            let html = "<table style='width:100%; font-size:0.8rem;'><tr><th>INFO</th><th>AKSI</th></tr>";
+            let html = "<table style='width:100%; font-size:0.8rem;'><tr><th>INFO PENGUNJUNG</th><th>AKSI HP</th></tr>";
             Object.values(d).reverse().forEach(v => { 
-                html += `<tr><td><b>${v.nama}</b><br><small>${v.waktu}</small><br><span style="color:blue;">📱 ${v.os} | 🌐 ${v.br}</span></td><td>${isAdmin ? `<button onclick="resetHardware('${v.hw}','${v.nama}')">RESET</button>` : '-'}</td></tr>`; 
+                html += `<tr style='border-bottom:1px solid #eee;'>
+                    <td style='padding:8px;'>
+                        <b>${v.nama}</b><br>
+                        <small style="color:#666;">${v.waktu}</small><br>
+                        <span style="color:#007bff;">📱 ${v.os || 'N/A'} | 🌐 ${v.br || 'N/A'}</span><br>
+                        <span style="color:#28a745;">📶 ${v.isp || 'N/A'}</span><br>
+                        <span style="color:#d9534f;">📍 ${v.ip || 'N/A'} (${v.loc || 'N/A'})</span>
+                    </td>
+                    <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td>
+                </tr>`; 
             });
             list.innerHTML = html + "</table>";
         }
     });
+
+    if(isAdmin) {
+        listLog.innerHTML = "Memindai riwayat penyusup...";
+        db.ref('log_pelanggaran_hardware').limitToLast(100).once('value', s => {
+            const d = s.val(); let h = "";
+            if(d) {
+                Object.values(d).reverse().forEach(v => { 
+                    if(v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL"){
+                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
+                                🚨 <b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!<br>
+                                <small>${v.waktu}</small><br>
+                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
+                                📱 ${v.os || 'N/A'} | ${v.br || 'N/A'}
+                              </div>`;
+                    } else {
+                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
+                                ⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br>
+                                <small>${v.waktu}</small><br>
+                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}
+                              </div>`; 
+                    }
+                });
+                listLog.innerHTML = h;
+            } else {
+                listLog.innerHTML = "<p style='text-align:center; color:green;'>TIDAK ADA PERCOBAAN ILEGAL.</p>";
+            }
+        });
+    }
 }
-function hapusRiwayatPengunjung() { if (isAdmin && confirm("HAPUS SEMUA?")) db.ref('pengunjung_situs').remove().then(()=>openPengunjung()); }
+
+function hapusRiwayatPengunjung() {
+    if (!isAdmin) return;
+    if (confirm("HAPUS SEMUA RIWAYAT, TUAN?")) {
+        db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
+        alert("BERSIH!"); openPengunjung(); 
+    }
+}
 
 // ================= LOGIKA KAS ASLI =================
 function tambahBaris(tipe) {
     if(tipe === 'KELUAR'){
-        const tb = document.getElementById('tbKeluar'), tr = document.createElement('tr');
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable bukti-link' placeholder='Link Drive'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+        const tb = document.getElementById('tbKeluar');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='total'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     } else {
-        const tb = document.getElementById('tbMasuk'), tr = document.createElement('tr');
+        const tb = document.getElementById('tbMasuk');
+        const tr = document.createElement('tr');
         const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
-        tr.innerHTML = `<td><input class='editable' type='date'></td><td><input class='editable' value='${namaDefault}'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td class='saldo'>0</td><td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+        tr.innerHTML = `<td><input class='editable' type='date'></td>
+                        <td><input class='editable' value='${namaDefault}'></td>
+                        <td><input class='editable'></td>
+                        <td><input class='editable' value='0'></td>
+                        <td class='saldo'>0</td>
+                        <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         tb.appendChild(tr);
     }
     recalc();
 }
 
-function hapusBaris(btn) { if(confirm("HAPUS?")) { btn.parentElement.parentElement.remove(); recalc(); } }
+function hapusBaris(btn) {
+    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); }
+}
 
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -561,7 +742,7 @@ function buildTables(){
  });
  for(let i=0;i<5;i++){
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable bukti-link' placeholder='Link Drive'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+  tr.innerHTML=`<td><input class='editable' type='date'></td><td><input class='editable'></td><td><input class='editable' value='0'></td><td><input class='editable' value='0'></td><td class='total'>0</td><td class='admin-action' style='display:${isAdmin?"table-cell":"none"}'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
   document.getElementById('tbKeluar').appendChild(tr);
  }
 }
@@ -570,26 +751,28 @@ function recalc(){
  let tM=0, tK=0, runM=0;
  document.querySelectorAll('#tbMasuk tr').forEach(tr=>{
   let u=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0; runM+=u; tM+=u;
-  tr.children[3].firstChild.value=u.toLocaleString('id-ID'); tr.children[4].textContent=runM.toLocaleString('id-ID');
-  const ketVal=tr.children[2].firstChild.value.toUpperCase();
+  tr.children[3].firstChild.value=u.toLocaleString('id-ID');
+  tr.children[4].textContent=runM.toLocaleString('id-ID');
+  
+  // LOGIKA WARNA OTOMATIS BERDASARKAN TITAH TUAN
+  const ketInput = tr.children[2].firstChild;
+  const ketVal=ketInput.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
-  if(ketVal.includes('BELUM BAYAR')){ inputs.forEach(inp=>inp.style.backgroundColor='#ffcccc'); }
-  else if(["LUNAS","SUDAH BAYAR","SISA KAS"].some(k=>ketVal.includes(k))){ inputs.forEach(inp=>inp.style.backgroundColor='#ccffcc'); }
-  else { inputs.forEach(inp=>inp.style.backgroundColor='transparent'); }
+  const keywordsSuccess = ["LUNAS", "SUDAH BAYAR", "SISA KAS", "BAYAR TUNAI", "BAYAR TRANSFER"];
+  
+  if(ketVal.includes('BELUM BAYAR')){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--danger)'; inp.style.color='#fff'; }); 
+  }
+  else if(keywordsSuccess.some(k => ketVal.includes(k))){ 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='var(--success)'; inp.style.color='#fff'; }); 
+  }
+  else { 
+      inputs.forEach(inp=>{ inp.style.backgroundColor='transparent'; inp.style.color='var(--text)'; }); 
+  }
  });
  document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
-  let q=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[4].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
-  tr.children[3].firstChild.value=q.toLocaleString('id-ID'); tr.children[4].firstChild.value=h.toLocaleString('id-ID'); tr.children[5].textContent=t.toLocaleString('id-ID');
-  
-  // Logic for Evidence Button (Warga Mode)
-  const buktiInput = tr.querySelector('.bukti-link');
-  const cellBukti = tr.children[2];
-  if(!isAdmin){
-    const linkVal = buktiInput.value;
-    if(linkVal && linkVal.trim() !== ""){
-        cellBukti.innerHTML = `<button onclick="showPhoto('${linkVal}')" style="background:blue; color:#fff; padding:5px; font-size:0.7rem;">🖼️ LIHAT BUKTI</button><input class="bukti-link" type="hidden" value="${linkVal}">`;
-    } else { cellBukti.innerHTML = `<span style="color:#ccc; font-size:0.7rem;">TIDAK ADA FOTO</span><input class="bukti-link" type="hidden" value="">`; }
-  }
+  let q=parseInt(tr.children[2].firstChild.value.replace(/[^0-9]/g,''))||0, h=parseInt(tr.children[3].firstChild.value.replace(/[^0-9]/g,''))||0, t=q*h; tK+=t;
+  tr.children[2].firstChild.value=q.toLocaleString('id-ID'); tr.children[3].firstChild.value=h.toLocaleString('id-ID'); tr.children[4].textContent=t.toLocaleString('id-ID');
  });
  document.getElementById('totalMasuk').textContent=tM.toLocaleString('id-ID');
  document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
@@ -598,7 +781,7 @@ function recalc(){
 }
 
 function applyAdminLock(){ 
-    document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; });
+    document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; i.style.cursor = !isAdmin ? "default" : "text"; });
     document.querySelectorAll('.admin-action').forEach(el => el.style.display = isAdmin ? 'table-cell' : 'none');
 }
 
@@ -609,71 +792,175 @@ function loadData(){
   if(d && d.masuk){
    document.getElementById('tbMasuk').innerHTML='';
    d.masuk.forEach(r=>{
+    // LOGIKA STATUS OTOMATIS BERDASARKAN TAHUN
+    let statusOto = (tahun < 2026) ? "LUNAS" : "BELUM BAYAR";
+    let ketTampil = r.ket || statusOto;
+
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${ketTampil}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
    if(d.keluar) {
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
         const tr=document.createElement('tr');
-        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable bukti-link' value='${r.bukti||''}' placeholder='Link Drive'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white;'>X</button></td>`;
+        tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
         document.getElementById('tbKeluar').appendChild(tr);
     });
    }
-   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE: " + d.updated;
+   if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
+  
+  let pm=bulan-1, pt=tahun; if(pm<0){pm=11; pt--;}
+  db.ref('kas_data/'+pm+'-'+pt).once('value', sPrev=>{
+    const dPrev=sPrev.val(); let sL=0;
+    if(dPrev && dPrev.masuk){
+        let mt=0, kt=0;
+        dPrev.masuk.forEach(r=>{ if(r.uang) mt += parseInt(r.uang.replace(/[^0-9]/g,'')) || 0; });
+        if(dPrev.keluar) dPrev.keluar.forEach(r=>{ let q = parseInt(r.qty.replace(/[^0-9]/g,'')) || 0, h = parseInt(r.harga.replace(/[^0-9]/g,'')) || 0; kt += (q * h); });
+        sL = mt - kt;
+    }
+    const trSisa = document.querySelector('#tbMasuk tr');
+    if(trSisa && trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA'){
+        trSisa.children[0].firstChild.value = `${tahun}-${(bulan + 1).toString().padStart(2, '0')}-01`;
+        trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
+        trSisa.children[3].firstChild.value = sL.toLocaleString('id-ID');
+        recalc();
+    }
+  });
   recalc();
  });
- db.ref('kas_data/catatan_umum').once('value', s => { if(s.val()) document.getElementById('catatanWarga').value = s.val(); });
+ db.ref('kas_data/catatan_umum').once('value', snapshot => {
+    const cat = snapshot.val(); const ta = document.getElementById('catatanWarga');
+    if(cat) { ta.value = cat; document.getElementById('catatanPrint').innerText = cat; setTimeout(()=>autoHeight(ta), 150); } 
+ });
 }
 
 function saveData(){
  if(!isAdmin) return;
- const btn = document.getElementById('saveBtnManual'); btn.textContent = "PROSES...";
+ const btn = document.getElementById('saveBtnManual');
+ const originalText = btn.textContent;
+ btn.textContent = "PROSES...";
+ 
  const tgl = new Date(), formatUpdate = tgl.getDate() + " " + namaBulan[tgl.getMonth()] + " " + tgl.getFullYear() + ", " + tgl.getHours().toString().padStart(2,'0') + ":" + tgl.getMinutes().toString().padStart(2,'0') + " WIB";
  const m=[...document.querySelectorAll('#tbMasuk tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, nama:tr.children[1].firstChild.value, ket:tr.children[2].firstChild.value, uang:tr.children[3].firstChild.value}));
- const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, bukti:tr.querySelector('.bukti-link').value, qty:tr.children[3].firstChild.value, harga:tr.children[4].firstChild.value}));
- db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate}).then(() => {
+ const k=[...document.querySelectorAll('#tbKeluar tr')].map(tr=>({tanggal:tr.children[0].firstChild.value, ket:tr.children[1].firstChild.value, qty:tr.children[2].firstChild.value, harga:tr.children[3].firstChild.value}));
+ 
+ db.ref('kas_data/'+bulan+'-'+tahun).update({masuk:m, keluar:k, updated:formatUpdate})
+ .then(() => {
     db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
-    btn.textContent = "💾 SIMPAN DATA"; alert("BERHASIL!");
+    btn.textContent = originalText;
+    alert("✅ DATA BERHASIL DISIMPAN KE SERVER, TUAN!");
  });
 }
 
-function openChecklist() { toggleMenu(); document.getElementById('checklistModal').style.display = 'block'; renderChecklistData(tahun); }
+// LOGIKA NAVIGASI TAHUN CHECKLIST
+let tahunChecklist = tahun; 
+
+function changeChecklistYear(arah) {
+    tahunChecklist += arah;
+    document.getElementById('txtTahunChecklist').innerText = `PERIODE ${tahunChecklist}`;
+    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahunChecklist}`;
+    renderChecklistData(tahunChecklist);
+}
+
+async function openChecklist() {
+    toggleMenu(); 
+    const modal = document.getElementById('checklistModal');
+    tahunChecklist = tahun; 
+    document.getElementById('txtTahunChecklist').innerText = `PERIODE ${tahunChecklist}`;
+    document.getElementById('headerTahun').innerText = `CHECKLIST KAS ${tahunChecklist}`;
+    modal.style.display = 'block';
+    renderChecklistData(tahunChecklist);
+}
+
 async function renderChecklistData(thn) {
-    const tb = document.getElementById('tbChecklist'); tb.innerHTML = '<tr><td>Memuat...</td></tr>';
+    const tb = document.getElementById('tbChecklist');
+    tb.innerHTML = '<tr><td colspan="14">Memuat Data Tahun ' + thn + '...</td></tr>';
+    
     let listWarga = [...namaAnggotaAwal];
+    for(let m=0; m<=11; m++){
+        const snap = await db.ref(`kas_data/${m}-${thn}`).once('value'), d = snap.val();
+        if(d && d.masuk) d.masuk.forEach(r => { 
+            if(r.nama && !listWarga.includes(r.nama) && r.nama !== 'PEMASUKAN LAIN-LAIN' && r.nama !== 'SISA KAS SEBELUMNYA') listWarga.push(r.nama);
+        });
+    }
+
     const matrix = {};
     for (let m = 0; m <= 11; m++) {
         const snap = await db.ref(`kas_data/${m}-${thn}`).once('value'), d = snap.val();
         listWarga.forEach((nama, idx) => {
-            if (idx === 0) return; if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
+            if (idx === 0) return; 
+            if (!matrix[nama]) matrix[nama] = Array(12).fill('X');
             if (d && d.masuk) {
                 const row = d.masuk.find(r => r.nama === nama);
-                if (row && ["LUNAS", "SUDAH BAYAR"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
+                if (row && ["LUNAS", "SUDAH BAYAR", "BAYAR TUNAI", "BAYAR TRANSFER"].some(k => (row.ket||'').toUpperCase().includes(k))) matrix[nama][m] = '✓';
             }
         });
     }
+
     tb.innerHTML = '';
     Object.keys(matrix).forEach((nama, i) => {
         const tr = document.createElement('tr');
-        let html = `<td>${i+1}</td><td>${nama}</td>`;
+        let html = `<td>${i+1}</td><td style="text-align:left">Bpk. ${nama}</td>`;
         matrix[nama].forEach(status => { html += `<td class="${status === '✓' ? 'status-v' : 'status-x'}">${status}</td>`; });
-        tr.innerHTML = html; tb.appendChild(tr);
+        tr.innerHTML = html; 
+        tb.appendChild(tr);
     });
 }
+
 function closeChecklist() { document.getElementById('checklistModal').style.display = 'none'; }
-function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea')).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST.jpg`; l.href = c.toDataURL(); l.click(); }); }
+function cetakChecklist() { html2canvas(document.getElementById('checklistPrintArea'), {scale:2}).then(c => { const l = document.createElement('a'); l.download = `CHECKLIST_KAS_${tahunChecklist}.jpg`; l.href = c.toDataURL('image/jpeg', 0.9); l.click(); }); }
+
+// FITUR GUDANG CADANGAN (BACKUP & RESTORE)
+function downloadBackup() {
+    db.ref('kas_data').once('value', s => {
+        const data = JSON.stringify(s.val(), null, 2);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const l = document.createElement('a');
+        l.href = url;
+        l.download = `BACKUP_KAS_TOTAL_${new Date().toLocaleDateString()}.json`;
+        l.click();
+    });
+}
+
+function uploadBackup(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const dataImg = JSON.parse(e.target.result);
+            if(confirm("Tuan, apakah Anda yakin ingin menimpa database dengan cadangan ini?")) {
+                db.ref('kas_data').set(dataImg).then(() => {
+                    alert("DATA BERHASIL DIPULIHKAN, TUAN!");
+                    location.reload();
+                });
+            }
+        } catch(err) { alert("FILE TIDAK VALID!"); }
+    };
+    reader.readAsText(file);
+}
 
 document.getElementById('adminBtn').onclick = async function() {
  if(!isAdmin){
   let u=prompt('USER'), p=prompt('PASS');
-  if(u && u.toUpperCase()==='ADMIN' && p && p.toUpperCase()==='SANUMION'){
+  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
-   document.getElementById('adminTools').style.display='flex'; applyAdminLock(); loadData();
-  } else { alert('SALAH!'); }
- } else { isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off'; document.getElementById('adminTools').style.display='none'; loadData(); }
+   document.getElementById('adminTools').style.display='flex';
+   applyAdminLock(); recalc(); alert('BERHASIL!');
+  } else { 
+   const net = await getNetworkIntel();
+   const sys = getSystemIntel();
+   db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
+   alert('SALAH!'); 
+  }
+ } else {
+  isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
+  document.getElementById('adminTools').style.display='none';
+  applyAdminLock();
+ }
  toggleMenu();
 };
 
@@ -681,7 +968,22 @@ function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
 function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem.scrollHeight) + "px"; }
-function startClock() { setInterval(() => { const n = new Date(); document.getElementById('currentTime').innerText = "WAKTU: " + n.toLocaleString(); }, 1000); }
+function updateDeadlineBanner() {
+    const hariIni = new Date().getDate();
+    const banner = document.getElementById('deadline-text');
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom "CATATAN PENTING" pada bagian bawah halaman ini! 🛑 </span>`;
+}
+
+function startClock() {
+    setInterval(() => {
+        const n = new Date();
+        const d = n.getDate().toString().padStart(2,'0') + " " + namaBulan[n.getMonth()] + " " + n.getFullYear();
+        const t = n.getHours().toString().padStart(2,'0') + ":" + n.getMinutes().toString().padStart(2,'0') + ":" + n.getSeconds().toString().padStart(2,'0');
+        document.getElementById('currentTime').innerText = "WAKTU SAAT INI ADALAH : " + d + " | " + t + " WIB";
+    }, 1000);
+}
 
 document.getElementById('themeBtn').onclick=()=>{
  const th=['theme-cyberpunk','theme-dark','theme-blue',''];
@@ -690,9 +992,36 @@ document.getElementById('themeBtn').onclick=()=>{
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
 };
 
-updateUI(); startClock();
-function openPrivacy() { document.getElementById('privacyModal').style.display = 'flex'; }
-function closePrivacy() { document.getElementById('privacyModal').style.display = 'none'; }
+document.getElementById('cetakBtn').onclick=()=>{
+ toggleMenu(); window.scrollTo(0,0);
+ const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
+ const logoGrt = document.getElementById('userGreeting'), jamGr = document.getElementById('currentTime'), menuGr = document.getElementById('mainMenuContainer');
+ 
+ banner.style.display = 'none'; logoGrt.style.display = 'none'; jamGr.style.display = 'none'; menuGr.style.display = 'none';
+ areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
+ 
+ setTimeout(()=>{
+  html2canvas(document.body,{scale:2}).then(c=>{
+   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
+   banner.style.display = 'block'; logoGrt.style.display = 'block'; jamGr.style.display = 'block'; menuGr.style.display = 'flex';
+   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+  });
+ },500);
+};
+
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+});
+
+document.addEventListener('input', recalc);
+updateUI(); updateDeadlineBanner(); startClock();
+function openPrivacy() {
+    document.getElementById('privacyModal').style.display = 'flex';
+}
+function closePrivacy() {
+    document.getElementById('privacyModal').style.display = 'none';
+}
 </script>
 </body>
 </html>
