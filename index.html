@@ -392,7 +392,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
 
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
 
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 
@@ -580,7 +580,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
 
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 
 </div>
 
@@ -726,16 +726,17 @@ function autoExpand(el) {
  // FUNGSI PENGATUR BUKTI DRIVE
 
 function convertDriveLink(url) {
-    if(!url) return "";
-    // Logika cerdas untuk mengambil ID File dari berbagai format link Drive
-    const fileId = url.match(/[-\w]{25,}/);
-    if (fileId && url.includes('drive.google.com')) {
-        // Alamat resmi untuk memanggil gambar langsung dari Google Drive
-        return `https://drive.google.com/uc?export=view&id=${fileId[0]}`;
+    if (!url) return '';
+    // Mencari ID file yang terdiri dari karakter alfanumerik panjang (khas Google Drive)
+    const match = url.match(/[-\w]{25,}/);
+    if (match && (url.includes('drive.google.com') || url.includes('docs.google.com'))) {
+        const fileId = match[0];
+        // Gunakan format URL 'lh3.googleusercontent.com' atau 'drive.google.com/uc'
+        // Ini adalah format paling stabil untuk menampilkan gambar secara eksternal
+        return `https://drive.google.com/thumbnail?authuser=0&sz=w1000&id=${fileId}`;
     }
     return url;
 }
-
 
 
 function openBukti(btn) {
@@ -1525,4 +1526,5 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
