@@ -1,459 +1,936 @@
 <!DOCTYPE html>
+
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=1024">
+
 <title>LAPORAN KAS GANG MAWAR 3</title>
+
 <style>
+
  /* CSS UNTUK POPUP BUKTI DRIVE */
+
 #buktiModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:5000; align-items:center; justify-content:center; }
+
 .bukti-box { position:relative; max-width:90%; max-height:90%; background:#fff; padding:10px; border-radius:8px; display:flex; flex-direction:column; }
+
 .bukti-box img { max-width:100%; max-height:80vh; border:2px solid #333; }
+
 .btn-close-bukti { position:absolute; top:-40px; right:0; background:#ff4444; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold; }
+
 .btn-lihat-bukti { background:#007bff; color:white; font-size:0.7rem; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; }
+
 :root{
+
  --bg:#f5f5f5;--card:#ffffff;--text:#000000;--border:#cccccc;--accent:#4caf50;--danger:#d9534f;--success:#28a745;--yellow:#fff200;--font:Arial,sans-serif;
+
 }
+
+
 
 /* --- LOGO STYLING --- */
+
 .logo-mawar-container {
+
     position: fixed; top: 10px; left: 15px; z-index: 1001; display: flex; flex-direction: column; align-items: flex-start;
+
 }
+
 .logo-img {
+
     width: 200px; height: auto; filter: drop-shadow(0 0 5px rgba(0,0,0,0.3)); transition: all 0.3s;
+
 }
+
 .logo-welcome {
+
     width: 600px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 0 15px #00ffcc);
+
 }
+
 #userGreeting {
+
     font-size: 0.75rem; font-weight: bold; margin-top: 5px; color: var(--text); text-shadow: 1px 1px 2px rgba(0,0,0,0.1); display: none; background: rgba(255,255,255,0.6); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border);
+
 }
+
+
 
 /* --- SAFARI FIX --- */
+
 input:disabled {
+
   -webkit-text-fill-color: currentcolor !important; color: inherit !important; opacity: 1 !important; background-color: inherit; border-color: transparent;
+
 }
+
+
 
 button {
+
   padding: 20px 32px; font-size: 1.2rem; border-radius: 12px; font-weight: 600; cursor: pointer; text-transform: uppercase; border: 0; transition: all 0.2s;
+
 }
+
 .menu-items button { width: 100%; margin-bottom: 12px; }
 
+
+
 @media screen and (max-width: 768px) {
+
   #tbMasuk input, #tbKeluar input, .saldo, .total, #totalMasuk, #totalKeluar, .saldo-akhir { font-weight: 800 !important; font-size: 0.9rem; }
+
 }
+
+
 
 #welcomeScreen {
+
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; color: #fff; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+
 }
+
 #welcomeScreen h1 { font-size: 2.2rem; color: #00ffcc; text-shadow: 0 0 15px #00ffcc; margin: 0 20px 10px; font-family: Arial, sans-serif; }
+
 #welcomeScreen p { font-size: 1rem; color: #aaa; text-transform: none; margin-bottom: 40px; font-family: Arial, sans-serif; padding: 0 20px; }
+
 #enterBtn { padding: 15px 80px; background: #00ffcc; color: #000; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; text-transform: uppercase; font-size: 1.2rem; box-shadow: 0 0 20px rgba(0,255,204,0.4); }
 
+
+
 #modalPengunjung { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; padding:20px; box-sizing:border-box; }
+
 .pengunjung-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:600px; margin:0 auto; max-height:80vh; overflow-y:auto; }
 
+
+
 body{font-family:var(--font);background:var(--bg);margin:0;padding:20px;text-transform:uppercase;color:var(--text);-webkit-font-smoothing: antialiased;}
+
 header{text-align:center;font-size:2rem;margin-bottom:30px; padding: 40px 20px; background: rgba(0,0,0,0.02); border-radius: 0 0 20px 20px;}
+
 .update-info {text-align:center; font-size:0.85rem; color: var(--accent); margin-bottom:10px; font-weight:bold; text-transform:none;}
+
 .current-time-info {text-align:center; font-size:0.85rem; color: #666; margin-bottom:5px; font-weight:normal; text-transform:none;}
+
 #deadline-banner { background: #333; color: #fff; padding: 10px; margin: 10px 16px; border-radius: 8px; font-weight: bold; overflow: hidden; white-space: nowrap; }
+
 #deadline-banner marquee { font-size: 1.1rem; }
+
 .tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
+
 @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
 .menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.4); width: 250px;}
+
 .menu-items.show {display:flex}
+
 button.main-menu {background:#333; color:#fff; border:2px solid #fff; padding: 15px 25px;}
+
 button.primary{background:var(--accent);color:#fff}
+
 button.off{background:#999;color:#fff}
+
 button.warning{background:#f0ad4e;color:#fff;border:1px solid #fff}
+
 .block{margin:16px;padding:14px;background:var(--card);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);position:relative;transition:all 0.3s}
+
 .block h2{font-size:1.3rem;margin-bottom:10px;text-align:center}
+
 .pulse-line { display:none; height:2px; width:100%; background:linear-gradient(90deg, transparent, #00ffcc, #ff00ff, transparent); position:relative; margin-bottom:15px; overflow:hidden; }
+
 .pulse-line::after { content:""; position:absolute; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, #fff, transparent); animation: pulse-move 2s infinite linear; }
+
 @keyframes pulse-move { 0% { left: -100%; } 100% { left: 100%; } }
+
 .grand-total-table{width:100%;border-collapse:collapse;margin-top:10px}
+
 .grand-total-table th, .grand-total-table td{border:1px solid var(--border);padding:8px;text-align:center;font-weight:700}
+
 #totalMasuk { background:var(--success); color:#ffffff; }
+
 #totalKeluar { background:var(--danger); color:#ffffff; }
+
 .saldo-akhir { background:var(--yellow); color:#000000; }
+
 .note-box {border:2px dashed var(--border); padding:20px; background:rgba(0,0,0,0.03); border-radius:12px; margin-top:20px;}
+
 #catatanWarga { width:100%; background:transparent; border:0; color:var(--text); font-family:inherit; font-size:1.1rem; resize:none; text-transform:none; min-height:50px; overflow:hidden; line-height:1.5; white-space: pre-wrap; word-wrap: break-word; display: block; }
+
 #catatanPrint { display: none; white-space: pre-wrap; font-size:1.1rem; line-height:1.5; text-transform:none; }
+
 table{width:100%;border-collapse:collapse}
+
 th,td{border:1px solid var(--border);padding:6px;text-align:left}
+
 th{text-align:center; background:#eee; color:#000}
+
 input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;text-transform:none;font-family:inherit; color:inherit; background:transparent;}
 
+
+
 /* --- CYBERPUNK THEME --- */
+
 .theme-cyberpunk{--bg:#050505;--card:#0f0f0f;--text:#00ffcc;--border:#ff00ff;--accent:#ffff00;--yellow:#ffff00;}
+
 .theme-cyberpunk .pulse-line { display:block; }
+
 .theme-cyberpunk .block { border: 1px solid #00ffcc; box-shadow: 0 0 15px rgba(0,255,204,0.3); }
+
 .theme-cyberpunk th { background:#1a1a1a; color:#ff00ff; border: 1px solid #00ffcc; }
+
 .theme-cyberpunk td { border: 1px solid #ff00ff; }
+
 .theme-cyberpunk tr:nth-child(odd) td { border-color: #00ffcc; }
+
 .theme-cyberpunk tr:nth-child(even) td { border-color: #ffff00; }
+
 .theme-cyberpunk input, .theme-cyberpunk textarea { color:#fff; text-shadow: 0 0 5px #fff; }
+
 .theme-cyberpunk #totalMasuk { background:#00ff00; color:#000 !important; box-shadow: 0 0 10px #00ff00; }
+
 .theme-cyberpunk #totalKeluar { background:#ff0000; color:#fff !important; box-shadow: 0 0 10px #ff0000; }
+
 .theme-cyberpunk .saldo-akhir { background:#ffff00; color:#000 !important; box-shadow: 0 0 10px #ffff00; }
+
 .theme-cyberpunk .menu-items button { background: #ff00ff !important; color: #000000 !important; box-shadow: 0 0 15px #ff00ff; border: 2px solid #00ffcc; }
+
 .theme-cyberpunk #adminBtn.primary { background: #00ffcc !important; color: #000000 !important; box-shadow: 0 0 15px #00ffcc; }
+
 .theme-cyberpunk #userGreeting { background: rgba(0,255,204,0.2); border-color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
 
+
+
 .theme-dark{--bg:#1e1e1e;--text:#eee;--card:#2a2a2a;--border:#444}
+
 .theme-dark #userGreeting { background: rgba(0,0,0,0.5); border-color: #444; }
+
 .theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
 
+
+
 #checklistModal, #usulanModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box; }
+
 .checklist-content, .usulan-content { background:#fff; color:#000; padding:20px; border-radius:10px; max-width:980px; margin:0 auto; }
+
 .usulan-content h1 { text-align:center; background:#ff9800; color:#fff; padding:10px; margin:0; }
+
 .usulan-btn-container { display:flex; justify-content:center; gap:10px; margin:15px 0; }
+
 .btn-buat { background:#2196F3; color:#fff; padding:10px 20px; }
+
 .btn-respon { background:#673AB7; color:#fff; padding:10px 20px; }
+
 .table-usulan { width:100%; border-collapse:collapse; margin-top:10px; }
+
 .table-usulan th { background:#333; color:#fff; }
+
 .table-usulan td { font-size:0.85rem; text-transform:none; }
+
 .vote-box { display:flex; flex-direction:column; gap:4px; font-size:0.75rem; }
+
 .vote-count { font-weight:bold; color:#28a745; }
+
 .vote-names { font-style:italic; color:#666; font-size:0.7rem; }
+
 #formInputUsulan { display:none; border:2px solid #2196F3; padding:15px; margin-bottom:15px; border-radius:8px; }
 
+
+
 .status-v { background:#93c47d; color:#000; }
+
 .status-x { background:#e06666; color:#000; }
 
+
+
 .admin-action { display: none; width: 40px; text-align: center; }
+
 #adminTools { display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; }
 
+
+
 /* --- NEW HARDWARE SECURITY STYLE --- */
+
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
+
 /* Pastikan ini ada di dalam <style> Tuan */
+
 #privacyModal { 
+
     display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+
     background:rgba(0,0,0,0.8); z-index:100000; align-items:center; 
+
     justify-content:center; padding:20px; 
+
 }
+
 .privacy-box { 
+
     background:#fff; color:#333; padding:20px; border-radius:8px; 
+
     max-width:400px; max-height:70vh; overflow-y:auto; text-align:justify; 
+
     font-size:0.75rem; line-height:1.4; border: 2px solid #555; 
+
 }
+
 .btn-close-privacy { 
+
     width:100%; margin-top:15px; background:#333; color:#fff; 
+
     padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; 
+
+}
+
+/* PENAMBAHAN FITUR TEXTAREA OTOMATIS OLEH TUAN */
+.keterangan-textarea {
+    width: 100%; 
+    background: transparent; 
+    border: 0; 
+    color: inherit; 
+    font-family: inherit; 
+    font-size: inherit; 
+    resize: none; 
+    overflow: hidden; 
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    padding: 4px; 
+    box-sizing: border-box; 
+    display: block;
 }
 </style>
+
 </head>
+
 <body>
+
  <div id="buktiModal">
+
     <div class="bukti-box">
+
         <button class="btn-close-bukti" onclick="closeBukti()">TUTUP [X]</button>
+
         <img id="imgBukti" src="" alt="BUKTI">
+
         <p id="txtBuktiKet" style="text-align:center; font-weight:bold; margin-top:10px; color:#000; text-transform:uppercase;"></p>
+
     </div>
+
 </div>
+
 <span id="privacyLink" onclick="openPrivacy()" style="position:fixed; top:10px; right:15px; color:#aaa; font-size:0.65rem; cursor:pointer; z-index:100001; background:rgba(255,255,255,0.1); padding:5px 10px; border-radius:5px; text-transform:none;">Kebijakan Privasi</span>
 
+
+
 <div id="privacyModal">
+
     <div class="privacy-box">
+
         <h3>KEBIJAKAN PRIVASI & KETENTUAN KEAMANAN</h3>
+
         
+
 Bahwasanya dalam rangka upaya preventif guna memelihara integritas struktural database sistem pelaporan finansial pada lingkup administrasi Kas Gang Mawar 3, maka dengan ini ditetapkan bahwa setiap entitas perangkat elektronik yang melakukan akses interaktif ke dalam domain ini akan melalui proses identifikasi parameter teknis secara otomatis dan komprehensif. Parameter ini mencakup namun tidak terbatas pada jejak digital alamat protokol internet, identifikasi metadata perangkat keras, spesifikasi sistem operasi beserta versinya, serta rincian teknis peramban yang digunakan.
+
+
 
 Lebih lanjut, sistem akan melakukan sinkronisasi data secara periodik terhadap log aktivitas guna memastikan sinkronisitas antara input data dengan protokol validasi yang telah ditetapkan dalam standarisasi manajemen risiko digital. Proses audit teknis ini dilaksanakan tanpa interupsi guna menjamin keberlangsungan operasional (business continuity) serta memitigasi potensi divergensi data yang dapat berimplikasi pada akurasi pelaporan kolektif. Setiap fragmen informasi teknis yang terhimpun diklasifikasikan sebagai data restriktif yang tunduk pada kebijakan enkripsi berlapis sesuai dengan arsitektur keamanan yang diimplementasikan oleh pengelola.
 
+
+
 Seluruh rangkaian protokol keamanan ini diimplementasikan semata-mata untuk memvalidasi otentisitas pengguna untuk meminimalisir risiko anomali akses ilegal atau intrusi pihak ketiga yang tidak bertanggung jawab yang dapat mengancam stabilitas sistem informasi lingkungan. Dengan melanjutkan akses dan menekan elemen interaktif pada halaman penyambutan ini, maka Anda secara sadar dan bersifat absolut memberikan konsesi serta persetujuan penuh terhadap pengumpulan data teknis tersebut di atas demi kemaslahatan dan keamanan stabilitas ekonomi mikro lingkungan kita bersama secara berkelanjutan dan berkesambungan sesuai dengan standar operasional yang telah ditetapkan oleh pengelola sistem. Pelanggaran terhadap ketentuan ini atau upaya manipulasi parameter identitas digital akan ditindaklanjuti sesuai dengan kewenangan administratif yang berlaku pada yurisdiksi internal Kas Gang Mawar 3.
+
+
 
 Terkait dengan prosedur retensi data, sistem secara periodik akan melakukan purifikasi terhadap rekaman aktivitas (access logs) yang dianggap tidak relevan dengan matriks stabilitas sistem. Namun demikian, enkapsulasi data primer tetap akan dipertahankan dalam repositori terisolasi guna memenuhi standar akuntabilitas pelaporan kas. Hal ini mencakup sinkronisasi berkelanjutan antara server-side scripting dengan client-side interface guna meminimalisir latensi informasi yang dapat mengaburkan transparansi nominal finansial yang tertera dalam sistem administrasi Kas Gang Mawar 3.
 
+
+
 Bahwasanya pemanfaatan algoritma validasi identitas dalam domain ini bersifat nondiskriminatif namun tetap mengedepankan prinsip kehati-hatian (prudence principle). Setiap anomali yang terdeteksi oleh modul pengawas keamanan akan secara otomatis memicu protokol isolasi sesi guna mencegah eskalasi intrusi yang bersifat destruktif terhadap skema basis data. Parameter keamanan ini dievaluasi secara mandiri oleh pengelola sistem tanpa memerlukan intervensi pihak luar, guna menjaga otonomi penuh atas kedaulatan data finansial internal lingkungan kita.
+
+
 
 Penggunaan sumber daya komputasi oleh entitas pengguna saat mengakses portal ini wajib tunduk pada limitasi lebar pita (bandwidth) dan integritas kueri yang telah dikonfigurasi. Segala bentuk manipulasi terhadap kode sumber (source code) atau upaya dekompilasi terhadap skrip yang berjalan di latar belakang akan diklasifikasikan sebagai tindakan pelanggaran integritas digital. Pengelola sistem melepaskan diri dari segala tanggung jawab atas malfungsi perangkat keras milik pengguna yang diakibatkan oleh ketidakpatuhan terhadap standar spesifikasi minimal peramban yang telah direkomendasikan.
 
+
+
 Akhirul kalam, bahwa seluruh ketentuan yang tercantum dalam maklumat ini bersifat dinamis dan dapat mengalami penyesuaian struktural sewaktu-waktu mengikuti dinamika regulasi internal dan perkembangan arsitektur teknologi informasi. Dengan tetap berada pada laman ini, Anda dianggap telah melakukan asimilasi kognitif terhadap seluruh poin-poin tersebut dan sepakat untuk membebaskan pengelola dari segala tuntutan hukum di kemudian hari. Keputusan pengelola sistem terkait interpretasi atas pasal-pasal keamanan ini bersifat final, mengikat, dan tidak dapat diganggu gugat oleh pihak manapun.
+
+
 
 ADENDUM PERLINDUNGAN YURIDIS & PENGAWASAN SIBER:
 
+
+
 Bahwasanya seluruh aktivitas transmisi data, manipulasi kode, dan upaya eskalasi hak akses pada domain ini berada di bawah pemantauan protokol integritas digital yang berafiliasi dengan standar keamanan informasi nasional. Setiap pelanggaran yang terdeteksi, termasuk namun tidak terbatas pada upaya penggandaan tanpa izin (copyright infringement) terhadap arsitektur sistem Kas Gang Mawar 3, akan secara otomatis teregistrasi dalam pangkalan data pelanggaran administratif siber.
 
+
+
 Ketahuilah bahwa sistem ini telah mengadopsi prinsip perlindungan karya intelektual yang bersifat imperatif, di mana setiap entitas yang terbukti melakukan tindakan destruktif atau penggunaan materi tanpa otorisasi tertulis dari Pengelola, dapat diproses melalui mekanisme penegakan hukum sesuai dengan ketentuan perundang-undangan yang berlaku tentang Informasi dan Transaksi Elektronik (UU ITE). Pengelola memiliki hak mutlak untuk melakukan penangguhan akses dan menyerahkan log identifikasi perangkat kepada pihak berwenang guna kepentingan audit investigatif jika ditemukan indikasi kerugian finansial maupun struktural pada ekosistem Kas Gang Mawar 3.
+
 Sistem Laporan Finansial Kas Gang Mawar 3 adalah karya intelektual yang dilindungi secara otomatis oleh Undang-Undang Hak Cipta Republik Indonesia. Segala bentuk duplikasi tanpa izin akan diproses melalui jalur administratif internal.
+
 Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Undang-Undang. Penggandaan atau penggunaan kode tanpa izin tertulis dari pengelola adalah pelanggaran integritas digital.
+
         <button class="btn-close-privacy" onclick="closePrivacy()">SAYA MENGERTI & SETUJU</button>
+
     </div>
+
 </div>
+
 <div id="welcomeScreen">
+
     <img src="logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
+
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
+
     <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
+
 </div>
+
+
 
 <div class="logo-mawar-container" id="logoHeaderContainer">
+
     <img src="logo.png" alt="LOGO" class="logo-img">
+
     <div id="userGreeting">Selamat datang Bpk. ...</div>
+
 </div>
+
+
 
 <div id="modalPengunjung">
+
     <div class="pengunjung-content">
+
         <h2 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">DAFTAR PENGUNJUNG</h2>
+
         <button id="btnHapusPengunjung" onclick="hapusRiwayatPengunjung()" style="width:100%; background:orange; color:#000; font-weight:bold; margin-bottom:10px; display:none; border-radius:8px; border:none; padding:10px;">⚠️ HAPUS SEMUA RIWAYAT</button>
+
         <div id="listPengunjung" style="margin:20px 0; font-size:0.9rem;"></div>
+
         <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
+
             <h3 style="text-align:center; color:red;">🚨 LOG KEAMANAN SISTEM 🚨</h3>
+
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
+
             <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ BERSIHKAN LOG PELANGGARAN</button>
+
         </div>
+
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
+
     </div>
+
 </div>
+
+
 
 <header>
+
   LAPORAN KAS GANG MAWAR 3
+
   <div style="margin-top:10px; text-align:center">
+
     <button onclick="prevMonth()">◀</button>
+
     <span id="periode" style="min-width:180px; display:inline-block">...</span>
+
     <button onclick="nextMonth()">▶</button>
+
   </div>
+
   <div class="update-info" id="lastUpdate">Laporan terakhir di update pada: -</div>
+
   <div class="current-time-info" id="currentTime">Waktu saat ini adalah: -</div>
+
 </header>
 
+
+
 <div id="deadline-banner">
+
     <marquee id="deadline-text" scrollamount="5">Mengecek tanggal...</marquee>
+
 </div>
+
+
 
 <div class="menu-container" id="mainMenuContainer">
+
     <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
+
     <div class="menu-items" id="menuItems">
+
         <button id="adminBtn" class="off">⛔ ADMIN OFF 🔒</button>
+
         <div id="adminTools">
+
             <button onclick="tambahBaris('WARGA')" style="background:#28a745; color:#fff;">👤 TAMBAH WARGA</button>
+
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">📥 TAMBAH PEMASUKAN</button>
+
             <button onclick="tambahBaris('KELUAR')" style="background:#d9534f; color:#fff;">📤 TAMBAH PENGELUARAN</button>
+
             <button id="saveBtnManual" onclick="saveData()" style="background:#007bff; color:#fff;">💾 SIMPAN DATA</button>
+
             <button id="listVisitorBtn" class="warning" onclick="openPengunjung()">👀 DAFTAR PENGUNJUNG</button>
+
             <button onclick="downloadBackup()" style="background:#6c757d; color:#fff;">📥 BACKUP DATABASE</button>
+
             <button onclick="document.getElementById('fileRestore').click()" style="background:#6c757d; color:#fff;">📤 RESTORE DATABASE</button>
+
             <input type="file" id="fileRestore" style="display:none" onchange="uploadBackup(event)">
+
         </div>
+
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
+
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
+
         <button id="themeBtn" class="primary">🎨 GANTI TEMA</button>
+
         <button id="cetakBtn" class="primary">🖨️ CETAK LAPORAN</button>
+
     </div>
+
 </div>
 
+
+
 <div class="block">
+
 <h2>PEMASUKAN</h2>
+
 <div class="pulse-line"></div>
+
 <table>
+
 <tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:50%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th><th class="admin-action">HPS</th></tr>
+
 <tbody id="tbMasuk"></tbody>
+
 </table>
+
 </div>
 
+
+
 <div class="block">
+
 <h2>PENGELUARAN</h2>
+
 <div class="pulse-line"></div>
+
 <table>
+
 <tr><th style="width:30px">Tgl</th><th style="width:40%">Keterangan</th><th style="width:8%">Qty</th><th style="width:25%">Harga</th><th style="width:25%">Total</th><th style="width:100px">Bukti</th><th class="admin-action">HPS</th></tr>
+
 <tbody id="tbKeluar"></tbody>
+
 </table>
+
 </div>
 
+
+
 <div class="block">
+
 <h2>GRAND TOTAL</h2>
+
 <div class="pulse-line"></div>
+
 <table class="grand-total-table">
+
 <tr><th>TOTAL UANG MASUK</th><th>TOTAL UANG KELUAR</th><th>SALDO AKHIR</th></tr>
+
 <tr><td id="totalMasuk">0</td><td id="totalKeluar">0</td><td id="saldoAkhir" class="saldo-akhir">0</td></tr>
+
 </table>
+
 </div>
+
+
 
 <div class="block note-box">
+
   <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
+
   <div class="pulse-line"></div>
+
   <textarea id="catatanWarga" class="editable" placeholder="Klik Admin ON untuk mengisi catatan di sini..." oninput="autoHeight(this)"></textarea>
+
   <div id="catatanPrint"></div>
+
 </div>
+
+
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
+
     Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+
 </div>
+
+
 
 <div id="checklistModal">
+
     <div style="text-align:center; margin-bottom:10px;">
+
         <button onclick="closeChecklist()" style="background:#d9534f; color:#fff;"> TUTUP </button>
+
         <button onclick="cetakChecklist()" style="background:var(--accent); color:#fff; margin-left:10px;">CETAK GAMBAR</button>
+
     </div>
+
     <div class="checklist-content" id="checklistPrintArea">
+
         <h1 id="judulChecklist" style="text-align:center; background:#92c694; padding:10px; margin:0;">CHECKLIST KAS GANG MAWAR 3</h1>
+
         <h2 id="subJudulChecklist" style="text-align:center; background:#d9ead3; padding:5px; border-bottom:2px solid #000; margin:0; display:flex; justify-content:center; align-items:center; gap:20px;">
+
             <button onclick="changeChecklistYear(-1)" style="padding:5px 15px; font-size:1rem; background:#333; color:#fff;">◀</button>
+
             <span id="txtTahunChecklist">PERIODE 2026</span>
+
             <button onclick="changeChecklistYear(1)" style="padding:5px 15px; font-size:1rem; background:#333; color:#fff;">▶</button>
+
         </h2>
+
         <table class="table-checklist">
+
             <thead>
+
                 <tr>
+
                     <th rowspan="2" style="width:30px">No.</th>
+
                     <th rowspan="2">NAMA</th>
+
                     <th colspan="12" id="headerTahun">CHECKLIST KAS 2026</th>
+
                 </tr>
+
                 <tr>
+
                     <th>JAN</th><th>FEB</th><th>MAR</th><th>APR</th><th>MEI</th><th>JUN</th>
+
                     <th>JUL</th><th>AGT</th><th>SEP</th><th>OKT</th><th>NOV</th><th>DES</th>
+
                 </tr>
+
             </thead>
+
             <tbody id="tbChecklist"></tbody>
+
         </table>
+
     </div>
+
 </div>
+
+
 
 <div id="usulanModal">
+
     <div style="text-align:center; margin-bottom:10px;">
+
         <button onclick="document.getElementById('usulanModal').style.display='none'" style="background:#d9534f; color:#fff;"> TUTUP </button>
+
     </div>
+
     <div class="usulan-content">
+
         <h1>📝 FORM USULAN WARGA</h1>
+
         <div class="usulan-btn-container">
+
             <button class="btn-buat" onclick="showInputUsulan()">➕ BUAT USULAN BARU</button>
+
             <button class="btn-respon" onclick="aktifkanModeRespon()">🤝 BERI RESPON PADA USULAN</button>
+
         </div>
+
+
 
         <div id="formInputUsulan">
+
             <h4 style="margin-top:0;">TULIS USULAN ANDA:</h4>
+
             <textarea id="txtUsulan" style="width:100%; height:80px; padding:10px; box-sizing:border-box; border-radius:5px;" placeholder="Silahkan tulis usulan anda di sini..."></textarea>
+
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+
                 <button onclick="batalUsulan()" style="background:#aaa; font-size:0.9rem; padding:8px 15px;">BATAL</button>
+
                 <button onclick="kirimUsulan()" style="background:#2196F3; color:#fff; font-size:0.9rem; padding:8px 15px;">KIRIM USULAN</button>
+
             </div>
+
         </div>
+
+
 
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
+
             <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : KLIK TOMBOL ✅ / ❌ PADA USULAN YG ADA. JIKA SUDAH, KLIK TOMBOL SELESAI RESPON</p>
+
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
+
         </div>
 
+
+
         <table class="table-usulan">
+
             <thead id="headUsulan"></thead>
+
             <tbody id="tbUsulan"></tbody>
+
         </table>
+
     </div>
+
 </div>
 
+
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
+
+
 <script>
- // FUNGSI PENGATUR BUKTI DRIVE
-function convertDriveLink(url) {
-    if(!url) return "";
-    if(url.includes("drive.google.com/file/d/")){
-        let id = url.split("/d/")[1].split("/")[0];
-        return `https://lh3.googleusercontent.com/u/0/d/${id}`;
-    }
-    return url;
+// FUNGSI AGAR KOTAK KETERANGAN MEMANJANG OTOMATIS
+function autoExpand(el) {
+    el.style.height = 'auto';
+    el.style.height = (el.scrollHeight) + 'px';
 }
 
-function openBukti(btn) {
-    const url = btn.getAttribute('data-link');
-    const tr = btn.closest('tr');
-    const ket = tr.children[1].querySelector('input').value;
-    document.getElementById('imgBukti').src = convertDriveLink(url);
-    document.getElementById('txtBuktiKet').innerText = ket;
-    document.getElementById('buktiModal').style.display = 'flex';
+ // FUNGSI PENGATUR BUKTI DRIVE
+
+function convertDriveLink(url) {
+
+    if(!url) return "";
+
+    if(url.includes("drive.google.com/file/d/")){
+
+        let id = url.split("/d/")[1].split("/")[0];
+
+        return `https://lh3.googleusercontent.com/u/0/d/${id}`;
+
+    }
+
+    return url;
+
 }
+
+
+
+function openBukti(btn) {
+
+    const url = btn.getAttribute('data-link');
+
+    const tr = btn.closest('tr');
+
+    const ket = tr.children[1].querySelector('input').value;
+
+    document.getElementById('imgBukti').src = convertDriveLink(url);
+
+    document.getElementById('txtBuktiKet').innerText = ket;
+
+    document.getElementById('buktiModal').style.display = 'flex';
+
+}
+
+
 
 function closeBukti() { document.getElementById('buktiModal').style.display = 'none'; }
 
+
+
 // SISIPKAN LOGIKA INI DI DALAM FUNGSI RECALC() TUAN (Bagian Pengeluaran)
+
 document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
+
     const linkInp = tr.children[2].querySelector('input');
+
     if(!linkInp) return;
+
     const val = linkInp.value.trim();
+
     
+
     if(!isAdmin){
+
         linkInp.style.display = "none"; // Sembunyikan input teks link dari warga
+
         let btnLihat = tr.querySelector('.btn-lihat-bukti');
+
         if(val !== ""){
+
             if(!btnLihat){
+
                 btnLihat = document.createElement('button');
+
                 btnLihat.className = 'btn-lihat-bukti';
+
                 btnLihat.innerText = '👁️ LIHAT';
+
                 btnLihat.onclick = function(){ openBukti(this); };
+
                 tr.children[2].appendChild(btnLihat);
+
             }
+
             btnLihat.setAttribute('data-link', val);
+
             btnLihat.style.display = "inline-block";
+
         } else if(btnLihat) {
+
             btnLihat.style.display = "none"; // Sembunyi jika link kosong
+
         }
+
     } else {
+
         linkInp.style.display = "block"; // Admin tetap bisa melihat & mengisi link
+
         let btnLihat = tr.querySelector('.btn-lihat-bukti');
+
         if(btnLihat) btnLihat.style.display = "none";
+
     }
+
 });
+
 const firebaseConfig = {
+
     apiKey: "AIzaSyAn5Iw4cI8bRSGuyRr3TNNVWzQA-duRHvk",
+
     authDomain: "kasmawar3-59c18.firebaseapp.com",
+
     databaseURL: "https://kasmawar3-59c18-default-rtdb.asia-southeast1.firebasedatabase.app",
+
     projectId: "kasmawar3-59c18",
+
     storageBucket: "kasmawar3-59c18.firebasestorage.app",
+
     messagingSenderId: "643313437210",
+
     appId: "1:643313437210:web:7377bbd6e4cd9aa33b5fa3",
+
     measurementId: "G-KY0GS26WNT"
+
 };
+
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.database();
 
+
+
 const daftarKunci = {
+
     "D3/2": "RIZAL", "D3/3": "ROMI", "D3/4": "TRI", "D3/5": "ANIS",
+
     "D3/6": "FAJAR DJAKA", "D3/7": "FAJAR SHANUM", "D3/10": "AGUS", "D3/11": "LUKMAN",
+
     "D2/16": "IRAWAN", "D2/17": "RIAN", "D2/18": "MULYADIE", "D2/19": "HELDI",
+
     "D2/20": "HILMAN", "D2/21": "HILMAN", "D2/22": "NANO", "D2/23": "TEGUH"
+
 };
 
+
+
 const skrg = new Date();
+
 let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
+
 let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
+
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
+
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
 
+
+
 /* --- SUPREME SECURITY HARDWARE GENERATOR --- */
+
 async function getSupremeFingerprint() {
+
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+
     ctx.fillText("Mawar3-V10.2-Supreme-Sec", 2, 2);
+
     const b64 = canvas.toDataURL(); let hash = 0;
+
     for (let i = 0; i < b64.length; i++) { hash = ((hash << 5) - hash) + b64.charCodeAt(i); hash |= 0; }
+
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
+
 }
+
+
 
 /* --- SUPREME NETWORK INTEL ENGINE (NEW) --- */
+
 async function getNetworkIntel() {
+
     try {
+
         const res = await fetch('https://ipapi.co/json/');
+
         const data = await res.json();
+
         return { ip: data.ip, isp: data.org, loc: data.city + ", " + data.region };
+
     } catch(e) { return { ip: 'Unknown', isp: 'Unknown', loc: 'Unknown' }; }
+
 }
 
+
+
 function getSystemIntel() {
+
     const ua = navigator.userAgent;
+
     let os = "Unknown OS", br = "Unknown Browser";
+
     if (ua.indexOf("Win") != -1) os = "Windows";
+
     if (ua.indexOf("Mac") != -1) os = "MacOS";
+
     if (ua.indexOf("Linux") != -1) os = "Linux";
+
     if (ua.indexOf("Android") != -1) os = "Android " + (ua.match(/Android\s([0-9\.]+)/) ? ua.match(/Android\s([0-9\.]+)/)[1] : "");
+
     if (ua.indexOf("like Mac") != -1) os = "iOS";
+
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
+
     else if (ua.indexOf("Safari") != -1) br = "Safari";
+
     else if (ua.indexOf("Firefox") != -1) br = "Firefox";
+
     else if (ua.indexOf("Opera") != -1 || ua.indexOf("OPR") != -1) br = "Opera";
     return { os: os, br: br };
 }
@@ -708,7 +1185,7 @@ function tambahBaris(tipe) {
         const tb = document.getElementById('tbKeluar');
         const tr = document.createElement('tr');
 tr.innerHTML = `<td><input class='editable' type='date'></td>
-                        <td><input class='editable'></td>
+                        <td><textarea class='editable keterangan-textarea' oninput='autoExpand(this)'></textarea></td>
                         <td><input class='editable' value='0'></td>
                         <td><input class='editable' value='0'></td>
                         <td class='total'>0</td>
@@ -721,7 +1198,7 @@ tr.innerHTML = `<td><input class='editable' type='date'></td>
         const namaDefault = (tipe === 'WARGA') ? 'WARGA BARU' : 'PEMASUKAN LAIN-LAIN';
         tr.innerHTML = `<td><input class='editable' type='date'></td>
                         <td><input class='editable' value='${namaDefault}'></td>
-                        <td><input class='editable'></td>
+                        <td><textarea class='editable keterangan-textarea' oninput='autoExpand(this)'></textarea></td>
                         <td><input class='editable' value='0'></td>
                         <td class='saldo'>0</td>
                         <td class='admin-action' style='display:table-cell'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
@@ -829,14 +1306,14 @@ function loadData(){
     let ketTampil = r.ket || statusOto;
 
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><input class='editable' value='${ketTampil}'></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+    tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.nama||''}'></td><td><textarea class='editable keterangan-textarea' oninput='autoExpand(this)'>${ketTampil}</textarea></td><td><input class='editable' value='${r.uang||'0'}'></td><td class='saldo'>0</td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
     document.getElementById('tbMasuk').appendChild(tr);
    });
    if(d.keluar) {
     document.getElementById('tbKeluar').innerHTML='';
     d.keluar.forEach(r=>{
         const tr=document.createElement('tr');
-tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><input class='editable' value='${r.ket||''}'></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td><input class='editable' value='${r.bukti||''}' placeholder='Link Drive...'></td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
+tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'></td><td><textarea class='editable keterangan-textarea' oninput='autoExpand(this)'>${r.ket||''}</textarea></td><td><input class='editable' value='${r.qty||'0'}'></td><td><input class='editable' value='${r.harga||'0'}'></td><td class='total'>0</td><td><input class='editable' value='${r.bukti||''}' placeholder='Link Drive...'></td><td class='admin-action'><button onclick='hapusBaris(this)' style='background:red; color:white; padding:5px 10px; font-size:0.8rem;'>X</button></td>`;
      document.getElementById('tbKeluar').appendChild(tr);
     });
    }
