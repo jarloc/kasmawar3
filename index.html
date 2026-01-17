@@ -392,7 +392,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
 
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.5.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
 
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 
@@ -580,7 +580,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
 
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.5.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 
 </div>
 
@@ -726,37 +726,28 @@ function autoExpand(el) {
  // FUNGSI PENGATUR BUKTI DRIVE
 
 function convertDriveLink(url) {
-
     if(!url) return "";
-
-    if(url.includes("drive.google.com/file/d/")){
-
-        let id = url.split("/d/")[1].split("/")[0];
-
-        return `https://lh3.googleusercontent.com/u/0/d/${id}`;
-
+    // Logika cerdas untuk mengambil ID File dari berbagai format link Drive
+    const fileId = url.match(/[-\w]{25,}/);
+    if (fileId && url.includes('drive.google.com')) {
+        // Alamat resmi untuk memanggil gambar langsung dari Google Drive
+        return `https://drive.google.com/uc?export=view&id=${fileId[0]}`;
     }
-
     return url;
-
 }
 
 
 
 function openBukti(btn) {
-
     const url = btn.getAttribute('data-link');
-
     const tr = btn.closest('tr');
-
-    const ket = tr.children[1].querySelector('input').value;
-
+    // Perubahan di sini: mencari 'textarea', bukan 'input'
+    const areaTeks = tr.children[1].querySelector('textarea');
+    const ket = areaTeks ? areaTeks.value : "Tanpa Keterangan";
+    
     document.getElementById('imgBukti').src = convertDriveLink(url);
-
     document.getElementById('txtBuktiKet').innerText = ket;
-
     document.getElementById('buktiModal').style.display = 'flex';
-
 }
 
 
@@ -1534,5 +1525,4 @@ function closePrivacy() {
 </script>
 </body>
 </html>
-
 
