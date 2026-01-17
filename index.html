@@ -786,7 +786,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 
 
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
 
 
 
@@ -1162,7 +1162,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 
 
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 
 
 
@@ -2179,19 +2179,21 @@ tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'><
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   
+  // --- PERBAIKAN LOGIKA SALDO LINTAS TAHUN & KETERANGAN DINAMIS BY TITAH TUAN ---
   let saldoKumulatif = 0;
+  let pm = bulan - 1, pt = tahun; if (pm < 0) { pm = 11; pt--; }
+
   db.ref('kas_data').once('value', snapshot => {
     const semuaData = snapshot.val();
     if (semuaData) {
-      // Hitung semua bulan sebelum bulan yang sedang dibuka
-      for (let th = 2026; th <= tahun; th++) {
+      for (let th = 2025; th <= tahun; th++) {
         let maxBulan = (th === tahun) ? bulan - 1 : 11;
         for (let bl = 0; bl <= maxBulan; bl++) {
           let dataBulan = semuaData[bl + '-' + th];
           if (dataBulan) {
             if (dataBulan.masuk) {
               dataBulan.masuk.forEach(r => {
-                if (r.nama !== 'SISA KAS SEBELUMNYA') { // Hindari hitung ganda
+                if (r.nama !== 'SISA KAS SEBELUMNYA') {
                    saldoKumulatif += parseInt((r.uang || "0").replace(/[^0-9]/g, '')) || 0;
                 }
               });
@@ -2209,14 +2211,14 @@ tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'><
     }
     
     const trSisa = document.querySelector('#tbMasuk tr');
-    if(trSisa && (trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA' || trSisa.children[1].firstChild.value === 'WARGA BARU')){
+    if(trSisa && (trSisa.children[1].firstChild.value === 'SISA KAS SEBELUMNYA' || trSisa.children[1].firstChild.value === 'WARGA BARU' || trSisa.children[1].firstChild.value === 'PEMASUKAN LAIN-LAIN')){
         trSisa.children[0].firstChild.value = `${tahun}-${(bulan + 1).toString().padStart(2, '0')}-01`;
         trSisa.children[1].firstChild.value = 'SISA KAS SEBELUMNYA';
-        trSisa.children[2].firstChild.value = `DIHITUNG OTOMATIS DARI AWAL TAHUN`;
+        trSisa.children[2].firstChild.value = `SISA KAS ${namaBulan[pm]} ${pt}`;
         trSisa.children[3].firstChild.value = saldoKumulatif.toLocaleString('id-ID');
-        trSisa.children[3].firstChild.readOnly = true; // Kunci agar tidak bentrok lagi
+        trSisa.children[3].firstChild.readOnly = true; 
         recalc();
-    }
+      }
   });
   recalc();
  });
