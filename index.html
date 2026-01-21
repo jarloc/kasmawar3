@@ -1919,7 +1919,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     const registeredUser = snap.val();
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nSebelumnya anda sudah terdaftar login sebagai " + registeredUser + ".\nJika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
+        alert("🛑 AKSES DITOLAK!\nAnda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan masukan nomor blok anda sesuai nomor rumah anda. Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
@@ -2511,4 +2511,5 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
 
