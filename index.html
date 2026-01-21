@@ -507,7 +507,7 @@ function getSystemIntel() {
     return { os: os, br: br };
 }
 async function masukWeb() {
-    let kunci = prompt("SILAHKAN DI ISI SESUAI DENGAN NOMOR BLOK RUMAH ANDA: (Contoh: 1, No 1, Nomor 1, Nomer 1, D3 no 1 atau D2 no 1");
+    let kunci = prompt("SILAHKAN DI ISI SESUAI DENGAN NOMOR BLOK RUMAH ANDA: (Contoh: 1, No 1, Nomor 1, Nomer 1, D3 no 1 atau D2 no 1)");
     if (!kunci) return;
     
     // Pembersihan cerdas: buang kata BLOK, NOMOR, NOMER, NO, titik, spasi, dash
@@ -529,7 +529,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar sesuai dengan nomor rumah anda!"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar dan sesuai dengan nomor rumah anda!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -544,7 +544,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     const registeredUser = snap.val();
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nAnda tadi mengisi nomor blok milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan isi sesuai dengan nomor rumah anda! Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
+        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan diisi sesuai dengan nomor rumah anda! Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
@@ -1106,6 +1106,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
