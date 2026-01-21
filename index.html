@@ -426,9 +426,67 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 
 
-.theme-blue{--bg:#eef4ff;--text:#102040;--card:#fff}
+.theme-blue {
+    --bg: radial-gradient(circle at top right, #1a1a1a, #0a0a0a);
+    --text: #e0e0e0;
+    --card: rgba(255, 255, 255, 0.05);
+    --header-bg: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+    --header-text: #D4AF37;
+    --accent: #D4AF37;
+    --border: rgba(255, 255, 255, 0.1);
+}
 
+/* Efek Animasi Kartu Terangkat */
+.theme-blue .block { 
+    transition: all 0.4s ease !important; 
+    border: 1px solid var(--border); 
+    backdrop-filter: blur(10px); 
+}
 
+.theme-blue .block:hover { 
+    border-color: #D4AF37 !important; 
+    transform: translateY(-10px); 
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2); 
+}
+
+/* Tipografi Khusus Noble Gold */
+.theme-blue h1, .theme-blue h2, .theme-blue .title, .theme-blue #userGreeting {
+    font-family: 'Playfair Display', serif !important;
+    letter-spacing: 2px;
+}
+
+.theme-blue body {
+    font-family: 'Inter', sans-serif !important;
+}
+/* Mencegah Cacat Visual pada Modal & Form */
+.theme-blue .checklist-content, 
+.theme-blue .usulan-content, 
+.theme-blue .privacy-box {
+    background: #1a1a1a !important;
+    color: #e0e0e0 !important;
+    border: 2px solid #D4AF37 !important;
+}
+
+.theme-blue .table-usulan th, .theme-blue th {
+    background: #D4AF37 !important;
+    color: #000 !important;
+}
+
+.theme-blue .table-usulan td, .theme-blue td {
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+    color: #e0e0e0 !important;
+}
+
+.theme-blue input, .theme-blue textarea {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid #D4AF37 !important;
+    color: #fff !important;
+}
+
+.theme-blue .btn-buat, .theme-blue .btn-respon, .theme-blue .btn-close-privacy {
+    background: #D4AF37 !important;
+    color: #000 !important;
+}
 
 
 
@@ -615,9 +673,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 }
 
 </style>
-
-
-
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 
@@ -2382,6 +2438,13 @@ document.getElementById('themeBtn').onclick=()=>{
  let i=th.indexOf(currentTheme)+1; if(i>=th.length) i=0;
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
+ 
+ // PENAMBAHAN TEKS TOMBOL AGAR NOBLE GOLD MUNCUL
+ const btn = document.getElementById('themeBtn');
+ if(currentTheme === 'theme-cyberpunk') btn.innerText = '🎨 CYBERPUNK';
+ else if(currentTheme === 'theme-dark') btn.innerText = '🎨 DARK MODE';
+ else if(currentTheme === 'theme-blue') btn.innerText = '🎨 NOBLE GOLD';
+ else btn.innerText = '🎨 DEFAULT';
 };
 
 document.getElementById('cetakBtn').onclick=()=>{
