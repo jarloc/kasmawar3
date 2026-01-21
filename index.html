@@ -2414,6 +2414,23 @@ function openPrivacy() {
 function closePrivacy() {
     document.getElementById('privacyModal').style.display = 'none';
 }
+// Kode ini akan memantau setiap kali ada perubahan di layar (Sapu Jagat)
+const observer = new MutationObserver((mutations) => {
+    const textareas = document.querySelectorAll('.keterangan-textarea');
+    textareas.forEach(el => {
+        // Hanya jalankan jika tinggi belum menyesuaikan
+        if (el.style.height === 'auto' || el.style.height === '') {
+            autoExpand(el);
+        }
+    });
+});
+
+// Mulai memantau seluruh isi website Tuan
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
 </script>
 </body>
 </html>
+
