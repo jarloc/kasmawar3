@@ -201,7 +201,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -296,7 +296,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -475,34 +475,30 @@ function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
-    // 1. DETEKSI OS, MERK, DAN TIPE (KODE MODEL)
     if (ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1) {
-        // iPhone memang sangat pelit info, mereka hanya kasih tahu "iPhone" saja
-        os = "Apple iPhone"; 
+        os = "Apple iPhone";
     } else if (ua.indexOf("Android") != -1) {
-        // Mengambil potongan teks di dalam kurung UserAgent yang biasanya berisi Kode Model
-        let model = "Android";
-        const match = ua.match(/\(([^;]+);([^;]+);([^?)]+)\)/) || ua.match(/\(([^;]+);([^?)]+)\)/);
-        if (match) {
-            // Kita ambil bagian yang biasanya berisi tipe/model HP
-            model = match[match.length - 1].trim();
-        }
-        
+        // Ambil info model di antara tanda kurung dengan lebih akurat
+        let modelMatch = ua.match(/\(([^)]+)\)/);
+        let modelInfo = modelMatch ? modelMatch[1] : "Android";
+        let parts = modelInfo.split(';');
+        let model = parts[parts.length - 1].trim(); // Ambil bagian paling akhir (biasanya tipe HP)
+
+        // Deteksi Merk + Tipe Spesifik
         if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
         else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
         else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
         else if (ua.indexOf("Xiaomi") != -1 || ua.indexOf("Redmi") != -1 || ua.indexOf("POCO") != -1) os = "Xiaomi/Poco (" + model + ")";
         else if (ua.indexOf("Realme") != -1 || ua.indexOf("RMX") != -1) os = "Realme (" + model + ")";
-        else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
+        else if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6") != -1) os = "Infinix (" + model + ")";
         else os = "HP " + model;
     } else if (ua.indexOf("Win") != -1) {
         os = "Laptop/PC Windows";
     }
     
-    // 2. DETEKSI BROWSER
+    // Deteksi Browser
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-    else if (ua.indexOf("Opera") != -1 || ua.indexOf("OPR") != -1) br = "Opera";
     
     return { os: os, br: br };
 }
@@ -1106,6 +1102,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
