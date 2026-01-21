@@ -1020,12 +1020,12 @@ document.getElementById('adminBtn').onclick = async function() {
   if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
-   applyAdminLock(); recalc(); alert('BERHASIL!');
+   applyAdminLock(); recalc(); alert('✅ SELAMAT DATANG TUAN ADMIN KECE ✅');
   } else { 
    const net = await getNetworkIntel();
    const sys = getSystemIntel();
    db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
-   alert('SALAH!'); 
+   alert('❌ CIEE SALAH PASSWORD ❌'); 
   }
  } else {
   isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
@@ -1106,6 +1106,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
