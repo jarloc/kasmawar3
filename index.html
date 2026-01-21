@@ -634,7 +634,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 
 
 
-        <button class="btn-close-bukti" onclick="closeBukti()">TUTUP [X]</button>
+        <button class="btn-close-bukti" onclick="closeBukti()">TUTUP</button>
 
 
 
@@ -2127,7 +2127,7 @@ document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
               if(!btnLihat){
                   btnLihat = document.createElement('button');
                   btnLihat.className = 'btn-lihat-bukti';
-                  btnLihat.innerText = '👁️ BUKTI';
+                  btnLihat.innerText = 'LIHAT BUKTI';
                   btnLihat.onclick = function(){ openBukti(this); };
                   tr.children[5].appendChild(btnLihat);
               }
@@ -2433,4 +2433,5 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
