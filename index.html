@@ -201,7 +201,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -296,7 +296,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -473,24 +473,45 @@ async function getNetworkIntel() {
 
 function getSystemIntel() {
     const ua = navigator.userAgent;
-    let os = "Unknown OS", br = "Unknown Browser";
-    if (ua.indexOf("Win") != -1) os = "Windows";
-    if (ua.indexOf("Mac") != -1) os = "MacOS";
-    if (ua.indexOf("Linux") != -1) os = "Linux";
-    if (ua.indexOf("Android") != -1) os = "Android " + (ua.match(/Android\s([0-9\.]+)/) ? ua.match(/Android\s([0-9\.]+)/)[1] : "");
-    if (ua.indexOf("like Mac") != -1) os = "iOS";
+    let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
+    
+    // 1. DETEKSI OS, MERK, DAN TIPE (KODE MODEL)
+    if (ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1) {
+        // iPhone memang sangat pelit info, mereka hanya kasih tahu "iPhone" saja
+        os = "Apple iPhone"; 
+    } else if (ua.indexOf("Android") != -1) {
+        // Mengambil potongan teks di dalam kurung UserAgent yang biasanya berisi Kode Model
+        let model = "Android";
+        const match = ua.match(/\(([^;]+);([^;]+);([^?)]+)\)/) || ua.match(/\(([^;]+);([^?)]+)\)/);
+        if (match) {
+            // Kita ambil bagian yang biasanya berisi tipe/model HP
+            model = match[match.length - 1].trim();
+        }
+        
+        if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
+        else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
+        else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
+        else if (ua.indexOf("Xiaomi") != -1 || ua.indexOf("Redmi") != -1 || ua.indexOf("POCO") != -1) os = "Xiaomi/Poco (" + model + ")";
+        else if (ua.indexOf("Realme") != -1 || ua.indexOf("RMX") != -1) os = "Realme (" + model + ")";
+        else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
+        else os = "HP " + model;
+    } else if (ua.indexOf("Win") != -1) {
+        os = "Laptop/PC Windows";
+    }
+    
+    // 2. DETEKSI BROWSER
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
-    else if (ua.indexOf("Safari") != -1) br = "Safari";
-    else if (ua.indexOf("Firefox") != -1) br = "Firefox";
+    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
     else if (ua.indexOf("Opera") != -1 || ua.indexOf("OPR") != -1) br = "Opera";
+    
     return { os: os, br: br };
 }
 async function masukWeb() {
-    let kunci = prompt("SILAHKAN MASUKKAN NOMOR BLOK RUMAH ANDA:");
+    let kunci = prompt("SILAHKAN DI ISI SESUAI DENGAN NOMOR BLOK RUMAH ANDA:");
     if (!kunci) return;
     
-    // Pembersihan cerdas: buang kata BLOK, NO, titik, spasi, dash
-    let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
+    // Pembersihan cerdas: buang kata BLOK, NOMOR, NOMER, NO, titik, spasi, dash
+    let raw = kunci.toUpperCase().replace(/BLOK/g, '').replace(/NOMOR/g, '').replace(/NOMER/g, '').replace(/NO/g, '').replace(/[\s\.\-]/g, '');
     
     // Jika warga ngetik D220, D221, dll (Hilman)
     if (raw.includes("D220") || raw.includes("D221") || raw.includes("D2/20") || raw.includes("D2/21")) { await prosesMasukHardware("HILMAN", "D2/20-21"); return; }
@@ -508,7 +529,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yg anda masukan sudah benar!"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar sesuai dengan nomor rumah anda!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -523,7 +544,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     const registeredUser = snap.val();
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nAnda memasukan nomor blok orang lain! Anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan tulis sesuai nomor rumah anda. Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
+        alert("🛑 AKSES DITOLAK!\nAnda tadi mengisi nomor blok milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan isi sesuai dengan nomor rumah anda! Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
@@ -1085,6 +1106,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
