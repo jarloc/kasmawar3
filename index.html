@@ -529,7 +529,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar dan sesuai dengan nomor rumah anda!"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("❌ NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar dan sesuai dengan nomor rumah anda!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -1106,6 +1106,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
