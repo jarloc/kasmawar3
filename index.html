@@ -448,6 +448,37 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     transform: translateY(-10px); 
     box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2); 
 }
+ /* Animasi Terangkat untuk Tombol Menu & Navigasi */
+.theme-blue button, 
+.theme-blue .menu-btn, 
+.theme-blue .btn-nav, 
+.theme-blue #themeBtn,
+.theme-blue .btn-bukti {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.theme-blue button:hover, 
+.theme-blue .menu-btn:hover, 
+.theme-blue #themeBtn:hover,
+.theme-blue .btn-bukti:hover {
+    transform: translateY(-5px) scale(1.02); /* Terangkat dan membesar sedikit */
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4) !important;
+    border-color: #D4AF37 !important;
+    filter: brightness(1.2);
+}
+
+/* Animasi untuk Tombol Geser Bulan */
+.theme-blue .month-nav-container button:hover {
+    transform: translateX(5px); /* Jika tombol panah, geser ke samping */
+    color: #fff !important;
+    text-shadow: 0 0 10px #D4AF37;
+}
+
+/* Sentuhan Akhir: Efek Tekan (Click) */
+.theme-blue button:active {
+    transform: translateY(0) scale(0.95);
+    transition: 0.1s;
+}
 
 /* Tipografi Khusus Noble Gold */
 .theme-blue h1, .theme-blue h2, .theme-blue .title, .theme-blue #userGreeting {
@@ -842,7 +873,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 
 
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.6.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
 
 
 
@@ -1218,7 +1249,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 
 
 
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.6.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 
 
 
@@ -2480,3 +2511,4 @@ function closePrivacy() {
 </script>
 </body>
 </html>
+
