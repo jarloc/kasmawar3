@@ -475,41 +475,28 @@ async function getNetworkIntel() {
 function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
-    
-    if (ua.indexOf("Android") != -1) {
-        let model = "Android";
-        const match = ua.match(/\(([^)]+)\)/);
-        if (match) {
-            let details = match[1].split(';');
-            
-            // LOGIKA BARU: Cari kata kunci spesifik Infinix atau model mesinnya
-            let findModel = details.find(d => d.includes("Infinix") || d.includes("X6") || d.includes("HOT"));
-            
-            if (findModel) {
-                // Jika ketemu, buang tulisan "Build/..." yang sering bikin muncul "K"
-                model = findModel.split('Build/')[0].trim();
-            } else {
-                // Jika tidak ketemu kata kunci, ambil bagian sebelum kata 'Build' di bagian terakhir
-                let lastPart = details[details.length - 1].trim();
-                model = lastPart.split('Build/')[0].trim();
-            }
-        }
-
-// LOGIKA KLASIFIKASI MERK PEPRANGKAT
+//LOGIKA MODEL PERANGKAT    
+    if (ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1) {
+        os = "Apple iPhone";
+    } else if (ua.indexOf("Android") != -1) {
+        let modelMatch = ua.match(/\(([^)]+)\)/);
+        let modelInfo = modelMatch ? modelMatch[1] : "Android";
+        let parts = modelInfo.split(';');
+        
+        // LOGIKA BARU: Ambil bagian terakhir, tapi bersihkan jika ada kata "Build"
+        let rawModel = parts[parts.length - 1].trim();
+        let model = rawModel.split('Build/')[0].trim(); // INI PENGHANCUR "HP K"
+// LOGIKA IDENTIFIKASI MERK PERANGKAT
         if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
         else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
         else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
         else if (ua.indexOf("Xiaomi") != -1 || ua.indexOf("Redmi") != -1 || ua.indexOf("POCO") != -1) os = "Xiaomi/Poco (" + model + ")";
-        else if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6") != -1) os = "Infinix (" + model + ")";
         else if (ua.indexOf("Realme") != -1 || ua.indexOf("RMX") != -1) os = "Realme (" + model + ")";
+        else if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6") != -1) os = "Infinix (" + model + ")";
         else os = "HP " + model;
-        
-    } else if (ua.indexOf("iPhone") != -1) {
-        os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
         os = "Laptop/PC Windows";
     }
-
 // LOGIKA IDENTIFIKASI BROWSER PERANGKAT
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
@@ -1138,6 +1125,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
