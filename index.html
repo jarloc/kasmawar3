@@ -613,6 +613,17 @@ async function prosesMasukHardware(namaUser, kunci) {
     document.getElementById('userGreeting').style.display = 'block';
     document.getElementById('welcomeScreen').remove();
     
+    // Perintah Sapu Jagat: Menghilangkan semua tombol yang membuka Privacy
+    const semuaTombolPrivasi = document.querySelectorAll('button');
+    semuaTombolPrivasi.forEach(btn => {
+        if (btn.getAttribute('onclick') === 'openPrivacy()') {
+            btn.style.display = 'none';
+        }
+    });
+
+    window.scrollTo(0,0);
+}
+    
     // HILANGKAN TOMBOL PRIVASI SAAT LOGIN BERHASIL
     const btnPrivasi = document.querySelector('button[onclick="openPrivacy()"]');
     if(btnPrivasi) btnPrivasi.style.display = 'none';
@@ -1317,6 +1328,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
