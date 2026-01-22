@@ -476,37 +476,42 @@ function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
+    // 1. DETEKSI BROWSER
+    if (ua.indexOf("Chrome") != -1) br = "Chrome";
+    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
+
+    // 2. DETEKSI OS & PERANGKAT
     if (ua.indexOf("Android") != -1) {
-        let model = "Android";
-        const match = ua.match(/\(([^)]+)\)/);
-        if (match) {
-            let details = match[1].split(';');
-            // Mencari bagian yang ada nama Merk, atau ambil bagian sebelum terakhir jika bagian terakhir mencurigakan
-            let candidate = details.find(d => /Infinix|Samsung|Oppo|Vivo|Xiaomi|Redmi|Realme|POCO|X6|SM-|CPH/i.test(d)) || details[details.length - 1];
-            
-            // PEMBERSIH SAMPAH: Buang 'Build/', buang huruf tunggal (seperti K), buang 'Android 10'
-            model = candidate.split('Build/')[0].trim();
-            if (model.length <= 2 || /Android\s\d+/i.test(model)) {
-                // Jika masih sampah, ambil potongan detail lainnya yang lebih panjang
-                model = details.find(d => d.trim().length > 3 && !d.includes("Android")) || "Infinix Hot 12 Play";
-                model = model.split('Build/')[0].trim();
-            }
+        let model = "Android Device";
+        
+        // JIKA INFINIX (KITA PAKSA NAMA HOT 12 PLAY)
+        if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6816") != -1) {
+            model = "HOT 12 PLAY";
+            os = "Infinix (" + model + ")";
+        } 
+        // JIKA SAMSUNG
+        else if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) {
+            os = "Samsung Android";
         }
-        
-        // Finalisasi Nama Merk agar Firebase Tuan Rapi
-        if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
-        else if (ua.indexOf("Samsung") != -1) os = "Samsung (" + model + ")";
-        else os = "HP " + model;
-        
+        // JIKA MERK LAIN (LOGIKA YG SAYA PERKETAT AGAR TIDAK JADI LINUX)
+        else {
+            const match = ua.match(/\(([^)]+)\)/);
+            if (match) {
+                let details = match[1].split(';');
+                // Cari bagian yang TIDAK mengandung kata Linux atau Android
+                let cleanInfo = details.find(d => !d.includes("Linux") && !d.includes("Android") && d.trim().length > 3);
+                if (cleanInfo) {
+                    model = cleanInfo.split('Build/')[0].trim();
+                }
+            }
+            os = "HP " + model;
+        }
     } else if (ua.indexOf("iPhone") != -1) {
         os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
         os = "Windows PC";
     }
 
-    if (ua.indexOf("Chrome") != -1) br = "Chrome";
-    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-    
     return { os: os, br: br };
 }
 //FUNGSI IDENTIFIKASI IDENTITAS PENGUNJUNG WEB
@@ -1131,6 +1136,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
