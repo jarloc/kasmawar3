@@ -604,7 +604,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     });
     
     currentUserName = namaIdentitas;
- document.querySelectorAll('button').forEach(b => { if(b.innerText.includes('KEBIJAKAN')) b.remove(); });
+ document.querySelectorAll('button').forEach(b => { if(b.innerText.includes('Kebijakan Privasi')) b.remove(); });
     db.ref('pengunjung_situs').push({ 
         nama: currentUserName, alias: topeng,
         hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') 
@@ -1318,6 +1318,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
