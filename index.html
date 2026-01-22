@@ -478,27 +478,29 @@ function getSystemIntel() {
     
     if (ua.indexOf("Android") != -1) {
         let model = "Android";
-        // MENGGUNAKAN REGEX UNTUK MENCARI KATA DI DALAM KURUNG
-        const match = ua.match(/\(([^)]+)\)/);
-        if (match) {
-            let details = match[1];
-            // JIKA TERDETEKSI INFINIX, KITA CARI MODELNYA LANGSUNG
-            if (ua.indexOf("Infinix") != -1) {
-                let checkInfinix = details.match(/(Infinix\s[^\s;]+|X[0-9]{3,4})/i);
-                model = checkInfinix ? checkInfinix[0] : "Infinix Device";
-            } else {
-                // Untuk HP lain, ambil bagian setelah kata 'Android' atau bagian terakhir sebelum 'Build'
-                let parts = details.split(';');
-                model = parts[parts.length - 1].split('Build/')[0].trim();
+        
+        // TEKNIK BARU: Mencari kata Infinix secara spesifik di seluruh teks
+        if (ua.indexOf("Infinix") != -1) {
+            // Jika ada kata Infinix, kita ambil kata 'Infinix' sampai sebelum tanda titik koma atau kurung tutup
+            let matchInfinix = ua.match(/Infinix\s?([^;)]+)/i);
+            model = matchInfinix ? matchInfinix[0] : "Infinix Device";
+        } else {
+            // Untuk HP lain, gunakan logika standar yang lebih aman
+            const match = ua.match(/\(([^)]+)\)/);
+            if (match) {
+                let details = match[1].split(';');
+                // Ambil bagian yang mengandung model, cari yang bukan 'Linux' atau 'Android'
+                model = details.find(d => d.includes("SM-") || d.includes("CPH") || d.includes("V2") || d.includes("X6")) || details[details.length - 1];
+                model = model.split('Build/')[0].trim();
             }
         }
-        
-        // Klasifikasi Merk
+
+        // LOGIKA INDETIFIKASI MERK PERANGKAT
         if (ua.indexOf("Samsung") != -1) os = "Samsung (" + model + ")";
+        else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
         else if (ua.indexOf("Oppo") != -1) os = "Oppo (" + model + ")";
         else if (ua.indexOf("Vivo") != -1) os = "Vivo (" + model + ")";
         else if (ua.indexOf("Xiaomi") != -1) os = "Xiaomi (" + model + ")";
-        else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
         else os = "HP " + model;
         
     } else if (ua.indexOf("iPhone") != -1) {
@@ -1134,6 +1136,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
