@@ -1133,8 +1133,27 @@ window.hapusPerangkat = (key) => {
     }
 };
 </script>
+<div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+    <div style="background:#fff; width:100%; max-width:800px; border-radius:10px; padding:20px; color:#000; max-height:90vh; overflow-y:auto;">
+        <h2 style="text-align:center; margin-top:0; border-bottom:3px solid #673AB7; padding-bottom:10px;">📱 DATA PERANGKAT WARGA</h2>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                <thead>
+                    <tr style="background:#f2f2f2;">
+                        <th style="padding:10px; border:1px solid #ddd;">WARGA</th>
+                        <th style="padding:10px; border:1px solid #ddd;">DETAIL PERANGKAT</th>
+                        <th style="padding:10px; border:1px solid #ddd;">AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="listPerangkatTabel"></tbody>
+            </table>
+        </div>
+        <button onclick="document.getElementById('modalPerangkat').style.display='none'" style="width:100%; background:#ff4444; color:#fff; padding:12px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:20px;">TUTUP PANEL</button>
+    </div>
+</div>
 </body>
 </html>
+
 
 
 
