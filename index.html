@@ -476,29 +476,32 @@ function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
-    // DETEKSI BROWSER
-    if (ua.indexOf("Chrome") != -1) br = "Chrome";
-    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-
-    // DETEKSI OS & PERANGKAT
     if (ua.indexOf("Android") != -1) {
-        // JIKA INFINIX (KITA PAKSA TULISANNYA)
-        if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6816") != -1) {
-            os = "Infinix (HOT 12 PLAY)";
+        let model = "";
+        
+        // 1. SCANNER KHUSUS INFINIX
+        if (ua.indexOf("Infinix") != -1) {
+            // Mencari kata Infinix dan model di belakangnya (misal: Infinix X6816)
+            let match = ua.match(/Infinix\s([^\s;]+)/i) || ua.match(/X[0-9]{4}/i);
+            model = match ? match[0] : "HOT 12 PLAY";
+            os = "Infinix (" + model + ")";
         } 
-        // JIKA SAMSUNG
-        else if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) {
-            os = "Samsung Android";
-        }
-        // JIKA MERK LAIN (LOGIKA PALING AMAN)
+        // 2. SCANNER UNTUK MERK LAIN (SAMSUNG, OPPO, VIVO, XIAOMI)
         else {
             const match = ua.match(/\(([^)]+)\)/);
-            let model = "Android";
             if (match) {
-                let parts = match[1].split(';');
-                let lastPart = parts[parts.length - 1].split('Build/')[0].trim();
-                // Jika hasil terakhir hanya satu huruf (seperti K), kita ambil bagian sebelumnya
-                model = (lastPart.length <= 1) ? parts[parts.length - 2].trim() : lastPart;
+                let details = match[1].split(';');
+                // Mencari bagian yang mengandung kode model atau nama perangkat, bukan versi Android
+                let info = details.find(d => 
+                    d.includes("SM-") || d.includes("CPH") || d.includes("V2") || 
+                    d.includes("RMX") || d.includes("M20") || d.includes("Redmi") || d.includes("POCO")
+                ) || details[details.length - 1];
+                
+                model = info.split('Build/')[0].trim();
+                // Jika masih terbaca "Android 10", ambil bagian setelahnya
+                if(model.toLowerCase().includes("android")) {
+                    model = details[details.length - 1].split('Build/')[0].trim();
+                }
             }
             os = "HP " + model;
         }
@@ -508,6 +511,10 @@ function getSystemIntel() {
         os = "Windows PC";
     }
 
+    // DETEKSI BROWSER
+    if (ua.indexOf("Chrome") != -1) br = "Chrome";
+    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
+    
     return { os: os, br: br };
 }
 //FUNGSI IDENTIFIKASI IDENTITAS PENGUNJUNG WEB
@@ -1132,6 +1139,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
