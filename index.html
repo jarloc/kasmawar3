@@ -1103,7 +1103,18 @@ document.getElementById('adminBtn').onclick = async function() {
   } else { 
    const net = await getNetworkIntel();
    const sys = getSystemIntel();
-   db.ref('log_pelanggaran_hardware').push({ penyamar: currentUserName, pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", hw: "ADMIN_SEC", ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
+   const fPrintAsli = await getSupremeFingerprint(); 
+   
+   db.ref('log_pelanggaran_hardware').push({ 
+    penyamar: currentUserName, 
+    pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
+    hw: fPrintAsli, 
+    ip: net.ip, 
+    isp: net.isp, 
+    os: sys.os, 
+    br: sys.br, 
+    waktu: new Date().toLocaleString() 
+   });
    alert('❌ CIEE SALAH PASSWORD ❌'); 
   }
  } else {
@@ -1265,6 +1276,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
