@@ -468,7 +468,28 @@ let bulan = skrg.getMonth(), tahun = skrg.getFullYear();
 let isAdmin=false, currentTheme='', currentUserName='', modeRespon=false;
 const namaBulan=['JANUARI','FEBRUARI','MARET','APRIL','MEI','JUNI','JULI','AGUSTUS','SEPTEMBER','OKTOBER','NOVEMBER','DESEMBER'];
 const namaAnggotaAwal=['SISA KAS SEBELUMNYA','RIZAL','ROMI','TRI','ANIS','FAJAR DJAKA','FAJAR SHANUM','AGUS','LUKMAN','IRAWAN','RIAN','MULYADIE','HELDI','HILMAN','NANO','TEGUH'];
-/* --- SUPREME SECURITY HARDWARE GENERATOR --- */
+/* --- DATABASE ALIAS PERANGKAT GLOBAL --- */
+const merekWargaGlobal = {
+    "RIZAL": "REDMI", "ROMI": "ESIA", "TRI": "XIAOMI", "ANIS": "OPPO",
+    "FAJAR DJAKA": "VIVAN", "AGUS": "BLACKBERRY", "LUKMAN": "POCO",
+    "IRAWAN": "NOKIA", "RIAN": "SAMSUNG", "MULYADIE": "SONY",
+    "HELDI": "ASUS", "HILMAN": "HUAWEI", "NANO": "SMARTFREN", "TEGUH": "VIVO",
+    "FAJAR SHANUM": ["INFINIX HOT 12 PLAY", "ADVAN TBOOK", "APPLE IPHONE X", "SAMSUNG A06", "INFINIX HOT 9 PLAY", "POCO C71"]
+};
+
+/* Fungsi Pembentuk Topeng Otomatis */
+function generateAlias(namaMurni, fPrint) {
+    if (!merekWargaGlobal[namaMurni]) return "PERANGKAT TIDAK DIKENAL";
+    const merek = merekWargaGlobal[namaMurni];
+    if (Array.isArray(merek)) {
+        // Logika untuk Bpk. Fajar Shanum (Berdasarkan ID unik perangkat)
+        const hash = fPrint.split('-')[1];
+        const index = parseInt(hash, 16) % merek.length;
+        return merek[index];
+    }
+    return merek;
+}
+ /* --- SUPREME SECURITY HARDWARE GENERATOR --- */
 async function getSupremeFingerprint() {
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
     ctx.fillText("Mawar3-V10.2-Supreme-Sec", 2, 2);
@@ -547,39 +568,38 @@ async function prosesMasukHardware(namaUser, kunci) {
     const net = await getNetworkIntel();
     const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kunci + ")";
+    const topeng = generateAlias(namaUser.toUpperCase(), fPrint); // <--- INI TOPENGNYA
     
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
     const dataAda = snap.val();
 
-    // Logika deteksi: Apakah ini data lama (string) atau data baru (object)?
     let registeredUser = "";
-    if (dataAda) {
-        registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda;
-    }
+    if (dataAda) { registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda; }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan diisi sesuai dengan nomor rumah anda!");
-        db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
+        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain!");
+        db.ref('log_pelanggaran_hardware').push({ 
+            penyamar: namaIdentitas, pemilik_asli: registeredUser, 
+            alias: topeng, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() 
+        });
         return;
     }
 
-    // SELALU UPDATE ATAU SET DATA LENGKAP SAAT LOGIN
     await hardwareRef.set({
-        identitas: namaIdentitas,
-        ip: net.ip,
-        isp: net.isp,
-        os: sys.os,
-        waktu_login_terakhir: new Date().toLocaleString('id-ID')
+        identitas: namaIdentitas, alias: topeng, // <--- MENYIMPAN ALIAS KE DATABASE
+        ip: net.ip, isp: net.isp, os: sys.os, waktu_login_terakhir: new Date().toLocaleString('id-ID')
     });
     
     currentUserName = namaIdentitas;
-    db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
+    db.ref('pengunjung_situs').push({ 
+        nama: currentUserName, alias: topeng, // <--- SI C MEMAKAI TOPENG
+        hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') 
+    });
     
     document.getElementById('userGreeting').innerText = "Selamat datang Bpk. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
     document.getElementById('welcomeScreen').remove();
-    if(document.getElementById('privacyLink')) document.getElementById('privacyLink').remove();
     window.scrollTo(0,0);
 }
 
@@ -766,6 +786,7 @@ function openPengunjung() {
                 html += `<tr style='border-bottom:1px solid #eee;'>
                     <td style='padding:8px;'>
                         <b style="color:#673AB7;">${v.nama}</b><br>
+                        <b style="color:#d81b60; font-size:0.75rem;">📱 PERANGKAT: ${v.alias || 'MEREK TIDAK TERDETEKSI'}</b><br>
                         <small style="color:#666;">${v.waktu}</small><br>
                         <span style="color:#007bff;">📱 ${v.os || 'N/A'}</span><br>
                         <span style="color:#28a745;">📶 ${v.isp || 'N/A'}</span><br>
@@ -791,6 +812,7 @@ function openPengunjung() {
                     
                     h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
                             ${icon} ${pesan}<br>
+                            <b style="color:#d81b60;">📱 PERANGKAT: ${v.alias || 'TIDAK TERDETEKSI'}</b><br>
                             <small>${v.waktu}</small><br>
                             📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
                             📱 ${v.os || 'N/A'} | <code style="font-size:0.7rem;">ID: ${v.hw || 'LEGACY'}</code>
@@ -1096,23 +1118,26 @@ document.getElementById('adminBtn').onclick = async function() {
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
    applyAdminLock(); recalc(); alert('✅ SELAMAT DATANG TUAN ADMIN KECE ✅');
-  } else { 
-   const net = await getNetworkIntel();
-   const sys = getSystemIntel();
-   const fPrintAsli = await getSupremeFingerprint(); 
-   
-   db.ref('log_pelanggaran_hardware').push({ 
-    penyamar: currentUserName, 
-    pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
-    hw: fPrintAsli, 
-    ip: net.ip, 
-    isp: net.isp, 
-    os: sys.os, 
-    br: sys.br, 
-    waktu: new Date().toLocaleString() 
-   });
-   alert('❌ CIEE SALAH PASSWORD ❌'); 
-  }
+} else { 
+    const net = await getNetworkIntel();
+    const sys = getSystemIntel();
+    const fPrintAsli = await getSupremeFingerprint(); 
+    const namaMurni = currentUserName.split(' (')[0].toUpperCase();
+    const topengMaling = generateAlias(namaMurni, fPrintAsli); // <--- SI B MEMBONGKAR TOPENG PENYUSUP
+    
+    db.ref('log_pelanggaran_hardware').push({ 
+     penyamar: currentUserName, 
+     pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
+     alias: topengMaling, // <--- MENCATAT MEREK HP PENYUSUP
+     hw: fPrintAsli, 
+     ip: net.ip, 
+     isp: net.isp, 
+     os: sys.os, 
+     br: sys.br, 
+     waktu: new Date().toLocaleString() 
+    });
+    alert('❌ CIEE SALAH PASSWORD ❌'); 
+ }
  } else {
   isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
   document.getElementById('adminTools').style.display='none';
@@ -1197,79 +1222,47 @@ observer.observe(document.body, {
 });
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
-    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi...</td></tr>';
+    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi identitas...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
-
-    const merekWarga = {
-        "RIZAL": "REDMI",
-        "ROMI": "ESIA",
-        "TRI": "XIAOMI",
-        "ANIS": "OPPO",
-        "FAJAR DJAKA": "VIVAN",
-        "FAJAR SHANUM": ["INFINIX HOT 12 PLAY", "ADVAN TBOOK", "APPLE IPHONE X", "SAMSUNG A06", "INFINIX HOT 9 PLAY", "POCO C71"],
-        "AGUS": "BLACKBERRY",
-        "LUKMAN": "POCO",
-        "IRAWAN": "NOKIA",
-        "RIAN": "SAMSUNG",
-        "MULYADIE": "SONY",
-        "HELDI": "ASUS",
-        "HILMAN": "HUAWEI",
-        "NANO": "SMARTFREN",
-        "TEGUH": "VIVO"
-    };
 
     db.ref('perangkat_terdaftar').once('value', (snapshot) => {
         tabel.innerHTML = '';
         const dataPerangkat = snapshot.val();
+        
         if (!dataPerangkat) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Data Kosong, Tuan.</td></tr>';
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Belum ada perangkat terdaftar, Tuan.</td></tr>';
             return;
         }
 
-        const counterWarga = {};
-
         Object.keys(dataPerangkat).forEach(fPrint => {
             const d = dataPerangkat[fPrint];
-            const identitasLengkap = (typeof d === 'object') ? d.identitas : d;
+            const identitasLengkap = (typeof d === 'object' && d !== null) ? d.identitas : d;
             
+            // Perbaikan: Mengambil Alias yang sudah tersimpan otomatis di Database
+            const aliasWarga = d.alias || "PERANGKAT LAMA";
+            const ipWarga = d.ip || 'Data Lama';
+            const ispWarga = d.isp || 'Data Lama';
+            const osWarga = d.os || 'Data Lama';
+
             const bagian = identitasLengkap.split(' (');
-            const namaWarga = bagian[0].toUpperCase().trim();
+            const namaWarga = bagian[0];
             const blokRumah = bagian[1] ? bagian[1].replace(')', '') : '-';
-
-            let alias = "PERANGKAT TIDAK DIKENAL";
-            if (merekWarga[namaWarga]) {
-                if (!counterWarga[namaWarga]) counterWarga[namaWarga] = 0;
-                counterWarga[namaWarga]++;
-
-                const urutan = counterWarga[namaWarga];
-                const merek = merekWarga[namaWarga];
-
-                if (Array.isArray(merek)) {
-                    alias = merek[urutan - 1] || "PERANGKAT TAMBAHAN";
-                } else {
-                    alias = urutan === 1 ? merek : `${merek} KE ${urutan}`;
-                }
-            }
-
-            const ipWarga = d.ip || '-';
-            const ispWarga = d.isp || '-';
-            const osWarga = d.os || '-';
 
             const row = `
                 <tr style="border-bottom:1px solid #ddd;">
                     <td style="padding:10px;">
                         <b style="color:#673AB7;">${namaWarga}</b><br>
-                        <small>Unit: ${blokRumah}</small><br>
+                        <small style="color:#666;">Unit: ${blokRumah}</small><br>
                         <small style="color:blue;">OS: ${osWarga}</small>
                     </td>
                     <td style="padding:10px; font-size:0.75rem;">
-                        <b>ALIAS: <span style="color:#d81b60;">${alias}</span></b><br>
+                        <span style="display:inline-block; background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold; margin-bottom:4px;">${aliasWarga}</span><br>
                         <b>IP:</b> ${ipWarga}<br>
                         <b>ISP:</b> ${ispWarga}<br>
-                        <code style="color:#666; font-size:0.65rem;">ID: ${fPrint}</code>
+                        <code style="color:#d81b60; font-weight:bold;">ID: ${fPrint}</code>
                     </td>
                     <td style="padding:10px; text-align:center;">
-                        <button onclick="hapusPerangkat('${fPrint}')" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.7rem;">HAPUS</button>
+                        <button onclick="hapusPerangkat('${fPrint}')" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">MUSNAHKAN</button>
                     </td>
                 </tr>`;
             tabel.innerHTML += row;
@@ -1308,6 +1301,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
