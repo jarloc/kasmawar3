@@ -1097,11 +1097,12 @@ window.openDaftarPerangkat = () => {
     tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Mengunduh data perangkat...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
 
-    db.ref('riwayat_masuk').once('value', (snapshot) => {
+    // Saya sesuaikan jalurnya ke 'riwayat_pengunjung' sesuai kitab utama Tuan
+    db.ref('riwayat_pengunjung').once('value', (snapshot) => {
         tabel.innerHTML = '';
         const data = snapshot.val();
         if (!data) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada data ditemukan.</td></tr>';
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada data ditemukan di database.</td></tr>';
             return;
         }
 
@@ -1125,7 +1126,7 @@ window.openDaftarPerangkat = () => {
 
 window.hapusPerangkat = (key) => {
     if (confirm("Tuan, yakin ingin mencabut izin akses perangkat ini?")) {
-        db.ref('riwayat_masuk/' + key).remove()
+        db.ref('riwayat_pengunjung/' + key).remove()
             .then(() => { 
                 alert("Akses perangkat berhasil dimusnahkan!");
                 openDaftarPerangkat(); 
@@ -1153,6 +1154,7 @@ window.hapusPerangkat = (key) => {
 </div>
 </body>
 </html>
+
 
 
 
