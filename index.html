@@ -1094,61 +1094,59 @@ observer.observe(document.body, {
 });
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
-    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang melacak perangkat...</td></tr>';
+    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang mencari folder data...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
 
-    // Mengambil data dari root riwayat_pengunjung
-    db.ref('riwayat_pengunjung').once('value', (snapshot) => {
+    // Mendeteksi seluruh isi database untuk mencari folder yang berisi data hardware/perangkat
+    db.ref().once('value', (snapshot) => {
         tabel.innerHTML = '';
-        const data = snapshot.val();
+        const allData = snapshot.val();
         
-        if (!data) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Data kosong di database.</td></tr>';
+        if (!allData) {
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Database Tuan benar-benar kosong.</td></tr>';
             return;
         }
 
-        // Melakukan loop untuk menembus Push ID Firebase
-        Object.keys(data).reverse().forEach(key => {
-            const entry = data[key];
+        // Cari folder mana yang mengandung informasi hardware/hwid
+        let found = false;
+        Object.keys(allData).forEach(folderName => {
+            const folderContent = allData[folderName];
             
-            // Mencari data di dalam entry jika strukturnya bersarang
-            const nama = entry.nama || "Tanpa Nama";
-            const blok = entry.blok || "-";
-            const os = entry.os || entry.platform || "Tidak Terdeteksi";
-            const hwid = entry.hwid || entry.hardwareID || "Legacy/Lama";
-
-            const row = `
-                <tr style="border-bottom:1px solid #ddd;">
-                    <td style="padding:12px;">
-                        <span style="font-weight:bold; color:#333;">${nama}</span><br>
-                        <small style="color:#666;">Blok: ${blok}</small>
-                    </td>
-                    <td style="padding:12px; font-size:0.75rem;">
-                        <span style="background:#e8eaf6; padding:2px 5px; border-radius:3px;">OS: ${os}</span><br>
-                        <span style="color:#673AB7; font-family:monospace;">ID: ${hwid}</span>
-                    </td>
-                    <td style="padding:12px; text-align:center;">
-                        <button onclick="hapusPerangkat('${key}')" 
-                                style="background:#d9534f; color:#fff; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:0.7rem;">
-                            KICK
-                        </button>
-                    </td>
-                </tr>`;
-            tabel.innerHTML += row;
+            // Kita bongkar folder yang isinya banyak (seperti folder riwayat atau supreme_security)
+            if (typeof folderContent === 'object') {
+                Object.keys(folderContent).forEach(key => {
+                    const entry = folderContent[key];
+                    if (entry.hwid || entry.nama || entry.hardwareID) {
+                        found = true;
+                        const row = `
+                            <tr style="border-bottom:1px solid #ddd;">
+                                <td style="padding:10px;"><b>${entry.nama || 'Warga'}</b><br><small>Folder: ${folderName}</small></td>
+                                <td style="padding:10px; font-size:0.75rem;">
+                                    <b>OS:</b> ${entry.os || '-'}<br>
+                                    <b>ID:</b> <span style="color:blue;">${entry.hwid || 'Legacy'}</span>
+                                </td>
+                                <td style="padding:10px; text-align:center;">
+                                    <button onclick="hapusPerangkat('${folderName}/${key}')" style="background:#ff4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">HAPUS</button>
+                                </td>
+                            </tr>`;
+                        tabel.innerHTML += row;
+                    }
+                });
+            }
         });
+
+        if (!found) {
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Folder perangkat tidak ditemukan. Silakan cek nama folder di Firebase Tuan.</td></tr>';
+        }
     });
 };
 
-window.hapusPerangkat = (key) => {
-    if (confirm("Tuan, apakah benar perangkat ini akan di-KICK dan dihapus aksesnya?")) {
-        db.ref('riwayat_pengunjung/' + key).remove()
-            .then(() => { 
-                alert("Akses perangkat berhasil dimusnahkan, Tuan!");
-                openDaftarPerangkat(); 
-            })
-            .catch((err) => {
-                alert("Gagal menghapus: " + err.message);
-            });
+window.hapusPerangkat = (path) => {
+    if (confirm("Tuan, yakin ingin menghapus data ini dari " + path + "?")) {
+        db.ref(path).remove().then(() => { 
+            alert("Data dimusnahkan!");
+            openDaftarPerangkat(); 
+        });
     }
 };
 </script>
@@ -1172,6 +1170,7 @@ window.hapusPerangkat = (key) => {
 </div>
 </body>
 </html>
+
 
 
 
