@@ -479,23 +479,22 @@ function getSystemIntel() {
     if (ua.indexOf("Android") != -1) {
         let model = "Android";
         
-        // TEKNIK BARU: Mencari kata Infinix secara spesifik di seluruh teks
+        // LOGIKA BARU: Tembak langsung kata 'Infinix' atau model mesinnya
         if (ua.indexOf("Infinix") != -1) {
-            // Jika ada kata Infinix, kita ambil kata 'Infinix' sampai sebelum tanda titik koma atau kurung tutup
+            // Mencari kata 'Infinix' dan kata setelahnya sampai batas pemisah
             let matchInfinix = ua.match(/Infinix\s?([^;)]+)/i);
-            model = matchInfinix ? matchInfinix[0] : "Infinix Device";
+            model = matchInfinix ? matchInfinix[0].trim() : "Infinix Device";
         } else {
-            // Untuk HP lain, gunakan logika standar yang lebih aman
+            // Untuk HP lain, gunakan logika yang lebih bersih dari 'Build/'
             const match = ua.match(/\(([^)]+)\)/);
             if (match) {
                 let details = match[1].split(';');
-                // Ambil bagian yang mengandung model, cari yang bukan 'Linux' atau 'Android'
-                model = details.find(d => d.includes("SM-") || d.includes("CPH") || d.includes("V2") || d.includes("X6")) || details[details.length - 1];
-                model = model.split('Build/')[0].trim();
+                let rawModel = details[details.length - 1].trim();
+                model = rawModel.split('Build/')[0].trim();
             }
         }
 
-        // LOGIKA INDETIFIKASI MERK PERANGKAT
+        // Klasifikasi Merk untuk Firebase Tuan agar rapi
         if (ua.indexOf("Samsung") != -1) os = "Samsung (" + model + ")";
         else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
         else if (ua.indexOf("Oppo") != -1) os = "Oppo (" + model + ")";
@@ -509,6 +508,7 @@ function getSystemIntel() {
         os = "Laptop/PC Windows";
     }
 
+    // Deteksi Browser
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
     
@@ -1136,6 +1136,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
