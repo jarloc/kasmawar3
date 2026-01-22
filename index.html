@@ -128,9 +128,8 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
 .admin-action { display: none; width: 40px; text-align: center; }
 
 #adminTools { display:none; flex-direction:column; gap:8px; border-top:1px solid #555; padding-top:10px; }
-/* --- NEW HARDWARE SECURITY STYLE --- */
 .btn-reset-hw { background: #d9534f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; cursor: pointer; margin-top: 5px; }
-/* Pastikan ini ada di dalam <style> Tuan */
+
 #privacyModal { 
     display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
     background:rgba(0,0,0,0.8); z-index:100000; align-items:center; 
@@ -147,7 +146,7 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     width:100%; margin-top:15px; background:#333; color:#fff; 
     padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; 
 }
-/* PENAMBAHAN FITUR TEXTAREA OTOMATIS OLEH TUAN */
+/* FUNGSI TEXTAREA OTOMATIS */
 .keterangan-textarea {
     width: 100%; 
     background: transparent; 
@@ -179,9 +178,6 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     <div class="privacy-box">
         <h3>KEBIJAKAN PRIVASI & KETENTUAN KEAMANAN</h3>
         
-
-
-
 Bahwasanya dalam rangka upaya preventif guna memelihara integritas struktural database sistem pelaporan finansial pada lingkup administrasi Kas Gang Mawar 3, maka dengan ini ditetapkan bahwa setiap entitas perangkat elektronik yang melakukan akses interaktif ke dalam domain ini akan melalui proses identifikasi parameter teknis secara otomatis dan komprehensif. Parameter ini mencakup namun tidak terbatas pada jejak digital alamat protokol internet, identifikasi metadata perangkat keras, spesifikasi sistem operasi beserta versinya, serta rincian teknis peramban yang digunakan.
 Lebih lanjut, sistem akan melakukan sinkronisasi data secara periodik terhadap log aktivitas guna memastikan sinkronisitas antara input data dengan protokol validasi yang telah ditetapkan dalam standarisasi manajemen risiko digital. Proses audit teknis ini dilaksanakan tanpa interupsi guna menjamin keberlangsungan operasional (business continuity) serta memitigasi potensi divergensi data yang dapat berimplikasi pada akurasi pelaporan kolektif. Setiap fragmen informasi teknis yang terhimpun diklasifikasikan sebagai data restriktif yang tunduk pada kebijakan enkripsi berlapis sesuai dengan arsitektur keamanan yang diimplementasikan oleh pengelola.
 Seluruh rangkaian protokol keamanan ini diimplementasikan semata-mata untuk memvalidasi otentisitas pengguna untuk meminimalisir risiko anomali akses ilegal atau intrusi pihak ketiga yang tidak bertanggung jawab yang dapat mengancam stabilitas sistem informasi lingkungan. Dengan melanjutkan akses dan menekan elemen interaktif pada halaman penyambutan ini, maka Anda secara sadar dan bersifat absolut memberikan konsesi serta persetujuan penuh terhadap pengumpulan data teknis tersebut di atas demi kemaslahatan dan keamanan stabilitas ekonomi mikro lingkungan kita bersama secara berkelanjutan dan berkesambungan sesuai dengan standar operasional yang telah ditetapkan oleh pengelola sistem. Pelanggaran terhadap ketentuan ini atau upaya manipulasi parameter identitas digital akan ditindaklanjuti sesuai dengan kewenangan administratif yang berlaku pada yurisdiksi internal Kas Gang Mawar 3.
@@ -218,7 +214,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
         <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
             <h3 style="text-align:center; color:red;">🚨 LOG KEAMANAN SISTEM 🚨</h3>
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
-            <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ HAPUS LOG PELANGGARAN</button>
+            <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ BERSIHKAN LOG PELANGGARAN</button>
         </div>
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
@@ -265,7 +261,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <h2>PEMASUKAN</h2>
 <div class="pulse-line"></div>
 <table>
-<tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:50%">Keterangan</th><th style="width:15%">Masuk</th><th style="width:15%">Saldo</th><th class="admin-action">HPS</th></tr>
+<tr><th style="width:40px">Tgl</th><th style="width:25%">Nama</th><th style="width:50%">Keterangan</th><th style="width:15%">Uang Masuk</th><th style="width:15%">Saldo</th><th class="admin-action">HPS</th></tr>
 <tbody id="tbMasuk"></tbody>
 </table>
 </div>
@@ -348,7 +344,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
             </div>
         </div>
         <div id="containerVotingRespon" style="display:none; background:#e8f5e9; padding:10px; border-radius:8px; margin-bottom:10px; text-align:center;">
-            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : KLIK TOMBOL ✅ / ❌ PADA USULAN YG ADA. JIKA SUDAH, KLIK TOMBOL SELESAI RESPON</p>
+            <p style="margin:0 0 10px 0; font-weight:bold; color:#2e7d32;">MODE RESPON AKTIF : KLIK TOMBOL ✅ ATAU ❌ PADA USULAN YG ADA. JIKA SUDAH, KLIK TOMBOL SELESAI RESPON</p>
             <button onclick="selesaiRespon()" style="background:#2e7d32; color:#fff; padding:5px 15px; font-size:0.8rem;">SELESAI RESPON</button>
         </div>
         <table class="table-usulan">
@@ -370,12 +366,9 @@ function autoExpand(el) {
  // FUNGSI PENGATUR BUKTI DRIVE
 function convertDriveLink(url) {
     if (!url) return '';
-    // Mencari ID file yang terdiri dari karakter alfanumerik panjang (khas Google Drive)
     const match = url.match(/[-\w]{25,}/);
     if (match && (url.includes('drive.google.com') || url.includes('docs.google.com'))) {
         const fileId = match[0];
-        // Gunakan format URL 'lh3.googleusercontent.com' atau 'drive.google.com/uc'
-        // Ini adalah format paling stabil untuk menampilkan gambar secara eksternal
         return `https://drive.google.com/thumbnail?authuser=0&sz=w1000&id=${fileId}`;
     }
     return url;
@@ -384,46 +377,38 @@ function convertDriveLink(url) {
 function openBukti(btn) {
     const url = btn.getAttribute('data-link');
     const tr = btn.closest('tr');
-    // Perubahan di sini: mencari 'textarea', bukan 'input'
     const areaTeks = tr.children[1].querySelector('textarea');
     const ket = areaTeks ? areaTeks.value : "Tanpa Keterangan";
     
-
     document.getElementById('imgBukti').src = convertDriveLink(url);
-
     document.getElementById('txtBuktiKet').innerText = ket;
-
     document.getElementById('buktiModal').style.display = 'flex';
 }
 
 function closeBukti() { document.getElementById('buktiModal').style.display = 'none'; }
-// SISIPKAN LOGIKA INI DI DALAM FUNGSI RECALC() TUAN (Bagian Pengeluaran)
 document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
     const linkInp = tr.children[2].querySelector('input');
     if(!linkInp) return;
     const val = linkInp.value.trim();
     
-
-
-
     if(!isAdmin){
-        linkInp.style.display = "none"; // Sembunyikan input teks link dari warga
+        linkInp.style.display = "none"; 
         let btnLihat = tr.querySelector('.btn-lihat-bukti');
         if(val !== ""){
             if(!btnLihat){
                 btnLihat = document.createElement('button');
                 btnLihat.className = 'btn-lihat-bukti';
-                btnLihat.innerText = '👁️ LIHAT';
+                btnLihat.innerText = '👁️ LIHAT BUKTI';
                 btnLihat.onclick = function(){ openBukti(this); };
                 tr.children[2].appendChild(btnLihat);
             }
             btnLihat.setAttribute('data-link', val);
             btnLihat.style.display = "inline-block";
         } else if(btnLihat) {
-            btnLihat.style.display = "none"; // Sembunyi jika link kosong
+            btnLihat.style.display = "none"; 
         }
     } else {
-        linkInp.style.display = "block"; // Admin tetap bisa melihat & mengisi link
+        linkInp.style.display = "block"; 
         let btnLihat = tr.querySelector('.btn-lihat-bukti');
         if(btnLihat) btnLihat.style.display = "none";
     }
@@ -462,8 +447,7 @@ async function getSupremeFingerprint() {
     for (let i = 0; i < b64.length; i++) { hash = ((hash << 5) - hash) + b64.charCodeAt(i); hash |= 0; }
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
 }
-/* --- SUPREME NETWORK INTEL ENGINE (NEW) --- */
-//FUNGSI IDENTIFIKASI IP ADDRESS 
+/* --- SUPREME NETWORK INTEL ENGINE  --- */
 async function getNetworkIntel() {
     try {
         const res = await fetch('https://ipapi.co/json/');
@@ -471,48 +455,38 @@ async function getNetworkIntel() {
         return { ip: data.ip, isp: data.org, loc: data.city + ", " + data.region };
     } catch(e) { return { ip: 'Unknown', isp: 'Unknown', loc: 'Unknown' }; }
 }
-//FUNGSI IDENTIFIKASI PERANGKAT
+
 function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
-    // DETEKSI BROWSER
+    if (ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1) {
+        os = "Apple iPhone";
+    } else if (ua.indexOf("Android") != -1) {
+        
+        let modelMatch = ua.match(/\(([^)]+)\)/);
+        let modelInfo = modelMatch ? modelMatch[1] : "Android";
+        let parts = modelInfo.split(';');
+        let model = parts[parts.length - 1].trim(); 
+        
+        if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
+        else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
+        else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
+        else if (ua.indexOf("Xiaomi") != -1 || ua.indexOf("Redmi") != -1 || ua.indexOf("POCO") != -1) os = "Xiaomi/Poco (" + model + ")";
+        else if (ua.indexOf("Realme") != -1 || ua.indexOf("RMX") != -1) os = "Realme (" + model + ")";
+        else if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6") != -1) os = "Infinix (" + model + ")";
+        else os = "HP " + model;
+    } else if (ua.indexOf("Win") != -1) {
+        os = "Laptop/PC Windows";
+    }
+    
+    
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-
-    // DETEKSI PERANGKAT 
-    if (ua.indexOf("Android") != -1) {
-        let model = "Android Device";
-        
-        // JIKA MUNCUL KODE "K" (KASUS HP MUNCUL KODE K)
-        if (ua.includes("Android 10; K")) {
-            // Kita cek RAM/Memory (Device Memory) dan Kerapatan Layar (Pixel Ratio)
-            // Hot 12 Play biasanya 4GB RAM (memory: 4) sedangkan Hot 9 atau Samsung murah biasanya berbeda
-            if (navigator.deviceMemory >= 4 && window.devicePixelRatio >= 2) {
-                model = "Infinix HOT 12 PLAY";
-            } else if (ua.toLowerCase().includes("samsung") || ua.includes("SM-")) {
-                model = "Samsung Android";
-            } else {
-                model = "Android 10 (Model K)";
-            }
-        } 
-        else {
-            // LOGIKA NORMAL UNTUK HP YANG TIDAK SEMBUNYI IDENTITASNYA
-            const match = ua.match(/\(([^)]+)\)/);
-            if (match) {
-                let parts = match[1].split(';');
-                let info = parts.find(p => !p.includes("Linux") && !p.includes("Android") && p.trim().length > 1);
-                if (info) model = info.split('Build/')[0].trim();
-            }
-        }
-        os = model.includes("Infinix") || model.includes("Samsung") ? model : "HP " + model;
-    } else if (ua.indexOf("Win") != -1) {
-        os = "Windows PC";
-    }
-
+    
     return { os: os, br: br };
 }
-//FUNGSI IDENTIFIKASI IDENTITAS PENGUNJUNG WEB
+
 async function masukWeb() {
     let kunci = prompt("SILAHKAN DIISI SESUAI DENGAN NOMOR BLOK RUMAH ANDA! (Contoh: 1, No 1, Nomor 1, Nomer 1, D3 no 1 atau D2 no 1)");
     if (!kunci) return;
@@ -564,7 +538,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
     
     // Munculkan teks sapaan di bawah logo
-    document.getElementById('userGreeting').innerText = "SELAMAT DATANG, BPK. " + namaUser;
+    document.getElementById('userGreeting').innerText = "Selamat datang Bpk. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
     
     document.getElementById('welcomeScreen').remove();
@@ -575,11 +549,11 @@ async function prosesMasukHardware(namaUser, kunci) {
 }
 // --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
-    if (isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN ME-RESET IDENTITAS HP " + namaWarga + "?")) {
-        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("JARVIS : TUAN, IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
+    if (isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MERESET IDENTITAS HP " + namaWarga + "?")) {
+        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("JARVIS : IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
     }
 }
-function hapusRiwayatLog() { if(isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
+function hapusRiwayatLog() { if(isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENGHAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 // ================= FORM USULAN WARGA =================
 function openUsulan() {
@@ -602,7 +576,7 @@ function kirimUsulan() {
         setuju: [],
         tolak: []
     }).then(() => {
-        alert("USULAN TERKIRIM!");
+        alert("USULAN ANDA SUDAH DIKIRIM!");
         batalUsulan();
         loadUsulan();
     });
@@ -652,8 +626,8 @@ function loadUsulan() {
                                 <button onclick="vote('${id}', 'tolak')" style="background:#d9534f; color:#fff; font-size:0.7rem; padding:4px 8px;">❌</button>
                             </div>
                         ` : ''}
-                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, RESPON ANDA SUDAH MASUK.</div>` : ''}
-                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA YANG MEMBUAT USULAN INI, JADI ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN ANDA SENDIRI. SILAHKAN TUNGGU RESPON DARI WARGA LAINNHYA TERKAIT USULAN ANDA INI.</div>` : ''}
+                        ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH! RESPON ANDA PADA USULAN INI SUDAH DIKIRIM</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA YANG MEMBUAT USULAN INI, JADI ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN MILIK ANDA SENDIRI.</div>` : ''}
                     </div>
                 </td>
             `;
@@ -666,14 +640,14 @@ function loadUsulan() {
 
 function vote(id, tipe) {
     const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
-    if(confirm(`ANDA YAKIN ${teksTipe} DENGAN USULAN INI?`)) {
+    if(confirm(`ANDA YAKIN ${teksTipe}, PADA USULAN INI?`)) {
         db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
     }
 }
 function hapusUsulan(id) {
     if(!isAdmin) return;
-    if(confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS USULAN INI?")) {
-        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("JARVIS : TUAN, USULAN BERHASIL DIHAPUS!"); });
+    if(confirm("ANDA YAKIN INGIN MENGHAPUS USULAN INI?")) {
+        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("USULAN TERHAPUS!"); });
     }
 }
 function updateUsulanAdmin(id, field, value) {
@@ -738,9 +712,9 @@ function openPengunjung() {
 }
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
-    if (confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS SELURUH RIWAYAT PENGUNJUNG?")) {
+    if (confirm("JARVIS : ANDA YAKIN INGIN MENGHAPUS SEMUA RIWAYAT INI, TUAN?")) {
         db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
-        alert("JARVIS : TUAN, SELURUH RIWAYAT PENGUNJUNG BERHASIL DIHAPUS!"); openPengunjung(); 
+        alert("JARVIS : RIWAYAT BERHASIL DIHAPUS!"); openPengunjung(); 
     }
 }
 // ================= LOGIKA KAS ASLI =================
@@ -771,7 +745,7 @@ tr.innerHTML = `<td><input class='editable' type='date'></td>
     recalc();
 }
 function hapusBaris(btn) {
-    if(confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS BARIS INI?")) { btn.parentElement.parentElement.remove(); recalc(); }
+    if(confirm("JARVIS : ANDA YAKIN INGIN MENGHAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); }
 }
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -793,7 +767,7 @@ function recalc(){
   tr.children[3].firstChild.value=u.toLocaleString('id-ID');
   tr.children[4].textContent=runM.toLocaleString('id-ID');
   
-  // LOGIKA WARNA OTOMATIS BERDASARKAN TITAH TUAN
+  // LOGIKA WARNA OTOMATIS
   const ketInput = tr.children[2].firstChild;
   const ketVal=ketInput.value.toUpperCase();
   const inputs=tr.querySelectorAll('input');
@@ -817,7 +791,7 @@ document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
   tr.children[2].firstChild.value=q.toLocaleString('id-ID'); 
   tr.children[3].firstChild.value=h.toLocaleString('id-ID'); 
   tr.children[4].textContent=t.toLocaleString('id-ID');
-  // --- MULAI GANTI/TAMBAH DI SINI (LOGIKA BUKTI) ---
+  // --- LOGIKA BUKTI ---
   const linkInp = tr.children[5].querySelector('input'); 
   if(linkInp){
       const val = linkInp.value.trim();
@@ -877,7 +851,7 @@ tr.innerHTML=`<td><input class='editable' type='date' value='${r.tanggal||''}'><
    if(d.updated) document.getElementById('lastUpdate').textContent = "TERAKHIR DI UPDATE PADA: " + d.updated;
   }
   
-  // --- PERBAIKAN LOGIKA SALDO LINTAS TAHUN & KETERANGAN DINAMIS BY TITAH TUAN ---
+  // --- PERBAIKAN LOGIKA SALDO LINTAS TAHUN & KETERANGAN DINAMIS  ---
   let saldoKumulatif = 0;
   let pm = bulan - 1, pt = tahun; if (pm < 0) { pm = 11; pt--; }
   db.ref('kas_data').once('value', snapshot => {
@@ -938,7 +912,7 @@ function saveData(){
  .then(() => {
     db.ref('kas_data/catatan_umum').set(document.getElementById('catatanWarga').value);
     btn.textContent = originalText;
-    alert("✅ DATA BERHASIL DISIMPAN KE SERVER, TUAN!");
+    alert("✅ DATA BERHASIL DISIMPAN KE SERVER!");
  });
 }
 // LOGIKA NAVIGASI TAHUN CHECKLIST
@@ -1012,13 +986,13 @@ function uploadBackup(event) {
     reader.onload = function(e) {
         try {
             const dataImg = JSON.parse(e.target.result);
-            if(confirm("Tuan, apakah Anda yakin ingin menimpa database dengan cadangan ini?")) {
+            if(confirm("JARVIS: TUAN, ANDA YAKIN INGIN MENIMPA DATABASE DENGAN CADANGAN INI?")) {
                 db.ref('kas_data').set(dataImg).then(() => {
-                    alert("DATA BERHASIL DIPULIHKAN, TUAN!");
+                    alert("JARVIS : TUAN, DATA TELAH BERHASIL DIPULIHKAN DENGAN CARA DITIMPA MENGGUNAKAN DATA YANG TUAN UPLOAD TADI!");
                     location.reload();
                 });
             }
-        } catch(err) { alert("FILE TIDAK VALID!"); }
+        } catch(err) { alert("FILE YANG ANDA KIRIM TIDAK VALID!"); }
     };
     reader.readAsText(file);
 }
@@ -1067,42 +1041,21 @@ document.getElementById('themeBtn').onclick=()=>{
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
 };
-//FUNGSI TOMBOL CETAK LAPORAN
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
  const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
  const logoGrt = document.getElementById('userGreeting'), jamGr = document.getElementById('currentTime'), menuGr = document.getElementById('mainMenuContainer');
-// CARI SEMUA KOLOM BUKTI DAN TOMBOL BUKTI
- const kolomBukti = document.querySelectorAll('th:nth-child(5), td:nth-child(5)');
- const tombolBukti = document.querySelectorAll('.btn-lihat-bukti');
-// SEMBUNYIKAN ELEMEN YANG TIDAK INGIN DICETAK
- banner.style.display = 'none'; 
- jamGr.style.display = 'none'; 
- menuGr.style.display = 'none';
- kolomBukti.forEach(el => el.style.display = 'none');
- tombolBukti.forEach(el => el.style.display = 'none');
- logoGrt.style.display = 'block'; 
+ 
+ banner.style.display = 'none'; logoGrt.style.display = 'none'; jamGr.style.display = 'none'; menuGr.style.display = 'none';
  areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  
  setTimeout(()=>{
- 
-  html2canvas(document.body,{
-    scale:2, 
-    useCORS: true, 
-    allowTaint: true
-  }).then(c=>{
+  html2canvas(document.body,{scale:2}).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-// KEMBALIKAN SEMUA TAMPILAN SEPERTI SEMULA
-   banner.style.display = 'block'; 
-   logoGrt.style.display = 'block'; 
-   jamGr.style.display = 'block'; 
-   menuGr.style.display = 'flex';
-   areaAdmin.style.display = 'block'; 
-   areaPrint.style.display = 'none';
-   kolomBukti.forEach(el => el.style.display = '');
-   tombolBukti.forEach(el => el.style.display = '');
+   banner.style.display = 'block'; logoGrt.style.display = 'block'; jamGr.style.display = 'block'; menuGr.style.display = 'flex';
+   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
   });
- },1000); // WAKTU TUNGGU JADI 1 DETIK (1000ms) AGAR LOGO STABIL
+ },500);
 };
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
@@ -1135,23 +1088,6 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
