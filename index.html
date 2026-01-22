@@ -477,17 +477,27 @@ const merekWargaGlobal = {
     "FAJAR SHANUM": ["INFINIX HOT 12 PLAY", "ADVAN TBOOK", "APPLE IPHONE X", "SAMSUNG A06", "INFINIX HOT 9 PLAY", "POCO C71"]
 };
 
-/* Fungsi Pembentuk Topeng Otomatis */
-function generateAlias(namaMurni, fPrint) {
-    if (!merekWargaGlobal[namaMurni]) return "PERANGKAT TIDAK DIKENAL";
-    const merek = merekWargaGlobal[namaMurni];
-    if (Array.isArray(merek)) {
-        // Logika untuk Bpk. Fajar Shanum (Berdasarkan ID unik perangkat)
-        const hash = fPrint.split('-')[1];
-        const index = parseInt(hash, 16) % merek.length;
-        return merek[index];
+/* Fungsi Pembentuk Topeng Urutan Terkunci ID */
+async function generateAlias(namaMurni, fPrint) {
+    let merekRaw = merekWargaGlobal[namaMurni] || "PERANGKAT TIDAK DIKENAL";
+    const snap = await db.ref('perangkat_terdaftar').once('value');
+    const data = snap.val() || {};
+    
+    if (data[fPrint] && data[fPrint].alias) return data[fPrint].alias;
+
+    const perangkatLama = Object.keys(data).filter(key => {
+        const d = data[key];
+        const identitas = (typeof d === 'object') ? d.identitas : d;
+        return identitas.toUpperCase().includes(namaMurni);
+    });
+    
+    const urutanKe = perangkatLama.length + 1;
+
+    if (Array.isArray(merekRaw)) {
+        return merekRaw[urutanKe - 1] || `${merekRaw[0]} KE ${urutanKe}`;
+    } else {
+        return urutanKe === 1 ? merekRaw : `${merekRaw} KE ${urutanKe}`;
     }
-    return merek;
 }
  /* --- SUPREME SECURITY HARDWARE GENERATOR --- */
 async function getSupremeFingerprint() {
@@ -568,7 +578,9 @@ async function prosesMasukHardware(namaUser, kunci) {
     const net = await getNetworkIntel();
     const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kunci + ")";
-    const topeng = generateAlias(namaUser.toUpperCase(), fPrint); // <--- INI TOPENGNYA
+    
+    // MENUNGGU PROSES GENERATE ALIAS BERDASARKAN ID
+    const topeng = await generateAlias(namaUser.toUpperCase(), fPrint);
     
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
@@ -578,7 +590,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     if (dataAda) { registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda; }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Tolong diisi sesuai nomor rumah anda sendiri!");
+        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain!");
         db.ref('log_pelanggaran_hardware').push({ 
             penyamar: namaIdentitas, pemilik_asli: registeredUser, 
             alias: topeng, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() 
@@ -587,26 +599,26 @@ async function prosesMasukHardware(namaUser, kunci) {
     }
 
     await hardwareRef.set({
-        identitas: namaIdentitas, alias: topeng, // <--- MENYIMPAN ALIAS KE DATABASE
+        identitas: namaIdentitas, alias: topeng,
         ip: net.ip, isp: net.isp, os: sys.os, waktu_login_terakhir: new Date().toLocaleString('id-ID')
     });
     
     currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ 
-        nama: currentUserName, alias: topeng, // <--- SI C MEMAKAI TOPENG
+        nama: currentUserName, alias: topeng,
         hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') 
     });
     
     document.getElementById('userGreeting').innerText = "Selamat datang Bpk. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
     document.getElementById('welcomeScreen').remove();
-// Perintah Sapu Jagat untuk menghilangkan tombol privasi
-if(document.getElementById('privacyLink')) document.getElementById('privacyLink').style.display = 'none';
-const btnPrivasi = document.querySelector('button[onclick="openPrivacy()"]');
-if(btnPrivasi) btnPrivasi.style.display = 'none';
+    
+    // HILANGKAN TOMBOL PRIVASI SAAT LOGIN BERHASIL
+    const btnPrivasi = document.querySelector('button[onclick="openPrivacy()"]');
+    if(btnPrivasi) btnPrivasi.style.display = 'none';
+    
     window.scrollTo(0,0);
 }
-
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
     tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi identitas perangkat...</td></tr>';
@@ -1127,12 +1139,12 @@ document.getElementById('adminBtn').onclick = async function() {
     const sys = getSystemIntel();
     const fPrintAsli = await getSupremeFingerprint(); 
     const namaMurni = currentUserName.split(' (')[0].toUpperCase();
-    const topengMaling = generateAlias(namaMurni, fPrintAsli); // <--- SI B MEMBONGKAR TOPENG PENYUSUP
+    const topengPenyusup = await generateAlias(namaMurni, fPrintAsli); 
     
     db.ref('log_pelanggaran_hardware').push({ 
      penyamar: currentUserName, 
      pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
-     alias: topengMaling, // <--- MENCATAT MEREK HP PENYUSUP
+     alias: topengPenyusup,
      hw: fPrintAsli, 
      ip: net.ip, 
      isp: net.isp, 
@@ -1305,6 +1317,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
