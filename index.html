@@ -1049,18 +1049,24 @@ document.getElementById('cetakBtn').onclick=()=>{
  banner.style.display = 'none'; jamGr.style.display = 'none'; menuGr.style.display = 'none';
  areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  
- setTimeout(()=>{
-  html2canvas(document.body,{scale:2}).then(c=>{
-   const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   banner.style.display = 'block'; jamGr.style.display = 'block'; menuGr.style.display = 'flex';
-   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+setTimeout(()=>{
+  html2canvas(document.body, {
+    scale: 2,
+    useCORS: true,
+    allowTaint: false
+  }).then(c=>{
+   const l=document.createElement('a'); 
+   l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; 
+   l.href=c.toDataURL('image/jpeg',0.9); 
+   l.click();
+   banner.style.display = 'block'; 
+   jamGr.style.display = 'block'; 
+   menuGr.style.display = 'flex';
+   areaAdmin.style.display = 'block'; 
+   areaPrint.style.display = 'none';
   });
- },500);
+ },1000);
 };
-window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    e.returnValue = '';
-});
 document.addEventListener('input', recalc);
 updateUI(); updateDeadlineBanner(); startClock();
 function openPrivacy() {
@@ -1088,6 +1094,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
