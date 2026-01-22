@@ -477,38 +477,26 @@ function getSystemIntel() {
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
     if (ua.indexOf("Android") != -1) {
-        let model = "Android";
-        
-        // LOGIKA BARU: Tembak langsung kata 'Infinix' atau model mesinnya
+        // DETEKSI KHUSUS INFINIX (LANGSUNG TEMBAK)
         if (ua.indexOf("Infinix") != -1) {
-            // Mencari kata 'Infinix' dan kata setelahnya sampai batas pemisah
-            let matchInfinix = ua.match(/Infinix\s?([^;)]+)/i);
-            model = matchInfinix ? matchInfinix[0].trim() : "Infinix Device";
+            let modelMatch = ua.match(/Infinix\s?([^;)]+)/i);
+            os = "Infinix (" + (modelMatch ? modelMatch[0].split('Build/')[0].trim() : "Hot 12 Play") + ")";
         } else {
-            // Untuk HP lain, gunakan logika yang lebih bersih dari 'Build/'
+            // DETEKSI HP LAIN
             const match = ua.match(/\(([^)]+)\)/);
+            let model = "Android";
             if (match) {
-                let details = match[1].split(';');
-                let rawModel = details[details.length - 1].trim();
-                model = rawModel.split('Build/')[0].trim();
+                let parts = match[1].split(';');
+                model = parts[parts.length - 1].split('Build/')[0].trim();
             }
+            os = "HP " + model;
         }
-
-        // Klasifikasi Merk untuk Firebase Tuan agar rapi
-        if (ua.indexOf("Samsung") != -1) os = "Samsung (" + model + ")";
-        else if (ua.indexOf("Infinix") != -1) os = "Infinix (" + model + ")";
-        else if (ua.indexOf("Oppo") != -1) os = "Oppo (" + model + ")";
-        else if (ua.indexOf("Vivo") != -1) os = "Vivo (" + model + ")";
-        else if (ua.indexOf("Xiaomi") != -1) os = "Xiaomi (" + model + ")";
-        else os = "HP " + model;
-        
     } else if (ua.indexOf("iPhone") != -1) {
         os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
         os = "Laptop/PC Windows";
     }
 
-    // Deteksi Browser
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
     
@@ -1136,6 +1124,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
