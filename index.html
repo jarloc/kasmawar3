@@ -548,42 +548,38 @@ async function prosesMasukHardware(namaUser, kunci) {
     const sys = getSystemIntel();
     const namaIdentitas = namaUser + " (" + kunci + ")";
     
-    // Check if hardware is already registered to another user
     const hardwareRef = db.ref('perangkat_terdaftar/' + fPrint);
     const snap = await hardwareRef.once('value');
-    const registeredData = snap.val();
+    const dataAda = snap.val();
 
-    // Logika pengecekan data (mendukung format lama dan baru)
-    const registeredUser = (typeof registeredData === 'object' && registeredData !== null) ? registeredData.identitas : registeredData;
+    // Logika deteksi: Apakah ini data lama (string) atau data baru (object)?
+    let registeredUser = "";
+    if (dataAda) {
+        registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda;
+    }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan diisi sesuai dengan nomor rumah anda! Jika anda bukan nama tersebut silahkan hubungi bendahara untuk melakukan reset daftar warga");
+        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Saat ini anda sudah terdaftar sebagai " + registeredUser + ".\nSilahkan diisi sesuai dengan nomor rumah anda!");
         db.ref('log_pelanggaran_hardware').push({ penyamar: namaIdentitas, pemilik_asli: registeredUser, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() });
         return;
     }
 
-    if (!registeredData) {
-        // MENYIMPAN DATA LENGKAP PADA PENDAFTARAN PERTAMA
-        hardwareRef.set({
-            identitas: namaIdentitas,
-            ip: net.ip,
-            isp: net.isp,
-            os: sys.os,
-            waktu_daftar: new Date().toLocaleString('id-ID')
-        });
-    }
+    // SELALU UPDATE ATAU SET DATA LENGKAP SAAT LOGIN
+    await hardwareRef.set({
+        identitas: namaIdentitas,
+        ip: net.ip,
+        isp: net.isp,
+        os: sys.os,
+        waktu_login_terakhir: new Date().toLocaleString('id-ID')
+    });
     
     currentUserName = namaIdentitas;
     db.ref('pengunjung_situs').push({ nama: currentUserName, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, loc: net.loc, waktu: new Date().toLocaleString('id-ID') });
     
-    // Munculkan teks sapaan di bawah logo
     document.getElementById('userGreeting').innerText = "Selamat datang Bpk. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
-    
     document.getElementById('welcomeScreen').remove();
- 
     if(document.getElementById('privacyLink')) document.getElementById('privacyLink').remove();
- 
     window.scrollTo(0,0);
 }
 
@@ -1201,22 +1197,24 @@ observer.observe(document.body, {
 });
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
-    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi identitas perangkat...</td></tr>';
+    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
 
     db.ref('perangkat_terdaftar').once('value', (snapshot) => {
         tabel.innerHTML = '';
         const dataPerangkat = snapshot.val();
-        
         if (!dataPerangkat) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Belum ada perangkat yang terdaftar dalam sistem, Tuan.</td></tr>';
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Data Kosong, Tuan.</td></tr>';
             return;
         }
 
-        let found = false;
         Object.keys(dataPerangkat).forEach(fPrint => {
-            found = true;
-            const identitasLengkap = dataPerangkat[fPrint];
+            const d = dataPerangkat[fPrint];
+            const identitasLengkap = (typeof d === 'object') ? d.identitas : d;
+            const ipWarga = d.ip || '-';
+            const ispWarga = d.isp || '-';
+            const osWarga = d.os || '-';
+
             const bagian = identitasLengkap.split(' (');
             const namaWarga = bagian[0];
             const blokRumah = bagian[1] ? bagian[1].replace(')', '') : '-';
@@ -1225,29 +1223,26 @@ window.openDaftarPerangkat = () => {
                 <tr style="border-bottom:1px solid #ddd;">
                     <td style="padding:10px;">
                         <b style="color:#673AB7;">${namaWarga}</b><br>
-                        <small style="color:#666;">Unit: ${blokRumah}</small>
+                        <small>Unit: ${blokRumah}</small><br>
+                        <small style="color:blue;">OS: ${osWarga}</small>
                     </td>
                     <td style="padding:10px; font-size:0.75rem;">
-                        <span style="display:inline-block; background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold; margin-bottom:4px;">SUPREME ID</span><br>
-                        <code style="color:#d81b60; font-weight:bold;">${fPrint}</code>
+                        <b>IP:</b> ${ipWarga}<br>
+                        <b>ISP:</b> ${ispWarga}<br>
+                        <code style="color:#d81b60;">ID: ${fPrint}</code>
                     </td>
                     <td style="padding:10px; text-align:center;">
-                        <button onclick="hapusPerangkat('perangkat_terdaftar/${fPrint}')" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">MUSNAHKAN</button>
+                        <button onclick="hapusPerangkat('${fPrint}')" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer;">HAPUS</button>
                     </td>
                 </tr>`;
             tabel.innerHTML += row;
         });
-
-        if (!found) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada data perangkat yang ditemukan.</td></tr>';
-        }
     });
 };
-
-window.hapusPerangkat = (path) => {
-    if (confirm("Tuan, yakin ingin menghapus data ini dari " + path + "?")) {
-        db.ref(path).remove().then(() => { 
-            alert("Data dimusnahkan!");
+window.hapusPerangkat = (fPrintID) => {
+    if (confirm("Tuan, yakin ingin memusnahkan perangkat ID: " + fPrintID + "?")) {
+        db.ref('perangkat_terdaftar/' + fPrintID).remove().then(() => { 
+            alert("Satu Perangkat Berhasil Dimusnahkan, Tuan!");
             openDaftarPerangkat(); 
         });
     }
@@ -1276,6 +1271,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
