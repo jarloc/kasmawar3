@@ -476,30 +476,38 @@ function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
+    // DETEKSI BROWSER
+    if (ua.indexOf("Chrome") != -1) br = "Chrome";
+    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
+
+    // DETEKSI OS & PERANGKAT
     if (ua.indexOf("Android") != -1) {
-        // DETEKSI KHUSUS INFINIX (LANGSUNG TEMBAK)
-        if (ua.indexOf("Infinix") != -1) {
-            let modelMatch = ua.match(/Infinix\s?([^;)]+)/i);
-            os = "Infinix (" + (modelMatch ? modelMatch[0].split('Build/')[0].trim() : "Hot 12 Play") + ")";
-        } else {
-            // DETEKSI HP LAIN
+        // JIKA INFINIX (KITA PAKSA TULISANNYA)
+        if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6816") != -1) {
+            os = "Infinix (HOT 12 PLAY)";
+        } 
+        // JIKA SAMSUNG
+        else if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) {
+            os = "Samsung Android";
+        }
+        // JIKA MERK LAIN (LOGIKA PALING AMAN)
+        else {
             const match = ua.match(/\(([^)]+)\)/);
             let model = "Android";
             if (match) {
                 let parts = match[1].split(';');
-                model = parts[parts.length - 1].split('Build/')[0].trim();
+                let lastPart = parts[parts.length - 1].split('Build/')[0].trim();
+                // Jika hasil terakhir hanya satu huruf (seperti K), kita ambil bagian sebelumnya
+                model = (lastPart.length <= 1) ? parts[parts.length - 2].trim() : lastPart;
             }
             os = "HP " + model;
         }
     } else if (ua.indexOf("iPhone") != -1) {
         os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
-        os = "Laptop/PC Windows";
+        os = "Windows PC";
     }
 
-    if (ua.indexOf("Chrome") != -1) br = "Chrome";
-    else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-    
     return { os: os, br: br };
 }
 //FUNGSI IDENTIFIKASI IDENTITAS PENGUNJUNG WEB
@@ -1124,6 +1132,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
