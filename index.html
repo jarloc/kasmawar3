@@ -463,6 +463,7 @@ async function getSupremeFingerprint() {
     return "HW-" + Math.abs(hash).toString(16).toUpperCase() + "-" + screen.width;
 }
 /* --- SUPREME NETWORK INTEL ENGINE (NEW) --- */
+//FUNGSI IDENTIFIKASI IP ADDRESS 
 async function getNetworkIntel() {
     try {
         const res = await fetch('https://ipapi.co/json/');
@@ -470,23 +471,31 @@ async function getNetworkIntel() {
         return { ip: data.ip, isp: data.org, loc: data.city + ", " + data.region };
     } catch(e) { return { ip: 'Unknown', isp: 'Unknown', loc: 'Unknown' }; }
 }
-
+//FUNGSI IDENTIFIKASI PERANGKAT
 function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
     if (ua.indexOf("Android") != -1) {
-        let model = "";
+        let model = "Android";
         const match = ua.match(/\(([^)]+)\)/);
         if (match) {
             let details = match[1].split(';');
-            // AMBIL BAGIAN TERAKHIR, TAPI JIKA ADA KATA 'Build', KITA BUANG
-            let rawModel = details[details.length - 1].trim();
-            model = rawModel.split('Build/')[0].trim(); // Ini akan membuang kode Build yang bikin muncul 'K'
-        } else {
-            model = "Android Perangkat";
+            
+            // LOGIKA BARU: Cari kata kunci spesifik Infinix atau model mesinnya
+            let findModel = details.find(d => d.includes("Infinix") || d.includes("X6") || d.includes("HOT"));
+            
+            if (findModel) {
+                // Jika ketemu, buang tulisan "Build/..." yang sering bikin muncul "K"
+                model = findModel.split('Build/')[0].trim();
+            } else {
+                // Jika tidak ketemu kata kunci, ambil bagian sebelum kata 'Build' di bagian terakhir
+                let lastPart = details[details.length - 1].trim();
+                model = lastPart.split('Build/')[0].trim();
+            }
         }
 
+// LOGIKA KLASIFIKASI MERK PEPRANGKAT
         if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
         else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
         else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
@@ -495,20 +504,19 @@ function getSystemIntel() {
         else if (ua.indexOf("Realme") != -1 || ua.indexOf("RMX") != -1) os = "Realme (" + model + ")";
         else os = "HP " + model;
         
-    } else if (ua.indexOf("iPhone") != -1 || ua.indexOf("iPad") != -1) {
-        os = "Apple iPhone/iPad";
+    } else if (ua.indexOf("iPhone") != -1) {
+        os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
         os = "Laptop/PC Windows";
-    } else if (ua.indexOf("Mac") != -1) {
-        os = "Apple Mac";
     }
 
+// LOGIKA IDENTIFIKASI BROWSER PERANGKAT
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
-    else if (ua.indexOf("Firefox") != -1) br = "Firefox";
     
     return { os: os, br: br };
 }
+//FUNGSI IDENTIFIKASI IDENTITAS PENGUNJUNG WEB
 async function masukWeb() {
     let kunci = prompt("SILAHKAN DIISI SESUAI DENGAN NOMOR BLOK RUMAH ANDA! (Contoh: 1, No 1, Nomor 1, Nomer 1, D3 no 1 atau D2 no 1)");
     if (!kunci) return;
@@ -1062,15 +1070,20 @@ document.getElementById('themeBtn').onclick=()=>{
  if(currentTheme) document.body.classList.remove(currentTheme);
  currentTheme=th[i]; if(currentTheme) document.body.classList.add(currentTheme);
 };
+//FUNGSI TOMBOL CETAK LAPORAN
 document.getElementById('cetakBtn').onclick=()=>{
  toggleMenu(); window.scrollTo(0,0);
  const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
  const logoGrt = document.getElementById('userGreeting'), jamGr = document.getElementById('currentTime'), menuGr = document.getElementById('mainMenuContainer');
- 
+// CARI SEMUA KOLOM BUKTI DAN TOMBOL BUKTI
+ const kolomBukti = document.querySelectorAll('th:nth-child(5), td:nth-child(5)');
+ const tombolBukti = document.querySelectorAll('.btn-lihat-bukti');
+// SEMBUNYIKAN ELEMEN YANG TIDAK INGIN DICETAK
  banner.style.display = 'none'; 
  jamGr.style.display = 'none'; 
  menuGr.style.display = 'none';
- 
+ kolomBukti.forEach(el => el.style.display = 'none');
+ tombolBukti.forEach(el => el.style.display = 'none');
  logoGrt.style.display = 'block'; 
  areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  
@@ -1082,15 +1095,17 @@ document.getElementById('cetakBtn').onclick=()=>{
     allowTaint: true
   }).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   
+// KEMBALIKAN SEMUA TAMPILAN SEPERTI SEMULA
    banner.style.display = 'block'; 
    logoGrt.style.display = 'block'; 
    jamGr.style.display = 'block'; 
    menuGr.style.display = 'flex';
    areaAdmin.style.display = 'block'; 
    areaPrint.style.display = 'none';
+   kolomBukti.forEach(el => el.style.display = '');
+   tombolBukti.forEach(el => el.style.display = '');
   });
- },1000); // WAKTU TUNGGU DITAMBAH JADI 1 DETIK AGAR LOGO STABIL
+ },1000); // WAKTU TUNGGU JADI 1 DETIK (1000ms) AGAR LOGO STABIL
 };
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
@@ -1123,6 +1138,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
