@@ -359,6 +359,34 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+ // FUNGSI PEREKAM SIDIK JARI DIGITAL (HWID) MILIK TUAN
+window.dapatkanHWID = () => {
+    const s = window.screen;
+    const n = navigator;
+    // Meracik data hardware: resolusi, warna, core CPU, dan info browser
+    const racikan = [
+        n.userAgent,
+        s.width + 'x' + s.height,
+        s.colorDepth,
+        n.hardwareConcurrency || 'N/A',
+        n.language
+    ].join('|');
+    
+    // Mengubah racikan menjadi kode unik pendek (Hashing)
+    let hash = 0;
+    for (let i = 0; i < racikan.length; i++) {
+        const char = racikan.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Ubah ke 32bit integer
+    }
+    const idUnik = 'ID-' + Math.abs(hash).toString(16).toUpperCase();
+    
+    // Menanamkan tanda di memori HP agar tidak mudah berubah
+    if (!localStorage.getItem('perangkat_token')) {
+        localStorage.setItem('perangkat_token', idUnik);
+    }
+    return localStorage.getItem('perangkat_token');
+};
 // FUNGSI AGAR KOTAK KETERANGAN MEMANJANG OTOMATIS
 function autoExpand(el) {
     el.style.height = 'auto';
@@ -658,11 +686,17 @@ function updateUsulanAdmin(id, field, value) {
 // ================= LOGIKA PENGUNJUNG =================
 function openPengunjung() {
     toggleMenu();
-    const modal = document.getElementById('modalPengunjung'), list = document.getElementById('listPengunjung'), secLog = document.getElementById('secLogAdmin'), listLog = document.getElementById('listLogAdmin'), btnHapus = document.getElementById('btnHapusPengunjung');
+    const modal = document.getElementById('modalPengunjung'), 
+          list = document.getElementById('listPengunjung'), 
+          secLog = document.getElementById('secLogAdmin'), 
+          listLog = document.getElementById('listLogAdmin'), 
+          btnHapus = document.getElementById('btnHapusPengunjung');
+    
     btnHapus.style.display = isAdmin ? 'block' : 'none';
     secLog.style.display = isAdmin ? 'block' : 'none';
     list.innerHTML = "Memuat daftar...";
     modal.style.display = 'block';
+
     db.ref('pengunjung_situs').limitToLast(100).once('value', s => {
         const d = s.val();
         if(d) {
@@ -670,11 +704,12 @@ function openPengunjung() {
             Object.values(d).reverse().forEach(v => { 
                 html += `<tr style='border-bottom:1px solid #eee;'>
                     <td style='padding:8px;'>
-                        <b>${v.nama}</b><br>
+                        <b style="color:#673AB7;">${v.nama}</b><br>
                         <small style="color:#666;">${v.waktu}</small><br>
-                        <span style="color:#007bff;">📱 ${v.os || 'N/A'} | 🌐 ${v.br || 'N/A'}</span><br>
+                        <span style="color:#007bff;">📱 ${v.os || 'N/A'}</span><br>
                         <span style="color:#28a745;">📶 ${v.isp || 'N/A'}</span><br>
-                        <span style="color:#d9534f;">📍 ${v.ip || 'N/A'} (${v.loc || 'N/A'})</span>
+                        <span style="color:#d9534f;">📍 ${v.ip || 'N/A'} (${v.loc || 'N/A'})</span><br>
+                        <code style="font-size:0.65rem; background:#f0f0f0; padding:2px 4px;">ID: ${v.hw || 'LEGACY'}</code>
                     </td>
                     <td style='text-align:center;'>${isAdmin ? `<button class="btn-reset-hw" onclick="resetHardware('${v.hw}','${v.nama}')">RESET HP</button>` : '-'}</td>
                 </tr>`; 
@@ -682,27 +717,23 @@ function openPengunjung() {
             list.innerHTML = html + "</table>";
         }
     });
+
     if(isAdmin) {
         listLog.innerHTML = "Memindai riwayat penyusup...";
         db.ref('log_pelanggaran_hardware').limitToLast(100).once('value', s => {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
-                    if(v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL"){
-                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
-                                🚨 <b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!<br>
-                                <small>${v.waktu}</small><br>
-                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
-                                📱 ${v.os || 'N/A'} | ${v.br || 'N/A'}
-                              </div>`;
-                    } else {
-                        h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
-                                ⚠️ HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b><br>
-                                <small>${v.waktu}</small><br>
-                                📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}
-                                📱 ${v.os || 'N/A'} | ${v.br || 'N/A'}
-                              </div>`; 
-                    }
+                    const isAdminIlegal = (v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL");
+                    const icon = isAdminIlegal ? "🚨" : "⚠️";
+                    const pesan = isAdminIlegal ? `<b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!` : `HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
+                    
+                    h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
+                            ${icon} ${pesan}<br>
+                            <small>${v.waktu}</small><br>
+                            📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
+                            📱 ${v.os || 'N/A'} | <code style="font-size:0.7rem;">ID: ${v.hw || 'LEGACY'}</code>
+                          </div>`;
                 });
                 listLog.innerHTML = h;
             } else {
@@ -1094,49 +1125,45 @@ observer.observe(document.body, {
 });
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
-    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang mencari folder data...</td></tr>';
+    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang sinkronisasi identitas perangkat...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
 
-    // Mendeteksi seluruh isi database untuk mencari folder yang berisi data hardware/perangkat
-    db.ref().once('value', (snapshot) => {
+    db.ref('perangkat_terdaftar').once('value', (snapshot) => {
         tabel.innerHTML = '';
-        const allData = snapshot.val();
+        const dataPerangkat = snapshot.val();
         
-        if (!allData) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Database Tuan benar-benar kosong.</td></tr>';
+        if (!dataPerangkat) {
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Belum ada perangkat yang terdaftar dalam sistem, Tuan.</td></tr>';
             return;
         }
 
-        // Cari folder mana yang mengandung informasi hardware/hwid
         let found = false;
-        Object.keys(allData).forEach(folderName => {
-            const folderContent = allData[folderName];
-            
-            // Kita bongkar folder yang isinya banyak (seperti folder riwayat atau supreme_security)
-            if (typeof folderContent === 'object') {
-                Object.keys(folderContent).forEach(key => {
-                    const entry = folderContent[key];
-                    if (entry.hwid || entry.nama || entry.hardwareID) {
-                        found = true;
-                        const row = `
-                            <tr style="border-bottom:1px solid #ddd;">
-                                <td style="padding:10px;"><b>${entry.nama || 'Warga'}</b><br><small>Folder: ${folderName}</small></td>
-                                <td style="padding:10px; font-size:0.75rem;">
-                                    <b>OS:</b> ${entry.os || '-'}<br>
-                                    <b>ID:</b> <span style="color:blue;">${entry.hwid || 'Legacy'}</span>
-                                </td>
-                                <td style="padding:10px; text-align:center;">
-                                    <button onclick="hapusPerangkat('${folderName}/${key}')" style="background:#ff4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">HAPUS</button>
-                                </td>
-                            </tr>`;
-                        tabel.innerHTML += row;
-                    }
-                });
-            }
+        Object.keys(dataPerangkat).forEach(fPrint => {
+            found = true;
+            const identitasLengkap = dataPerangkat[fPrint];
+            const bagian = identitasLengkap.split(' (');
+            const namaWarga = bagian[0];
+            const blokRumah = bagian[1] ? bagian[1].replace(')', '') : '-';
+
+            const row = `
+                <tr style="border-bottom:1px solid #ddd;">
+                    <td style="padding:10px;">
+                        <b style="color:#673AB7;">${namaWarga}</b><br>
+                        <small style="color:#666;">Unit: ${blokRumah}</small>
+                    </td>
+                    <td style="padding:10px; font-size:0.75rem;">
+                        <span style="display:inline-block; background:#e8f5e9; color:#2e7d32; padding:2px 6px; border-radius:4px; font-weight:bold; margin-bottom:4px;">SUPREME ID</span><br>
+                        <code style="color:#d81b60; font-weight:bold;">${fPrint}</code>
+                    </td>
+                    <td style="padding:10px; text-align:center;">
+                        <button onclick="hapusPerangkat('perangkat_terdaftar/${fPrint}')" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">MUSNAHKAN</button>
+                    </td>
+                </tr>`;
+            tabel.innerHTML += row;
         });
 
         if (!found) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Folder perangkat tidak ditemukan. Silakan cek nama folder di Firebase Tuan.</td></tr>';
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada data perangkat yang ditemukan.</td></tr>';
         }
     });
 };
@@ -1170,6 +1197,7 @@ window.hapusPerangkat = (path) => {
 </div>
 </body>
 </html>
+
 
 
 
