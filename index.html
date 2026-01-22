@@ -1094,29 +1094,44 @@ observer.observe(document.body, {
 });
 window.openDaftarPerangkat = () => {
     const tabel = document.getElementById('listPerangkatTabel');
-    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Mengunduh data perangkat...</td></tr>';
+    tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">🕵️ Sedang melacak perangkat...</td></tr>';
     document.getElementById('modalPerangkat').style.display = 'flex';
 
-    // Saya sesuaikan jalurnya ke 'riwayat_pengunjung' sesuai kitab utama Tuan
+    // Mengambil data dari root riwayat_pengunjung
     db.ref('riwayat_pengunjung').once('value', (snapshot) => {
         tabel.innerHTML = '';
         const data = snapshot.val();
+        
         if (!data) {
-            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Tidak ada data ditemukan di database.</td></tr>';
+            tabel.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">Data kosong di database.</td></tr>';
             return;
         }
 
+        // Melakukan loop untuk menembus Push ID Firebase
         Object.keys(data).reverse().forEach(key => {
-            const d = data[key];
+            const entry = data[key];
+            
+            // Mencari data di dalam entry jika strukturnya bersarang
+            const nama = entry.nama || "Tanpa Nama";
+            const blok = entry.blok || "-";
+            const os = entry.os || entry.platform || "Tidak Terdeteksi";
+            const hwid = entry.hwid || entry.hardwareID || "Legacy/Lama";
+
             const row = `
                 <tr style="border-bottom:1px solid #ddd;">
-                    <td style="padding:10px;"><b>${d.nama || 'Anonim'}</b><br><small>${d.blok || '-'}</small></td>
-                    <td style="padding:10px; font-size:0.75rem;">
-                        <b>OS:</b> ${d.os || '-'}<br>
-                        <b>ID:</b> <span style="color:blue;">${d.hwid || 'Legacy'}</span>
+                    <td style="padding:12px;">
+                        <span style="font-weight:bold; color:#333;">${nama}</span><br>
+                        <small style="color:#666;">Blok: ${blok}</small>
                     </td>
-                    <td style="padding:10px; text-align:center;">
-                        <button onclick="hapusPerangkat('${key}')" style="background:#ff4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">HAPUS</button>
+                    <td style="padding:12px; font-size:0.75rem;">
+                        <span style="background:#e8eaf6; padding:2px 5px; border-radius:3px;">OS: ${os}</span><br>
+                        <span style="color:#673AB7; font-family:monospace;">ID: ${hwid}</span>
+                    </td>
+                    <td style="padding:12px; text-align:center;">
+                        <button onclick="hapusPerangkat('${key}')" 
+                                style="background:#d9534f; color:#fff; border:none; padding:8px 12px; border-radius:5px; cursor:pointer; font-weight:bold; font-size:0.7rem;">
+                            KICK
+                        </button>
                     </td>
                 </tr>`;
             tabel.innerHTML += row;
@@ -1125,11 +1140,14 @@ window.openDaftarPerangkat = () => {
 };
 
 window.hapusPerangkat = (key) => {
-    if (confirm("Tuan, yakin ingin mencabut izin akses perangkat ini?")) {
+    if (confirm("Tuan, apakah benar perangkat ini akan di-KICK dan dihapus aksesnya?")) {
         db.ref('riwayat_pengunjung/' + key).remove()
             .then(() => { 
-                alert("Akses perangkat berhasil dimusnahkan!");
+                alert("Akses perangkat berhasil dimusnahkan, Tuan!");
                 openDaftarPerangkat(); 
+            })
+            .catch((err) => {
+                alert("Gagal menghapus: " + err.message);
             });
     }
 };
@@ -1154,6 +1172,7 @@ window.hapusPerangkat = (key) => {
 </div>
 </body>
 </html>
+
 
 
 
