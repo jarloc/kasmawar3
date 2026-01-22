@@ -476,36 +476,32 @@ function getSystemIntel() {
     const ua = navigator.userAgent;
     let os = "Perangkat Tidak Dikenal", br = "Unknown Browser";
     
-    // 1. DETEKSI BROWSER
+    // 1. DETEKSI BROWSER (Chrome/Safari)
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
 
-    // 2. DETEKSI OS & PERANGKAT
+    // 2. DETEKSI PERANGKAT (Android)
     if (ua.indexOf("Android") != -1) {
         let model = "Android Device";
         
-        // JIKA INFINIX (KITA PAKSA NAMA HOT 12 PLAY)
-        if (ua.indexOf("Infinix") != -1 || ua.indexOf("X6816") != -1) {
-            model = "HOT 12 PLAY";
-            os = "Infinix (" + model + ")";
-        } 
-        // JIKA SAMSUNG
-        else if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) {
-            os = "Samsung Android";
-        }
-        // JIKA MERK LAIN (LOGIKA YG SAYA PERKETAT AGAR TIDAK JADI LINUX)
-        else {
-            const match = ua.match(/\(([^)]+)\)/);
-            if (match) {
-                let details = match[1].split(';');
-                // Cari bagian yang TIDAK mengandung kata Linux atau Android
-                let cleanInfo = details.find(d => !d.includes("Linux") && !d.includes("Android") && d.trim().length > 3);
-                if (cleanInfo) {
-                    model = cleanInfo.split('Build/')[0].trim();
+        // SCANNER RADAR: Mencari kode mesin Infinix Hot 12 Play (X6816) atau kata Infinix
+        const match = ua.match(/\(([^)]+)\)/);
+        if (match) {
+            let details = match[1]; // Mengambil semua isi di dalam kurung
+            
+            if (/Infinix|X6816|X6817/i.test(details)) {
+                // Jika radar menemukan jejak Infinix atau kode mesinnya
+                model = "Infinix HOT 12 PLAY";
+            } else {
+                // Jika bukan Infinix, cari merk lain atau ambil potongan paling bersih
+                let parts = details.split(';');
+                let candidate = parts.find(p => !p.includes("Android") && !p.includes("Linux") && p.trim().length > 3);
+                if (candidate) {
+                    model = candidate.split('Build/')[0].trim();
                 }
             }
-            os = "HP " + model;
         }
+        os = (model.includes("Infinix")) ? model : "HP " + model;
     } else if (ua.indexOf("iPhone") != -1) {
         os = "Apple iPhone";
     } else if (ua.indexOf("Win") != -1) {
@@ -1136,6 +1132,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
