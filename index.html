@@ -477,17 +477,16 @@ function getSystemIntel() {
     
     if (ua.indexOf("Android") != -1) {
         let model = "";
-        // Mencari informasi model di dalam tanda kurung User Agent
         const match = ua.match(/\(([^)]+)\)/);
         if (match) {
             let details = match[1].split(';');
-            // Infinix biasanya menaruh kode model di bagian paling belakang
-            model = details[details.length - 1].trim(); 
+            // AMBIL BAGIAN TERAKHIR, TAPI JIKA ADA KATA 'Build', KITA BUANG
+            let rawModel = details[details.length - 1].trim();
+            model = rawModel.split('Build/')[0].trim(); // Ini akan membuang kode Build yang bikin muncul 'K'
         } else {
             model = "Android Perangkat";
         }
 
-        // Klasifikasi Merk agar tampilan di Firebase Tuan Sangat Rapi
         if (ua.indexOf("Samsung") != -1 || ua.indexOf("SM-") != -1) os = "Samsung (" + model + ")";
         else if (ua.indexOf("Oppo") != -1 || ua.indexOf("CPH") != -1) os = "Oppo (" + model + ")";
         else if (ua.indexOf("Vivo") != -1 || ua.indexOf("V2") != -1) os = "Vivo (" + model + ")";
@@ -504,7 +503,6 @@ function getSystemIntel() {
         os = "Apple Mac";
     }
 
-    // Deteksi Browser
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
     else if (ua.indexOf("Firefox") != -1) br = "Firefox";
@@ -1069,16 +1067,30 @@ document.getElementById('cetakBtn').onclick=()=>{
  const areaAdmin = document.getElementById('catatanWarga'), areaPrint = document.getElementById('catatanPrint'), banner = document.getElementById('deadline-banner');
  const logoGrt = document.getElementById('userGreeting'), jamGr = document.getElementById('currentTime'), menuGr = document.getElementById('mainMenuContainer');
  
- banner.style.display = 'none'; logoGrt.style.display = 'none'; jamGr.style.display = 'none'; menuGr.style.display = 'none';
+ banner.style.display = 'none'; 
+ jamGr.style.display = 'none'; 
+ menuGr.style.display = 'none';
+ 
+ logoGrt.style.display = 'block'; 
  areaPrint.innerText = areaAdmin.value; areaAdmin.style.display = 'none'; areaPrint.style.display = 'block';
  
  setTimeout(()=>{
-  html2canvas(document.body,{scale:2}).then(c=>{
+ 
+  html2canvas(document.body,{
+    scale:2, 
+    useCORS: true, 
+    allowTaint: true
+  }).then(c=>{
    const l=document.createElement('a'); l.download=`KAS_${namaBulan[bulan]}_${tahun}.jpg`; l.href=c.toDataURL('image/jpeg',0.9); l.click();
-   banner.style.display = 'block'; logoGrt.style.display = 'block'; jamGr.style.display = 'block'; menuGr.style.display = 'flex';
-   areaAdmin.style.display = 'block'; areaPrint.style.display = 'none';
+   
+   banner.style.display = 'block'; 
+   logoGrt.style.display = 'block'; 
+   jamGr.style.display = 'block'; 
+   menuGr.style.display = 'flex';
+   areaAdmin.style.display = 'block'; 
+   areaPrint.style.display = 'none';
   });
- },500);
+ },1000); // WAKTU TUNGGU DITAMBAH JADI 1 DETIK AGAR LOGO STABIL
 };
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
