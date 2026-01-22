@@ -1107,6 +1107,7 @@ window.addEventListener('beforeunload', function (e) {
 });
 document.addEventListener('input', recalc);
 updateUI(); updateDeadlineBanner(); startClock();
+alert(navigator.userAgent);
 function openPrivacy() {
     document.getElementById('privacyModal').style.display = 'flex';
 }
@@ -1132,6 +1133,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
