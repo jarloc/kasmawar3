@@ -600,6 +600,10 @@ async function prosesMasukHardware(namaUser, kunci) {
     document.getElementById('userGreeting').innerText = "Selamat datang Bpk. " + namaUser;
     document.getElementById('userGreeting').style.display = 'block';
     document.getElementById('welcomeScreen').remove();
+// Perintah Sapu Jagat untuk menghilangkan tombol privasi
+if(document.getElementById('privacyLink')) document.getElementById('privacyLink').style.display = 'none';
+const btnPrivasi = document.querySelector('button[onclick="openPrivacy()"]');
+if(btnPrivasi) btnPrivasi.style.display = 'none';
     window.scrollTo(0,0);
 }
 
@@ -1301,6 +1305,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
