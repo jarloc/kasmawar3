@@ -218,7 +218,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
         <div id="secLogAdmin" style="display:none; border-top:2px dashed #000; padding-top:15px; margin-top:15px;">
             <h3 style="text-align:center; color:red;">🚨 LOG KEAMANAN SISTEM 🚨</h3>
             <div id="listLogAdmin" style="font-size:0.85rem; color:#d9534f;"></div>
-            <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ BERSIHKAN LOG PELANGGARAN</button>
+            <button onclick="hapusRiwayatLog()" style="width:100%; background:orange; color:#000; margin-top:10px; padding:10px; border-radius:5px;">🗑️ HAPUS LOG PELANGGARAN</button>
         </div>
         <button onclick="document.getElementById('modalPengunjung').style.display='none'" style="width:100%; background:red; color:#fff;">TUTUP</button>
     </div>
@@ -582,11 +582,11 @@ async function prosesMasukHardware(namaUser, kunci) {
 }
 // --- ADMIN RESET FUNCTIONS ---
 function resetHardware(hwID, namaWarga) {
-    if (isAdmin && confirm("YAKIN RESET IDENTITAS HP " + namaWarga + "?")) {
-        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
+    if (isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN ME-RESET IDENTITAS HP " + namaWarga + "?")) {
+        db.ref('perangkat_terdaftar/' + hwID).remove().then(() => { alert("JARVIS : TUAN, IDENTITAS HP BERHASIL DIRESET!"); openPengunjung(); });
     }
 }
-function hapusRiwayatLog() { if(isAdmin && confirm("HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
+function hapusRiwayatLog() { if(isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 // ================= FORM USULAN WARGA =================
 function openUsulan() {
@@ -660,7 +660,7 @@ function loadUsulan() {
                             </div>
                         ` : ''}
                         ${(sudahVoting) ? `<div style="font-size:0.65rem; color:blue; margin-top:5px;">TERIMA KASIH, RESPON ANDA SUDAH MASUK.</div>` : ''}
-                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA PEMBUAT USULAN INI, ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN SENDIRI.</div>` : ''}
+                        ${(isOwner && modeRespon) ? `<div style="font-size:0.65rem; color:grey; margin-top:5px;">ANDA YANG MEMBUAT USULAN INI, JADI ANDA TIDAK DAPAT MEMBERI RESPON PADA USULAN ANDA SENDIRI. SILAHKAN TUNGGU RESPON DARI WARGA LAINNHYA TERKAIT USULAN ANDA INI.</div>` : ''}
                     </div>
                 </td>
             `;
@@ -673,14 +673,14 @@ function loadUsulan() {
 
 function vote(id, tipe) {
     const teksTipe = (tipe === 'setuju') ? 'SETUJU' : 'TIDAK SETUJU';
-    if(confirm(`YAKIN ${teksTipe}, PAK?`)) {
+    if(confirm(`ANDA YAKIN ${teksTipe} DENGAN USULAN INI?`)) {
         db.ref(`usulan_warga/${id}/${tipe}`).push(currentUserName).then(() => { loadUsulan(); });
     }
 }
 function hapusUsulan(id) {
     if(!isAdmin) return;
-    if(confirm("HAPUS USULAN INI, PAK?")) {
-        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("TERHAPUS!"); });
+    if(confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS USULAN INI?")) {
+        db.ref(`usulan_warga/${id}`).remove().then(() => { alert("JARVIS : TUAN, USULAN BERHASIL DIHAPUS!"); });
     }
 }
 function updateUsulanAdmin(id, field, value) {
@@ -745,9 +745,9 @@ function openPengunjung() {
 }
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
-    if (confirm("HAPUS SEMUA RIWAYAT, TUAN?")) {
+    if (confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS SELURUH RIWAYAT PENGUNJUNG?")) {
         db.ref('pengunjung_situs').remove(); db.ref('percobaan_admin_gagal').remove();
-        alert("BERSIH!"); openPengunjung(); 
+        alert("JARVIS : TUAN, SELURUH RIWAYAT PENGUNJUNG BERHASIL DIHAPUS!"); openPengunjung(); 
     }
 }
 // ================= LOGIKA KAS ASLI =================
@@ -778,7 +778,7 @@ tr.innerHTML = `<td><input class='editable' type='date'></td>
     recalc();
 }
 function hapusBaris(btn) {
-    if(confirm("HAPUS BARIS INI, TUAN?")) { btn.parentElement.parentElement.remove(); recalc(); }
+    if(confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENG-HAPUS BARIS INI?")) { btn.parentElement.parentElement.remove(); recalc(); }
 }
 function buildTables(){
  document.getElementById('tbMasuk').innerHTML=''; document.getElementById('tbKeluar').innerHTML='';
@@ -1142,6 +1142,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
