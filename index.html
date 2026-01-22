@@ -578,7 +578,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     if (dataAda) { registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda; }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain!");
+        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Tolong diisi sesuai nomor rumah anda sendiri!");
         db.ref('log_pelanggaran_hardware').push({ 
             penyamar: namaIdentitas, pemilik_asli: registeredUser, 
             alias: topeng, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() 
@@ -1305,6 +1305,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
