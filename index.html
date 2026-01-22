@@ -480,41 +480,34 @@ function getSystemIntel() {
     if (ua.indexOf("Chrome") != -1) br = "Chrome";
     else if (ua.indexOf("Safari") != -1 && ua.indexOf("Chrome") == -1) br = "Safari";
 
-    // DETEKSI PERANGKAT
+    // DETEKSI PERANGKAT 
     if (ua.indexOf("Android") != -1) {
-        // CEK KASUS KHUSUS "K"
+        let model = "Android Device";
+        
+        // JIKA MUNCUL KODE "K" (KASUS HP MUNCUL KODE K)
         if (ua.includes("Android 10; K")) {
-            // VALIDASI GANDA: Cek resolusi layar Infinix Hot 12 Play
-            // Biasanya Infinix Hot 12 Play memiliki lebar layar sekitar 360-400px dalam skala window
-            if (window.screen.width <= 450) { 
-                // Jika ingin lebih spesifik lagi, ini adalah jalur 
-                os = "Infinix HOT 12 PLAY";
+            // Kita cek RAM/Memory (Device Memory) dan Kerapatan Layar (Pixel Ratio)
+            // Hot 12 Play biasanya 4GB RAM (memory: 4) sedangkan Hot 9 atau Samsung murah biasanya berbeda
+            if (navigator.deviceMemory >= 4 && window.devicePixelRatio >= 2) {
+                model = "Infinix HOT 12 PLAY";
+            } else if (ua.toLowerCase().includes("samsung") || ua.includes("SM-")) {
+                model = "Samsung Android";
             } else {
-                // Jika kodenya 'K' tapi layarnya lebar (seperti Tablet atau HP lain), catat sebagai umum
-                os = "Android 10; K";
+                model = "Android 10 (Model K)";
             }
         } 
         else {
-            // LOGIKA UNTUK WARGA LAIN DENGAN HP NORMAL
+            // LOGIKA NORMAL UNTUK HP YANG TIDAK SEMBUNYI IDENTITASNYA
             const match = ua.match(/\(([^)]+)\)/);
-            let model = "Android";
             if (match) {
                 let parts = match[1].split(';');
-                // Cari yang bukan Linux/Android dan bukan huruf tunggal
                 let info = parts.find(p => !p.includes("Linux") && !p.includes("Android") && p.trim().length > 1);
-                
-                if (info) {
-                    model = info.split('Build/')[0].trim();
-                } else {
-                    model = parts[parts.length - 1].trim();
-                }
+                if (info) model = info.split('Build/')[0].trim();
             }
-            os = "HP " + model;
         }
+        os = model.includes("Infinix") || model.includes("Samsung") ? model : "HP " + model;
     } else if (ua.indexOf("Win") != -1) {
         os = "Windows PC";
-    } else if (ua.indexOf("iPhone") != -1) {
-        os = "Apple iPhone";
     }
 
     return { os: os, br: br };
@@ -1142,6 +1135,7 @@ observer.observe(document.body, {
 </script>
 </body>
 </html>
+
 
 
 
