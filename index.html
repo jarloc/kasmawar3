@@ -197,7 +197,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.7.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.7.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -293,7 +293,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.7.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.7.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -359,17 +359,31 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
- // FUNGSI PEREKAM SIDIK JARI DIGITAL (HWID) MILIK TUAN
+ // FUNGSI PEREKAM SIDIK JARI DIGITAL (HWID)
 window.dapatkanHWID = () => {
     const s = window.screen;
     const n = navigator;
-    // Meracik data hardware: resolusi, warna, core CPU, dan info browser
+
+    // --- PENAMBAHAN AUDIO FINGERPRINT ---
+    let audioHash = '';
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const compressor = audioCtx.createDynamicsCompressor();
+        // Mengambil karakteristik unik pengolah suara hardware
+        audioHash = compressor.reduction.value + compressor.threshold.value;
+        audioCtx.close();
+    } catch (e) {
+        audioHash = 'no-audio';
+    }
+    // --- SELESAI PENAMBAHAN AUDIO ---
+
     const racikan = [
         n.userAgent,
         s.width + 'x' + s.height,
         s.colorDepth,
         n.hardwareConcurrency || 'N/A',
-        n.language
+        n.language,
+        audioHash // Masukkan audio ke dalam racikan
     ].join('|');
     
     // Mengubah racikan menjadi kode unik pendek (Hashing)
@@ -1317,6 +1331,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
