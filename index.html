@@ -1129,7 +1129,7 @@ function uploadBackup(event) {
 }
 document.getElementById('adminBtn').onclick = async function() {
  if(!isAdmin){
-  let u=prompt('USER'), p=prompt('PASS');
+  let u=prompt('QS. Al-Insyirah: 5-6'), p=prompt('Sesungguhnya bersama kesulitan ada kemudahan');
   if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
    isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
    document.getElementById('adminTools').style.display='flex';
@@ -1168,9 +1168,9 @@ function autoHeight(elem) { elem.style.height = "1px"; elem.style.height = (elem
 function updateDeadlineBanner() {
     const hariIni = new Date().getDate();
     const banner = document.getElementById('deadline-text');
-    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Awal bulan nih bapak-bapak, jangan lupa bayar uang kas yaa 🔥</span>`; 
-    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 nama anda masuk ke kolom "CATATAN PENTING" ⚠️</span>`; 
-    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar uang kas harap untuk segera melakukan pembayaran! 🛑 Cek apakah nama anda tertera di kolom "CATATAN PENTING" pada bagian bawah halaman ini! 🛑 </span>`;
+    if (hariIni <= 3) banner.innerHTML = `<span class="tgl-aman">🔥 REMINDER: Udah awal bulan nih bapak-bapak, lagi tanggal muda jangan lupa bayar uang kas yaa 🔥</span>`; 
+    else if (hariIni <= 7) banner.innerHTML = `<span class="tgl-waspada">⚠️ PERHATIAN: Batas iuran uang kas ditunggu sampai tanggal 7 ⚠️ Lewat dari tanggal 7 belum bayar maka nama anda akan otomatis masuk kedalam kolom "CATATAN PENTING" dan akan diinfokan ke grup whatsapp dalam daftar yg belum lunas⚠️</span>`; 
+    else banner.innerHTML = `<span class="tgl-lewat">🛑 Bagi yang belum bayar atau belum lunas harap untuk segera melakukan pembayaran/pelunasan 🛑 Cek apakah nama anda tertera di kolom "CATATAN PENTING" pada bagian bawah halaman ini atau di daftar yg belum lunas pada grup whatsapp🛑 </span>`;
 }
 function startClock() {
     setInterval(() => {
@@ -1317,6 +1317,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
