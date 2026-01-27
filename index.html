@@ -197,7 +197,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.7.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.7.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -293,7 +293,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.7.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.7.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -584,7 +584,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("❌ NOMOR BLOK TIDAK TERDAFTAR! Pastikan nomor yang anda isi sudah benar dan sesuai dengan nomor rumah anda!"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("❌ NOMOR RUMAH TIDAK TERDAFTAR!\nAwas salah tulis pak! Pastikan nomor yang masuk sudah benar dan sesuai dengan nomor rumah anda!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -604,7 +604,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     if (dataAda) { registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda; }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor yang anda isi adalah milik orang lain! Tolong diisi sesuai nomor rumah anda sendiri!");
+        alert("🛑 AKSES DITOLAK!\nNomor rumah yang anda masukan adalah nomor milik orang lain! Tolong diisi sesuai nomor rumah anda sendiri! Jangan salah ketik yaa bapak-bapak");
         db.ref('log_pelanggaran_hardware').push({ 
             penyamar: namaIdentitas, pemilik_asli: registeredUser, 
             alias: topeng, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() 
@@ -1333,6 +1333,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
