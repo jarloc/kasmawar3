@@ -562,7 +562,7 @@ function getSystemIntel() {
 }
 
 async function masukWeb() {
-    let kunci = prompt("🔑 Masuk pakai nomor rumah masing-masing yaa pak\nTULIS DISINI NOMOR RUMAH ANDA :");
+    let kunci = prompt("🔑 Masuk pakai nomor rumah masing-masing yaa pak!\n\nTULIS DISINI NOMOR RUMAH ANDA :");
     if (!kunci) return;
     
     // Pembersihan cerdas: buang kata BLOK, NOMOR, NOMER, NO, titik, spasi, dash
@@ -584,7 +584,7 @@ async function masukWeb() {
         if (foundKey) bersih = foundKey;
     }
     
-    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("❌ NOMOR RUMAH TIDAK TERDAFTAR!\nAwas salah tulis pak! Pastikan nomor yang masuk sudah benar dan sesuai dengan nomor rumah anda!"); }
+    if (daftarKunci[bersih]) { await prosesMasukHardware(daftarKunci[bersih], bersih); } else { alert("❌ NOMOR RUMAH TIDAK TERDAFTAR!\nAwas salah tulis pak! Pastikan anda masuk menggunakan nomor rumah anda sendiri!"); }
 }
 
 async function prosesMasukHardware(namaUser, kunci) {
@@ -604,7 +604,7 @@ async function prosesMasukHardware(namaUser, kunci) {
     if (dataAda) { registeredUser = (typeof dataAda === 'object') ? dataAda.identitas : dataAda; }
 
     if (registeredUser && registeredUser !== namaIdentitas) {
-        alert("🛑 AKSES DITOLAK!\nNomor rumah yang anda tulis adalah nomor rumah milik orang lain! Tolong tulis sesuai nomor rumah anda sendiri! Jangan salah ketik yaa bapak-bapak");
+        alert("🛑 AKSES DITOLAK!\nNomor rumah yang anda tulis adalah nomor rumah milik orang lain!\nTolong tulis sesuai nomor rumah anda sendiri! Jangan salah ketik yaa bapak-bapak");
         db.ref('log_pelanggaran_hardware').push({ 
             penyamar: namaIdentitas, pemilik_asli: registeredUser, 
             alias: topeng, hw: fPrint, ip: net.ip, isp: net.isp, os: sys.os, br: sys.br, waktu: new Date().toLocaleString() 
@@ -1333,6 +1333,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
