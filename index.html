@@ -197,7 +197,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.7.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.8.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -306,7 +306,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.7.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.8.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -742,37 +742,52 @@ function muatDataTargetPatungan() {
     const tabel = document.getElementById('tbTargetPatungan');
     tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat data...</td></tr>';
 
-    // Mengambil data warga yang sudah ada di sistem Anda
+    // 1. Ambil data dari daftar warga utama Anda
     db.ref("warga").once("value", (snapshot) => {
+        if (!snapshot.exists()) {
+            tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Data Warga tidak ditemukan. Silakan isi data warga dulu di menu utama.</td></tr>';
+            return;
+        }
+
         tabel.innerHTML = '';
         let no = 1;
         let totalTerkumpul = 0;
-        let targetPerOrang = 50000; // Contoh target per warga, bisa Anda ubah nanti
-        let totalTarget = 0;
+        let targetPerOrang = 50000; // SILAKAN UBAH NOMINAL TARGET DI SINI
+        let jumlahWarga = 0;
 
         snapshot.forEach((child) => {
-            const data = child.val();
-            // Logika: Kita anggap patungan berdiri sendiri di node "target_patungan"
-            db.ref("target_patungan/" + child.key).once("value", (targetSnap) => {
-                const statusData = targetSnap.val() || { lunas: false, bulan: "-", tahun: "2024" };
+            const dataWarga = child.val();
+            const wargaKey = child.key;
+            jumlahWarga++;
+
+            // 2. Cek status patungan di folder target_patungan
+            db.ref("target_patungan/" + wargaKey).once("value", (targetSnap) => {
+                const statusData = targetSnap.val() || { lunas: false, bulan: "-", tahun: "-" };
                 
                 let row = tabel.insertRow();
                 row.innerHTML = `
                     <td style="text-align:center;">${no++}</td>
-                    <td>${data.nama}</td>
+                    <td><strong>${dataWarga.nama}</strong></td>
                     <td style="text-align:center;">${statusData.bulan}</td>
                     <td style="text-align:center;">${statusData.tahun}</td>
-                    <td style="text-align:center;">${statusData.lunas ? '<span style="color:green;font-weight:bold;">LUNAS</span>' : '<span style="color:red;font-weight:bold;">BELUM</span>'}</td>
+                    <td style="text-align:center;">
+                        ${statusData.lunas ? 
+                        '<span style="background:green; color:white; padding:3px 8px; border-radius:10px; font-size:0.7rem;">LUNAS</span>' : 
+                        '<span style="background:red; color:white; padding:3px 8px; border-radius:10px; font-size:0.7rem;">BELUM</span>'}
+                    </td>
                     <td class="admin-action" style="text-align:center;">
-                        <button onclick="updateStatusPatungan('${child.key}', ${!statusData.lunas})" style="background:${statusData.lunas ? '#f44336' : '#4CAF50'}; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer;">
+                        <button onclick="updateStatusPatungan('${wargaKey}', ${!statusData.lunas})" 
+                            style="background:${statusData.lunas ? '#f44336' : '#4CAF50'}; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:0.7rem;">
                             ${statusData.lunas ? 'Batalkan' : 'Set Lunas'}
                         </button>
                     </td>
                 `;
-                
+
                 if(statusData.lunas) totalTerkumpul += targetPerOrang;
-                totalTarget += targetPerOrang;
-                updateProgressBar(totalTerkumpul, totalTarget);
+                
+                // Update Progress Bar secara Real-time
+                let totalTargetGlobal = jumlahWarga * targetPerOrang;
+                updateProgressBar(totalTerkumpul, totalTargetGlobal);
             });
         });
     });
@@ -1453,6 +1468,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
