@@ -208,7 +208,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.9.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.9.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -353,7 +353,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.9.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.9.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -835,22 +835,32 @@ function updateProgressBarPatungan(terkumpul, total) {
 }
 // Fungsi untuk menghitung progress bar secara otomatis tanpa buka modal
 function hitungProgressOtomatis() {
-    let targetPerOrang = 50000;
-    db.ref("target_patungan").once("value", (snapshot) => {
-        const dbData = snapshot.val() || {};
-        let totalTerkumpul = 0;
+    // 1. Ambil Setting Target (Nama & Nominal) dari Firebase
+    db.ref("config_target").once("value", (confSnap) => {
+        const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
         
-        namaAnggotaAwal.forEach((nama) => {
-            if (nama === "SISA KAS SEBELUMNYA") return;
-            let idWarga = nama.replace(/\s+/g, '_');
-            let d = dbData[idWarga] || { masuk: 0 };
-            totalTerkumpul += parseInt(d.masuk) || 0;
+        // Update Judul di halaman utama
+        if(document.getElementById('judulTargetUtama')) {
+            document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
+        }
+
+        // 2. Ambil Data Pembayaran Warga
+        db.ref("target_patungan").once("value", (snapshot) => {
+            const dbData = snapshot.val() || {};
+            let totalTerkumpul = 0;
+            
+            namaAnggotaAwal.forEach((nama) => {
+                if (nama === "SISA KAS SEBELUMNYA") return; // Tetap menyaring sisa kas
+                let idWarga = nama.replace(/\s+/g, '_');
+                let d = dbData[idWarga] || { masuk: 0 };
+                totalTerkumpul += parseInt(d.masuk) || 0;
+            });
+            
+            // 3. Update Bar dengan nominal target yang baru (misal 1,5jt)
+            updateProgressBarPatungan(totalTerkumpul, config.nominal_total);
         });
-        
-        updateProgressBarPatungan(totalTerkumpul, namaAnggotaAwal.length * targetPerOrang);
     });
 }
-
 // Jalankan fungsi hitung ini setiap kali halaman di-refresh
 window.addEventListener('load', hitungProgressOtomatis);
 function simpanSettingTarget() {
@@ -1540,6 +1550,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
