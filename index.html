@@ -223,7 +223,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V2.9.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V2.9.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -286,7 +286,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div class="block">
- <div id="targetContainer" onclick="document.getElementById('modalTarget').style.display='flex'; muatDataTargetPatungan();" style="margin-bottom: 25px; padding: 15px; border: 2px solid #e91e63; border-radius: 12px; background: #fff0f5; cursor: pointer; position: relative; z-index: 10;" title="Klik untuk lihat detail patungan">
+ <div id="targetContainer" onclick="openTargetPatungan()" style="margin-bottom: 25px; padding: 15px; border: 2px solid #e91e63; border-radius: 12px; background: #fff0f5; cursor: pointer; position: relative; z-index: 9999;" title="Klik untuk lihat detail patungan">
     <h3 id="judulTargetUtama" style="font-size: 1rem; margin-bottom: 10px; text-align: center; color: #e91e63;">📊 LOADING TARGET...</h3>
     <div style="width: 100%; background: #ddd; border-radius: 20px; height: 30px; position: relative; overflow: hidden; border: 1px solid #bbb;">
         <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #e91e63, #ff4081); transition: width 1s ease-in-out;"></div>
@@ -368,7 +368,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V2.9.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V2.9.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -882,33 +882,29 @@ function updateProgressBarPatungan(terkumpul, total) {
 }
 // Fungsi untuk menghitung progress bar secara otomatis tanpa buka modal
 function hitungProgressOtomatis() {
-    // 1. Ambil Setting Target (Nama & Nominal) dari Firebase
     db.ref("config_target").once("value", (confSnap) => {
         const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
         
-        // Update Judul di halaman utama
         if(document.getElementById('judulTargetUtama')) {
             document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
         }
 
-        // 2. Ambil Data Pembayaran Warga
+
         db.ref("target_patungan").once("value", (snapshot) => {
             const dbData = snapshot.val() || {};
             let totalTerkumpul = 0;
             
             namaAnggotaAwal.forEach((nama) => {
-                if (nama === "SISA KAS SEBELUMNYA") return; // Tetap menyaring sisa kas
+                if (nama === "SISA KAS SEBELUMNYA") return;
                 let idWarga = nama.replace(/\s+/g, '_');
                 let d = dbData[idWarga] || { masuk: 0 };
                 totalTerkumpul += parseInt(d.masuk) || 0;
             });
             
-            // 3. Update Bar dengan nominal target yang baru (misal 1,5jt)
             updateProgressBarPatungan(totalTerkumpul, config.nominal_total);
         });
     });
 }
-// Jalankan fungsi hitung ini setiap kali halaman di-refresh
 window.addEventListener('load', hitungProgressOtomatis);
 function simpanSettingTarget() {
     const nama = document.getElementById('inputNamaTarget').value;
@@ -921,12 +917,9 @@ function simpanSettingTarget() {
     }).then(() => {
         alert("Target Berhasil Diubah!");
         muatDataTargetPatungan();
+        hitungProgressOtomatis();
     });
 }
-
-// Update fungsi muatDataTargetPatungan untuk membaca config ini
-// Cari di dalam fungsi muatDataTargetPatungan baris: let targetPerOrang = 50000;
-// Dan ganti seluruh isi db.ref("target_patungan").once sampai selesai dengan ini:
 
 db.ref("config_target").on("value", (confSnap) => {
     const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
@@ -1597,6 +1590,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
