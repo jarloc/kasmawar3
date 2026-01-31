@@ -208,7 +208,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.9.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.9.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -346,7 +346,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.9.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.9.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -758,19 +758,21 @@ function openTargetPatungan() {
 function muatDataTargetPatungan() {
     const tabel = document.getElementById('tbTargetPatungan');
     if (!tabel) return;
-    tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat data...</td></tr>';
+    
+    // 1. Bersihkan tabel sepenuhnya sebelum mengisi nama baru
+    tabel.innerHTML = ''; 
 
     let totalTerkumpul = 0;
     let targetPerOrang = 50000;
     
-    // Ambil data dari folder khusus "target_patungan" di Firebase
     db.ref("target_patungan").once("value", (snapshot) => {
         const dbData = snapshot.val() || {};
-        tabel.innerHTML = '';
+        tabel.innerHTML = ''; // Double check pembersihan
         
-        // namaAnggotaAwal adalah daftar Rizal s/d Teguh dari kode utama Anda
+        // 2. Loop HANYA berdasarkan namaAnggotaAwal (Rizal s/d Teguh)
         namaAnggotaAwal.forEach((nama) => {
             let idWarga = nama.replace(/\s+/g, '_');
+            // Jika nama tidak ada di database, tampilkan nilai default (kosong/0)
             let d = dbData[idWarga] || { tgl: '-', ket: 'Belum Bayar', masuk: 0 };
             
             let nominalMasuk = parseInt(d.masuk) || 0;
@@ -779,7 +781,6 @@ function muatDataTargetPatungan() {
             let row = tabel.insertRow();
             row.style.borderBottom = "1px solid #eee";
             
-            // Kolom TGL, KETERANGAN, dan UANG MASUK bisa diedit Admin langsung di tabel
             row.innerHTML = `
                 <td style="text-align:center; padding:10px; font-size:0.85rem;" 
                     contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'tgl', this.innerText)">${d.tgl}</td>
@@ -796,7 +797,6 @@ function muatDataTargetPatungan() {
             `;
         });
         
-        // Update Progress Bar di halaman utama
         updateProgressBarPatungan(totalTerkumpul, namaAnggotaAwal.length * targetPerOrang);
     });
 }
@@ -1484,6 +1484,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
