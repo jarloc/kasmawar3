@@ -223,7 +223,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V2.9.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V2.9.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,7 +368,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V2.9.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V2.9.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -769,11 +769,12 @@ function resetHardware(hwID, namaWarga) {
     }
 }
 function hapusRiwayatLog() { if(isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENGHAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
-// --- FUNGSI LOGIKA TARGET PATUNGAN ---
+// --- FUNGSI LOGIKA TARGET PATUNGAN (AUDITED & FIXED) ---
 function openTargetPatungan() {
     // Tutup menu otomatis saat modal buka
     if(document.getElementById('menuItems')) document.getElementById('menuItems').classList.remove('show');
-    document.getElementById('targetPatunganModal').style.display = 'block';
+    const modal = document.getElementById('targetPatunganModal');
+    if(modal) modal.style.display = 'block';
     muatDataTargetPatungan();
 }
 
@@ -781,86 +782,83 @@ function muatDataTargetPatungan() {
     const tabel = document.getElementById('tbTargetPatungan');
     if (!tabel) return;
     
-    // 1. Bersihkan tabel sepenuhnya sebelum mengisi nama baru
+    // 1. Bersihkan tabel sepenuhnya
     tabel.innerHTML = ''; 
 
-    let totalTerkumpul = 0;
-    let targetPerOrang = 50000;
-    
-    db.ref("target_patungan").once("value", (snapshot) => {
-        const dbData = snapshot.val() || {};
-        tabel.innerHTML = ''; // Double check pembersihan
+    db.ref("config_target").once("value", (confSnap) => {
+        const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
         
-        // 2. Loop HANYA berdasarkan namaAnggotaAwal (Rizal s/d Teguh)
-        namaAnggotaAwal.forEach((nama) => {
-            if (nama === "SISA KAS SEBELUMNYA") return;
-            let idWarga = nama.replace(/\s+/g, '_');
-            // Jika nama tidak ada di database, tampilkan nilai default (kosong/0)
-            let d = dbData[idWarga] || { tgl: '-', ket: 'Belum Bayar', masuk: 0 };
+        db.ref("target_patungan").once("value", (snapshot) => {
+            const dbData = snapshot.val() || {};
+            tabel.innerHTML = ''; // Double check pembersihan
+            let totalTerkumpul = 0;
             
-            let nominalMasuk = parseInt(d.masuk) || 0;
-            totalTerkumpul += nominalMasuk;
+            // 2. Loop HANYA berdasarkan namaAnggotaAwal
+            namaAnggotaAwal.forEach((nama) => {
+                if (nama === "SISA KAS SEBELUMNYA") return;
+                let idWarga = nama.replace(/\s+/g, '_');
+                let d = dbData[idWarga] || { tgl: '-', ket: 'Belum Bayar', masuk: 0 };
+                
+                let nominalMasuk = parseInt(d.masuk) || 0;
+                totalTerkumpul += nominalMasuk;
+                
+                let row = tabel.insertRow();
+                row.style.borderBottom = "1px solid #eee";
+                row.innerHTML = `
+                    <td style="text-align:center; padding:10px; font-size:0.85rem;" 
+                        contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'tgl', this.innerText)">${d.tgl}</td>
+                    <td style="text-align:left; padding:10px; font-weight:bold; color:#333;">${nama}</td>
+                    <td style="text-align:left; padding:10px; font-size:0.85rem;" 
+                        contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'ket', this.innerText)">${d.ket}</td>
+                    <td style="text-align:center; padding:10px; font-weight:bold; color:green;" 
+                        contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'masuk', this.innerText)">${d.masuk}</td>
+                    <td style="text-align:center; padding:10px; font-weight:bold; color:#000;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+                    <td class="admin-action" style="text-align:center; padding:10px;">
+                        <button onclick="hapusTargetAdmin('${idWarga}')" 
+                            style="background:#ff4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">RESET</button>
+                    </td>
+                `;
+            });
+
+            // 3. Tambahkan Baris Total & Kas
+            tambahBarisRingkasan(tabel, totalTerkumpul);
             
-            let row = tabel.insertRow();
-            row.style.borderBottom = "1px solid #eee";
-            
-            row.innerHTML = `
-                <td style="text-align:center; padding:10px; font-size:0.85rem;" 
-                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'tgl', this.innerText)">${d.tgl}</td>
-                <td style="text-align:left; padding:10px; font-weight:bold; color:#333;">${nama}</td>
-                <td style="text-align:left; padding:10px; font-size:0.85rem;" 
-                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'ket', this.innerText)">${d.ket}</td>
-                <td style="text-align:center; padding:10px; font-weight:bold; color:green;" 
-                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'masuk', this.innerText)">${d.masuk}</td>
-                <td style="text-align:center; padding:10px; font-weight:bold; color:#000;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
-                <td class="admin-action" style="text-align:center; padding:10px;">
-                    <button onclick="hapusTargetAdmin('${idWarga}')" 
-                        style="background:#ff4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">RESET</button>
-                </td>
-            `;
+            // 4. Update Progress Bar
+            updateProgressBarPatungan(totalTerkumpul, config.nominal_total);
         });
-
-        // AMBIL SALDO AKHIR KAS (MENGGUNAKAN ID saldoAkhir SESUAI FILE ASLI)
-        const saldoKasTeks = document.getElementById('saldoAkhir').innerText; 
-        const saldoKasAngka = parseInt(saldoKasTeks.replace(/[^0-9]/g, '')) || 0;
-        const totalSemua = totalTerkumpul + saldoKasAngka;
-
-        // 1. TAMBAHKAN BARIS TOTAL UANG PATUNGAN
-        let rowTotal = tabel.insertRow();
-        rowTotal.innerHTML = `
-            <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL UANG PATUNGAN TERKUMPUL</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#f9f9f9;">-</td>
-            <td class="admin-action" style="background:#f9f9f9;"></td>
-        `;
-
-        // 2. TAMBAHKAN BARIS TOTAL KAS SAAT INI
-        let rowKas = tabel.insertRow();
-        rowKas.innerHTML = `
-            <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL KAS SAAT INI (SALDO AKHIR)</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#fff9c4; color:#f57f17;">Rp ${saldoKasAngka.toLocaleString('id-ID')}</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#f9f9f9;">-</td>
-            <td class="admin-action" style="background:#f9f9f9;"></td>
-        `;
-
-        // 3. TAMBAHKAN BARIS GRAND TOTAL
-        let rowGrandTotal = tabel.insertRow();
-        rowGrandTotal.innerHTML = `
-            <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">TOTAL UANG PATUNGAN TERKUMPUL + SALDO AKHIR KAS</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
-            <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">-</td>
-            <td class="admin-action" style="background:#e91e63;"></td>
-        `;
-        
-        updateProgressBarPatungan(totalTerkumpul, namaAnggotaAwal.length * targetPerOrang);
     });
+}
+
+// Fungsi Pembantu Baris Total (Agar rapi dan tidak error)
+function tambahBarisRingkasan(tabel, totalTerkumpul) {
+    const saldoKasElem = document.getElementById('saldoAkhir');
+    const saldoKasTeks = saldoKasElem ? saldoKasElem.innerText : "0";
+    const saldoKasAngka = parseInt(saldoKasTeks.replace(/[^0-9]/g, '')) || 0;
+    const totalSemua = totalTerkumpul + saldoKasAngka;
+
+    // Baris Total Patungan
+    let rowTotal = tabel.insertRow();
+    rowTotal.innerHTML = `
+        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL PATUNGAN</td>
+        <td style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+        <td style="text-align:center; padding:10px; font-weight:bold; background:#f9f9f9;">-</td>
+        <td class="admin-action" style="background:#f9f9f9;"></td>
+    `;
+
+    // Baris Grand Total
+    let rowGrand = tabel.insertRow();
+    rowGrand.innerHTML = `
+        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">TOTAL + SALDO KAS</td>
+        <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
+        <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">-</td>
+        <td class="admin-action" style="background:#e91e63;"></td>
+    `;
 }
 
 function updateTargetAdmin(id, field, value) {
     if(!isAdmin) return;
-    // Simpan ke Firebase folder target_patungan
     db.ref("target_patungan/" + id).child(field).set(value).then(() => {
-        muatDataTargetPatungan(); // Refresh tabel setelah simpan
+        muatDataTargetPatungan();
     });
 }
 
@@ -873,39 +871,36 @@ function hapusTargetAdmin(id) {
 
 function updateProgressBarPatungan(terkumpul, total) {
     const persen = total > 0 ? Math.round((terkumpul / total) * 100) : 0;
-    if(document.getElementById('progressBar')) {
-        document.getElementById('progressBar').style.width = persen + "%";
-        document.getElementById('progressText').innerText = persen + "%";
-        document.getElementById('targetTerkumpul').innerText = "Terkumpul: Rp " + terkumpul.toLocaleString('id-ID');
-        document.getElementById('targetTotal').innerText = "Target: Rp " + total.toLocaleString('id-ID');
-    }
+    const bar = document.getElementById('progressBar');
+    const txt = document.getElementById('progressText');
+    if(bar) bar.style.width = persen + "%";
+    if(txt) txt.innerText = persen + "%";
+    
+    if(document.getElementById('targetTerkumpul')) document.getElementById('targetTerkumpul').innerText = "Terkumpul: Rp " + terkumpul.toLocaleString('id-ID');
+    if(document.getElementById('targetTotal')) document.getElementById('targetTotal').innerText = "Target: Rp " + total.toLocaleString('id-ID');
 }
-// Fungsi untuk menghitung progress bar secara otomatis tanpa buka modal
+
 function hitungProgressOtomatis() {
     db.ref("config_target").once("value", (confSnap) => {
         const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
-        
-        if(document.getElementById('judulTargetUtama')) {
-            document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
-        }
-
+        if(document.getElementById('judulTargetUtama')) document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
 
         db.ref("target_patungan").once("value", (snapshot) => {
             const dbData = snapshot.val() || {};
             let totalTerkumpul = 0;
-            
             namaAnggotaAwal.forEach((nama) => {
                 if (nama === "SISA KAS SEBELUMNYA") return;
                 let idWarga = nama.replace(/\s+/g, '_');
                 let d = dbData[idWarga] || { masuk: 0 };
                 totalTerkumpul += parseInt(d.masuk) || 0;
             });
-            
             updateProgressBarPatungan(totalTerkumpul, config.nominal_total);
         });
     });
 }
+
 window.addEventListener('load', hitungProgressOtomatis);
+
 function simpanSettingTarget() {
     const nama = document.getElementById('inputNamaTarget').value;
     const nominal = document.getElementById('inputNominalTarget').value;
@@ -921,34 +916,12 @@ function simpanSettingTarget() {
     });
 }
 
+// Listener Real-Time untuk sinkronisasi judul di semua perangkat
 db.ref("config_target").on("value", (confSnap) => {
-    const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
-    document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
-    
-    db.ref("target_patungan").once("value", (snapshot) => {
-        const dbData = snapshot.val() || {};
-        tabel.innerHTML = ''; 
-        let totalTerkumpul = 0;
-
-        namaAnggotaAwal.forEach((nama) => {
-            if (nama === "SISA KAS SEBELUMNYA") return;
-            let idWarga = nama.replace(/\s+/g, '_');
-            let d = dbData[idWarga] || { tgl: '-', ket: 'Belum Bayar', masuk: 0 };
-            totalTerkumpul += parseInt(d.masuk) || 0;
-            
-            let row = tabel.insertRow();
-            // ... (sisa kode row.innerHTML Anda yang lama) ...
-            row.innerHTML = `
-                <td style="text-align:center; padding:10px; font-size:0.85rem;" contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'tgl', this.innerText)">${d.tgl}</td>
-                <td style="text-align:left; padding:10px; font-weight:bold;">${nama}</td>
-                <td style="text-align:left; padding:10px; font-size:0.85rem;" contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'ket', this.innerText)">${d.ket}</td>
-                <td style="text-align:center; padding:10px; font-weight:bold; color:green;" contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'masuk', this.innerText)">${d.masuk}</td>
-                <td style="text-align:center; padding:10px; font-weight:bold;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
-                <td class="admin-action" style="text-align:center;"><button onclick="hapusTargetAdmin('${idWarga}')" style="background:red; color:white; border:none; padding:4px; border-radius:4px;">RESET</button></td>
-            `;
-        });
-        updateProgressBarPatungan(totalTerkumpul, config.nominal_total);
-    });
+    const config = confSnap.val();
+    if(config && document.getElementById('judulTargetUtama')) {
+        document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
+    }
 });
 // --- SELESAI FUNGSI TARGET PATUNGAN ---
 function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
@@ -1590,6 +1563,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
