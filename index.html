@@ -197,7 +197,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.8.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.8.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -306,7 +306,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.8.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.8.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -338,28 +338,35 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
         </table>
     </div>
 </div>
-<div id="targetPatunganModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; overflow-y:auto; padding:20px; box-sizing:border-box;">
-    <div style="text-align:center; margin-bottom:10px;">
-        <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#d9534f; color:#fff;"> TUTUP </button>
-    </div>
-    <div style="background:#fff; color:#000; padding:20px; border-radius:10px; max-width:980px; margin:0 auto;">
-        <h1 style="text-align:center; background:#e91e63; color:#fff; padding:10px; margin:0;">🎯 TARGET PATUNGAN WARGA</h1>
-        <div style="overflow-x:auto; margin-top:20px;">
-            <table style="width:100%; border-collapse:collapse;">
-                <thead>
-                    <tr style="background:#333; color:#fff;">
-                        <th>NO</th>
-                        <th>NAMA WARGA</th>
-                        <th>BULAN</th>
-                        <th>TAHUN</th>
-                        <th>STATUS</th>
-                        <th class="admin-action">AKSI</th>
-                    </tr>
-                </thead>
-                <tbody id="tbTargetPatungan">
-                    </tbody>
-            </table>
+<div id="targetPatunganModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow-y:auto; padding:15px; box-sizing:border-box;">
+    <div style="max-width:900px; margin:20px auto; background:#fff; border-radius:15px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5); border:2px solid #e91e63;">
+        
+        <div style="background:#e91e63; color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0; font-size:1.2rem;">🎯 TARGET PATUNGAN WARGA</h2>
+            <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#fff; color:#e91e63; border:none; padding:5px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">TUTUP</button>
         </div>
+
+        <div style="padding:15px;">
+            <div class="block" style="margin:0; border:none; box-shadow:none;">
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; background:#fff;">
+                        <thead>
+                            <tr style="background:#f8f9fa; border-bottom:2px solid #e91e63;">
+                                <th style="padding:12px; text-align:center; color:#333;">NO</th>
+                                <th style="padding:12px; text-align:left; color:#333;">NAMA WARGA</th>
+                                <th style="padding:12px; text-align:center; color:#333;">BULAN</th>
+                                <th style="padding:12px; text-align:center; color:#333;">TAHUN</th>
+                                <th style="padding:12px; text-align:center; color:#333;">STATUS</th>
+                                <th class="admin-action" style="padding:12px; text-align:center; color:#333;">AKSI ADMIN</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbTargetPatungan">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 <div id="usulanModal">
@@ -762,23 +769,24 @@ function muatDataTargetPatungan() {
             const statusData = targetSnap.val() || { lunas: false, bulan: "-", tahun: "-" };
             
             let row = tabel.insertRow();
-            row.innerHTML = `
-                <td style="text-align:center;">${no++}</td>
-                <td><strong>${namaWarga}</strong></td>
-                <td style="text-align:center;">${statusData.bulan}</td>
-                <td style="text-align:center;">${statusData.tahun}</td>
-                <td style="text-align:center;">
-                    ${statusData.lunas ? 
-                    '<span style="background:green; color:white; padding:3px 8px; border-radius:10px; font-size:0.7rem;">LUNAS</span>' : 
-                    '<span style="background:red; color:white; padding:3px 8px; border-radius:10px; font-size:0.7rem;">BELUM</span>'}
-                </td>
-                <td class="admin-action" style="text-align:center;">
-                    <button onclick="updateStatusPatungan('${wargaId}', ${!statusData.lunas})" 
-                        style="background:${statusData.lunas ? '#f44336' : '#4CAF50'}; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:0.7rem;">
-                        ${statusData.lunas ? 'Batalkan' : 'Set Lunas'}
-                    </button>
-                </td>
-            `;
+                row.style.borderBottom = "1px solid #eee";
+                row.innerHTML = `
+                    <td style="text-align:center; padding:10px;">${no++}</td>
+                    <td style="text-align:left; padding:10px; font-weight:bold; color:#333;">${namaWarga}</td>
+                    <td style="text-align:center; padding:10px;">${statusData.bulan}</td>
+                    <td style="text-align:center; padding:10px;">${statusData.tahun}</td>
+                    <td style="text-align:center; padding:10px;">
+                        ${statusData.lunas ? 
+                        '<b style="color:#2ecc71; background:#e8f8f0; padding:4px 10px; border-radius:15px; font-size:0.75rem;">LUNAS</b>' : 
+                        '<b style="color:#e74c3c; background:#fdecea; padding:4px 10px; border-radius:15px; font-size:0.75rem;">BELUM</b>'}
+                    </td>
+                    <td class="admin-action" style="text-align:center; padding:10px;">
+                        <button onclick="updateStatusPatungan('${wargaId}', ${!statusData.lunas})" 
+                            style="background:${statusData.lunas ? '#95a5a6' : '#e91e63'}; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size:0.7rem; font-weight:bold;">
+                            ${statusData.lunas ? 'BATALKAN' : 'SET LUNAS'}
+                        </button>
+                    </td>
+                `;
 
             if(statusData.lunas) totalTerkumpul += targetPerOrang;
             
@@ -1462,6 +1470,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
