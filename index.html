@@ -197,7 +197,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.8.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V10.8.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -254,24 +254,53 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
         <button onclick="openUsulan()" style="background:#ff9800; color:#fff;">📝 FORM USULAN WARGA</button>
         <button onclick="openChecklist()" class="primary">✅ CHECKLIST KAS</button>
         <button onclick="openTargetPatungan()" style="background:#e91e63; color:#fff;">🎯 TARGET PATUNGAN</button>
-
         <button id="themeBtn" class="primary">🎨 GANTI TEMA</button>
         <button id="cetakBtn" class="primary">🖨️ CETAK LAPORAN</button>
     </div>
 </div>
 
 <div class="block">
-    <div id="targetContainer" style="margin-bottom: 25px; padding: 15px; border: 2px solid #e91e63; border-radius: 12px; background: #fff0f5;">
-        <h3 style="font-size: 1rem; margin-bottom: 10px; text-align: center; color: #e91e63;">📊 PROGRESS TARGET PATUNGAN</h3>
-        <div style="width: 100%; background: #ddd; border-radius: 20px; height: 30px; position: relative; overflow: hidden; border: 1px solid #bbb;">
-            <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #e91e63, #ff4081); transition: width 1s ease-in-out;"></div>
-            <span id="progressText" style="position: absolute; width: 100%; text-align: center; top: 5px; font-weight: bold; font-size: 0.9rem; color: #000;">0%</span>
+ <div id="targetContainer" style="margin-bottom: 25px; padding: 15px; border: 2px solid #e91e63; border-radius: 12px; background: #fff0f5;">
+    <h3 style="font-size: 1rem; margin-bottom: 10px; text-align: center; color: #e91e63;">📊 PROGRESS TARGET PATUNGAN</h3>
+    <div style="width: 100%; background: #ddd; border-radius: 20px; height: 30px; position: relative; overflow: hidden; border: 1px solid #bbb;">
+        <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #e91e63, #ff4081); transition: width 1s ease-in-out;"></div>
+        <span id="progressText" style="position: absolute; width: 100%; text-align: center; top: 5px; font-weight: bold; font-size: 0.9rem; color: #000;">0%</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8rem; font-weight: bold; color: #333;">
+        <span id="targetTerkumpul">Terkumpul: Rp 0</span>
+        <span id="targetTotal">Target: Rp 0</span>
+    </div>
+</div>
+
+<div id="targetPatunganModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow-y:auto; padding:15px; box-sizing:border-box;">
+    <div style="max-width:950px; margin:20px auto; background:#fff; border-radius:15px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5); border:2px solid #e91e63;">
+        
+        <div style="background:#e91e63; color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="margin:0; font-size:1.2rem;">🎯 TARGET PATUNGAN WARGA</h2>
+            <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#fff; color:#e91e63; border:none; padding:5px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">TUTUP</button>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8rem; font-weight: bold; color: #333;">
-            <span id="targetTerkumpul">Terkumpul: Rp 0</span>
-            <span id="targetTotal">Target: Rp 0</span>
+
+        <div style="padding:15px;">
+            <div class="block" style="margin:0; border:none; box-shadow:none;">
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; background:#fff;">
+                        <thead>
+                            <tr style="background:#f8f9fa; border-bottom:2px solid #e91e63;">
+                                <th style="padding:12px; text-align:center;">TGL</th>
+                                <th style="padding:12px; text-align:left;">NAMA WARGA</th>
+                                <th style="padding:12px; text-align:left;">KETERANGAN</th>
+                                <th style="padding:12px; text-align:center;">UANG MASUK</th>
+                                <th style="padding:12px; text-align:center;">SALDO</th>
+                                <th class="admin-action" style="padding:12px; text-align:center;">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbTargetPatungan"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 <h2>PEMASUKAN</h2>
 <div class="pulse-line"></div>
 <table>
@@ -306,7 +335,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.8.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V10.8.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -338,37 +367,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
         </table>
     </div>
 </div>
-<div id="targetPatunganModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow-y:auto; padding:15px; box-sizing:border-box;">
-    <div style="max-width:900px; margin:20px auto; background:#fff; border-radius:15px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5); border:2px solid #e91e63;">
-        
-        <div style="background:#e91e63; color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="margin:0; font-size:1.2rem;">🎯 TARGET PATUNGAN WARGA</h2>
-            <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#fff; color:#e91e63; border:none; padding:5px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">TUTUP</button>
-        </div>
 
-        <div style="padding:15px;">
-            <div class="block" style="margin:0; border:none; box-shadow:none;">
-                <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; background:#fff;">
-                        <thead>
-                            <tr style="background:#f8f9fa; border-bottom:2px solid #e91e63;">
-                                <th style="padding:12px; text-align:center; color:#333;">TGL</th>
-                                <th style="padding:12px; text-align:left; color:#333;">NAMA WARGA</th>
-                                <th style="padding:12px; text-align:left; color:#333;">KETERANGAN</th>
-                                <th style="padding:12px; text-align:center; color:#333;">UANG MASUK</th>
-                                <th style="padding:12px; text-align:center; color:#333;">SALDO</th>
-                                <th class="admin-action" style="padding:12px; text-align:center; color:#333;">AKSI</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbTargetPatungan">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
 <div id="usulanModal">
     <div style="text-align:center; margin-bottom:10px;">
         <button onclick="document.getElementById('usulanModal').style.display='none'" style="background:#d9534f; color:#fff;"> TUTUP </button>
@@ -737,98 +736,86 @@ function resetHardware(hwID, namaWarga) {
     }
 }
 function hapusRiwayatLog() { if(isAdmin && confirm("JARVIS : TUAN, ANDA YAKIN INGIN MENGHAPUS SEMUA LOG PELANGGARAN?")) db.ref('log_pelanggaran_hardware').remove().then(()=>openPengunjung()); }
-function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
-
-// --- FUNGSI TARGET PATUNGAN (LANGKAH 4) ---
+// --- FUNGSI LOGIKA TARGET PATUNGAN ---
 function openTargetPatungan() {
+    // Tutup menu otomatis saat modal buka
+    if(document.getElementById('menuItems')) document.getElementById('menuItems').classList.remove('show');
     document.getElementById('targetPatunganModal').style.display = 'block';
     muatDataTargetPatungan();
 }
 
 function muatDataTargetPatungan() {
     const tabel = document.getElementById('tbTargetPatungan');
+    if (!tabel) return;
     tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat data...</td></tr>';
 
-    // Menggunakan variabel namaAnggotaAwal sesuai dasar kerja kita
-    if (typeof namaAnggotaAwal === 'undefined' || namaAnggotaAwal.length === 0) {
-        tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Daftar namaAnggotaAwal tidak ditemukan.</td></tr>';
-        return;
-    }
-
-    tabel.innerHTML = '';
-    let no = 1;
     let totalTerkumpul = 0;
-    let targetPerOrang = 50000; // Silakan ubah nominal target patungan di sini
-    let jumlahWarga = namaAnggotaAwal.length;
-
-    namaAnggotaAwal.forEach((namaWarga) => {
-        // Membuat ID unik berdasarkan nama (menghapus spasi) untuk database
-        let wargaId = namaWarga.replace(/\s+/g, '_');
-
-        db.ref("target_patungan/" + wargaId).once("value", (targetSnap) => {
-            const statusData = targetSnap.val() || { lunas: false, bulan: "-", tahun: "-" };
+    let targetPerOrang = 50000;
+    
+    // Ambil data dari folder khusus "target_patungan" di Firebase
+    db.ref("target_patungan").once("value", (snapshot) => {
+        const dbData = snapshot.val() || {};
+        tabel.innerHTML = '';
+        
+        // namaAnggotaAwal adalah daftar Rizal s/d Teguh dari kode utama Anda
+        namaAnggotaAwal.forEach((nama) => {
+            let idWarga = nama.replace(/\s+/g, '_');
+            let d = dbData[idWarga] || { tgl: '-', ket: 'Belum Bayar', masuk: 0 };
+            
+            let nominalMasuk = parseInt(d.masuk) || 0;
+            totalTerkumpul += nominalMasuk;
             
             let row = tabel.insertRow();
-                row.style.borderBottom = "1px solid #eee";
-                
-                // Logika Hitung Saldo Berjalan (Akumulasi)
-                if(statusData.lunas) totalTerkumpul += targetPerOrang;
-
-                row.innerHTML = `
-                    <td style="text-align:center; padding:10px; font-size:0.8rem;">${statusData.tgl || '-'}</td>
-                    <td style="text-align:left; padding:10px; font-weight:bold; color:#333;">${namaWarga}</td>
-                    <td style="text-align:left; padding:10px; font-size:0.8rem;">${statusData.lunas ? 'Target Patungan Lunas' : 'Belum Bayar'}</td>
-                    <td style="text-align:center; padding:10px; color:green; font-weight:bold;">
-                        ${statusData.lunas ? 'Rp ' + targetPerOrang.toLocaleString('id-ID') : '-'}
-                    </td>
-                    <td style="text-align:center; padding:10px; font-weight:bold; color:#000;">
-                        Rp ${totalTerkumpul.toLocaleString('id-ID')}
-                    </td>
-                    <td class="admin-action" style="text-align:center; padding:10px;">
-                        <button onclick="updateStatusPatungan('${wargaId}', ${!statusData.lunas})" 
-                            style="background:${statusData.lunas ? '#95a5a6' : '#e91e63'}; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; font-size:0.7rem; font-weight:bold;">
-                            ${statusData.lunas ? 'BATALKAN' : 'SET LUNAS'}
-                        </button>
-                    </td>
-                `;
-
+            row.style.borderBottom = "1px solid #eee";
             
-            // Update progress bar berdasarkan jumlah anggota tetap
-            updateProgressBar(totalTerkumpul, jumlahWarga * targetPerOrang);
+            // Kolom TGL, KETERANGAN, dan UANG MASUK bisa diedit Admin langsung di tabel
+            row.innerHTML = `
+                <td style="text-align:center; padding:10px; font-size:0.85rem;" 
+                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'tgl', this.innerText)">${d.tgl}</td>
+                <td style="text-align:left; padding:10px; font-weight:bold; color:#333;">${nama}</td>
+                <td style="text-align:left; padding:10px; font-size:0.85rem;" 
+                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'ket', this.innerText)">${d.ket}</td>
+                <td style="text-align:center; padding:10px; font-weight:bold; color:green;" 
+                    contenteditable="${isAdmin}" onblur="updateTargetAdmin('${idWarga}', 'masuk', this.innerText)">${d.masuk}</td>
+                <td style="text-align:center; padding:10px; font-weight:bold; color:#000;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+                <td class="admin-action" style="text-align:center; padding:10px;">
+                    <button onclick="hapusTargetAdmin('${idWarga}')" 
+                        style="background:#ff4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">RESET</button>
+                </td>
+            `;
         });
+        
+        // Update Progress Bar di halaman utama
+        updateProgressBarPatungan(totalTerkumpul, namaAnggotaAwal.length * targetPerOrang);
     });
 }
-function updateStatusPatungan(idWarga, statusBaru) {
-    if (typeof isAdmin === 'undefined' || !isAdmin) {
-        alert("Hanya Admin yang bisa mengubah status!");
-        return;
-    }
-    const d = new Date();
-    // Format tanggal: Tgl/Bulan/Tahun (Contoh: 31/1/2026)
-    const tglSekarang = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
-    
-    db.ref("target_patungan/" + idWarga).set({
-        lunas: statusBaru,
-        tgl: statusBaru ? tglSekarang : "-",
-        nominal: statusBaru ? 50000 : 0 
-    }).then(() => {
+
+function updateTargetAdmin(id, field, value) {
+    if(!isAdmin) return;
+    // Simpan ke Firebase folder target_patungan
+    db.ref("target_patungan/" + id).child(field).set(value).then(() => {
+        muatDataTargetPatungan(); // Refresh tabel setelah simpan
+    });
+}
+
+function hapusTargetAdmin(id) {
+    if(!isAdmin || !confirm("Apakah Anda yakin ingin me-reset data warga ini?")) return;
+    db.ref("target_patungan/" + id).remove().then(() => {
         muatDataTargetPatungan();
     });
 }
 
-function updateProgressBar(terkumpul, total) {
+function updateProgressBarPatungan(terkumpul, total) {
     const persen = total > 0 ? Math.round((terkumpul / total) * 100) : 0;
-    const bar = document.getElementById('progressBar');
-    const teksPersen = document.getElementById('progressText');
-    const teksTerkumpul = document.getElementById('targetTerkumpul');
-    const teksTotal = document.getElementById('targetTotal');
-
-    if(bar) bar.style.width = persen + "%";
-    if(teksPersen) teksPersen.innerText = persen + "%";
-    if(teksTerkumpul) teksTerkumpul.innerText = "Terkumpul: Rp " + terkumpul.toLocaleString('id-ID');
-    if(teksTotal) teksTotal.innerText = "Target: Rp " + total.toLocaleString('id-ID');
+    if(document.getElementById('progressBar')) {
+        document.getElementById('progressBar').style.width = persen + "%";
+        document.getElementById('progressText').innerText = persen + "%";
+        document.getElementById('targetTerkumpul').innerText = "Terkumpul: Rp " + terkumpul.toLocaleString('id-ID');
+        document.getElementById('targetTotal').innerText = "Target: Rp " + total.toLocaleString('id-ID');
+    }
 }
 // --- SELESAI FUNGSI TARGET PATUNGAN ---
+function toggleMenu() { document.getElementById('menuItems').classList.toggle('show'); }
 // ================= FORM USULAN WARGA =================
 function openUsulan() {
     toggleMenu();
@@ -1443,13 +1430,6 @@ window.hapusPerangkat = (fPrintID) => {
         });
     }
 };
-// Memanggil data target patungan saat aplikasi siap
-setTimeout(() => {
-    if (typeof muatDataTargetPatungan === "function") {
-        muatDataTargetPatungan();
-    }
-}, 3000); 
-/* SELESAI PENAMBAHAN */
 window.onbeforeunload = function() {
     return "ANDA YAKIN INGIN MENYEGARKAN HALAMAN? DATA YANG BELUM DISIMPAN MUNGKIN AKAN HILANG!";
 };
@@ -1474,15 +1454,6 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
 
 
 
