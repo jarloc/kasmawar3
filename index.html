@@ -743,7 +743,7 @@ function muatDataTargetPatungan() {
     tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Memuat data...</td></tr>';
 
     // 1. Ambil data dari daftar warga utama Anda
-    db.ref("data_warga").once("value", (snapshot) => {
+    db.ref("namaAnggotaAwal").once("value", (snapshot) => {
         if (!snapshot.exists()) {
             tabel.innerHTML = '<tr><td colspan="6" style="text-align:center;">Data Warga tidak ditemukan. Silakan isi data warga dulu di menu utama.</td></tr>';
             return;
@@ -1468,6 +1468,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
