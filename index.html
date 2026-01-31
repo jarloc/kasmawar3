@@ -162,6 +162,17 @@ input{padding:4px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:
     box-sizing: border-box; 
     display: block;
 }
+/* CSS Tambahan agar area edit terlihat jelas saat Admin ON */
+[contenteditable="true"]:hover {
+    background: rgba(233, 30, 99, 0.05);
+    outline: 1px dashed #e91e63;
+    cursor: edit;
+}
+[contenteditable="true"]:focus {
+    background: #fff;
+    outline: 2px solid #e91e63;
+    box-shadow: 0 0 5px rgba(233, 30, 99, 0.3);
+}
 </style>
 </head>
 <body>
@@ -1454,6 +1465,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
