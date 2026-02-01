@@ -837,24 +837,38 @@ function tambahBarisRingkasan(tabel, totalTerkumpul) {
     const saldoKasAngka = parseInt(saldoKasTeks.replace(/[^0-9]/g, '')) || 0;
     const totalSemua = totalTerkumpul + saldoKasAngka;
 
-    // Baris Total Patungan
-    let rowTotal = tabel.insertRow();
-    rowTotal.innerHTML = `
-        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL PATUNGAN</td>
-        <td style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
-        <td style="text-align:center; padding:10px; font-weight:bold; background:#f9f9f9;">-</td>
-        <td class="admin-action" style="background:#f9f9f9;"></td>
-    `;
+// Baris Total Patungan
+let rowTotal = tabel.insertRow();
+rowTotal.innerHTML = `
+    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">
+        TOTAL UANG PATUNGAN
+    </td>
+    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">
+        Rp ${totalTerkumpul.toLocaleString('id-ID')}
+    </td>
+`;
 
-    // Baris Grand Total
-    let rowGrand = tabel.insertRow();
-    rowGrand.innerHTML = `
-        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">TOTAL + SALDO KAS</td>
-        <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
-        <td style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">-</td>
-        <td class="admin-action" style="background:#e91e63;"></td>
-    `;
-}
+// Baris Saldo Kas Saat Ini
+let rowKas = tabel.insertRow();
+rowKas.innerHTML = `
+    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">
+        TOTAL UANG KAS SAAT INI
+    </td>
+    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#fffde7; color:#f57f17;">
+        Rp ${saldoKasSekarang.toLocaleString('id-ID')}
+    </td>
+`;
+
+// Baris Grand Total
+let rowGrand = tabel.insertRow();
+rowGrand.innerHTML = `
+    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">
+        TOTAL UANG PATUNGAN + SALDO KAS
+    </td>
+    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">
+        Rp ${totalSemua.toLocaleString('id-ID')}
+    </td>
+`;
 
 function updateTargetAdmin(id, field, value) {
     if(!isAdmin) return;
@@ -1611,6 +1625,7 @@ function loginAdmin(){
  
 </body>
 </html>
+
 
 
 
