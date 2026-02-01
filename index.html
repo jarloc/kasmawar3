@@ -431,6 +431,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
@@ -1372,38 +1373,59 @@ function uploadBackup(event) {
     reader.readAsText(file);
 }
 document.getElementById('adminBtn').onclick = async function() {
- if(!isAdmin){
-  let u=prompt('QS. Al-Insyirah: 5-6'), p=prompt('Sesungguhnya bersama kesulitan ada kemudahan');
-  if(u && u.toUpperCase()==='\x41\x44\x4D\x49\x4E' && p && p.toUpperCase()==='\x53\x41\x4E\x55\x4D\x49\x4F\x4E'){
-   isAdmin=true; this.textContent='✅ ADMIN ON 🔓'; this.className='primary';
-   document.getElementById('adminTools').style.display='flex';
-   applyAdminLock(); recalc(); alert('✅ SELAMAT DATANG TUAN ADMIN KECE ✅');
-} else { 
-    const net = await getNetworkIntel();
-    const sys = getSystemIntel();
-    const fPrintAsli = await getSupremeFingerprint(); 
-    const namaMurni = currentUserName.split(' (')[0].toUpperCase();
-    const topengPenyusup = await generateAlias(namaMurni, fPrintAsli); 
-    
-    db.ref('log_pelanggaran_hardware').push({ 
-     penyamar: currentUserName, 
-     pemilik_asli: "PERCOBAAN_ADMIN_ILEGAL", 
-     alias: topengPenyusup,
-     hw: fPrintAsli, 
-     ip: net.ip, 
-     isp: net.isp, 
-     os: sys.os, 
-     br: sys.br, 
-     waktu: new Date().toLocaleString() 
-    });
-    alert('❌ CIEE SALAH PASSWORD ❌'); 
- }
- } else {
-  isAdmin=false; this.textContent='⛔ ADMIN OFF 🔒'; this.className='off';
-  document.getElementById('adminTools').style.display='none';
-  applyAdminLock();
- }
- toggleMenu();
+    if (!isAdmin) {
+        // Step 1: Input Email & Password
+        const email = prompt("MASUKKAN EMAIL ADMIN:");
+        if (!email) return;
+        const password = prompt("MASUKKAN PASSWORD ADMIN:");
+        if (!password) return;
+
+        try {
+            // Step 2: Login ke Firebase Auth
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            
+            // Jika Berhasil
+            isAdmin = true;
+            this.textContent = '✅ ADMIN ON 🔓';
+            this.className = 'primary';
+            document.getElementById('adminTools').style.display = 'flex';
+            applyAdminLock();
+            recalc();
+            alert('✅ LOGIN BERHASIL! SELAMAT DATANG TUAN ADMIN ✅');
+        } catch (error) {
+            // Jika Gagal (Salah password/email atau penyusup)
+            const net = await getNetworkIntel();
+            const sys = getSystemIntel();
+            const fPrintAsli = await getSupremeFingerprint(); 
+            const namaMurni = currentUserName.split(' (')[0].toUpperCase();
+            const topengPenyusup = await generateAlias(namaMurni, fPrintAsli); 
+            
+            // Tetap catat log pelanggaran ke database
+            db.ref('log_pelanggaran_hardware').push({ 
+                penyamar: currentUserName, 
+                pemilik_asli: "PERCOBAAN_AUTH_GAGAL", 
+                alias: topengPenyusup,
+                hw: fPrintAsli, 
+                ip: net.ip, 
+                isp: net.isp, 
+                os: sys.os, 
+                br: sys.br, 
+                waktu: new Date().toLocaleString(),
+                pesan_error: error.message
+            });
+            alert('❌ AKSES DITOLAK: EMAIL ATAU PASSWORD SALAH! ❌'); 
+        }
+    } else {
+        // Step 3: Logout
+        await firebase.auth().signOut();
+        isAdmin = false;
+        this.textContent = '⛔ ADMIN OFF 🔒';
+        this.className = 'off';
+        document.getElementById('adminTools').style.display = 'none';
+        applyAdminLock();
+        alert('ADMIN TELAH LOGOUT.');
+    }
+    toggleMenu();
 };
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
@@ -1563,6 +1585,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
