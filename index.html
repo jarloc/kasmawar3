@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -376,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -882,7 +882,7 @@ function hapusTargetAdmin(id) {
 }
 
 function updateProgressBarPatungan(terkumpul, total) {
-    const persen = total > 0 ? Math.round((terkumpul / total) * 100) : 0;
+    const persen = total > 0 ? ((terkumpul / total) * 100).toFixed(1) : 0;
     const bar = document.getElementById('progressBar');
     const txt = document.getElementById('progressText');
     if(bar) bar.style.width = persen + "%";
@@ -895,7 +895,7 @@ function updateProgressBarPatungan(terkumpul, total) {
 function hitungProgressOtomatis() {
     db.ref("config_target").once("value", (confSnap) => {
         const config = confSnap.val() || { nama_target: "PATUNGAN WARGA", nominal_total: 800000 };
-        if(document.getElementById('judulTargetUtama')) document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
+        if(document.getElementById('judulTargetUtama')) document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase() + " (klik disini untuk detail lebih lanjut)";
 
         db.ref("target_patungan").once("value", (snapshot) => {
             const dbData = snapshot.val() || {};
@@ -932,7 +932,7 @@ function simpanSettingTarget() {
 db.ref("config_target").on("value", (confSnap) => {
     const config = confSnap.val();
     if(config && document.getElementById('judulTargetUtama')) {
-        document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase();
+        document.getElementById('judulTargetUtama').innerText = "📊 PROGRESS " + config.nama_target.toUpperCase() + " (klik disini untuk detail lebih lanjut)";
     }
 });
 // --- SELESAI FUNGSI TARGET PATUNGAN ---
@@ -1607,6 +1607,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
