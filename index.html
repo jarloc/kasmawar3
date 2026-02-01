@@ -1067,11 +1067,10 @@ function openPengunjung() {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
-                    const isAdminIlegal = (v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL");
-                         v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL" || 
+                    const isAdminIlegal =
+                         v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL" ||
                          v.pemilik_asli === "PERCOBAAN_AUTH_GAGAL" || 
-                         v.pemilik_asli === "SISTEM_AUTH"
-                          );
+                         v.pemilik_asli === "SISTEM_AUTH";
                     const icon = isAdminIlegal ? "🚨" : "⚠️";
                     const pesan = isAdminIlegal ? `<b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!` : `<b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
                     
@@ -1589,6 +1588,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
