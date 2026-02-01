@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -376,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -809,13 +809,17 @@ function muatDataTargetPatungan() {
                 totalTerkumpul += nominalMasuk;
                 
                 let row = tabel.insertRow();
-                row.style.borderBottom = "1px solid var(--border-color)"; // Ikut tema
+                // PAKSA BACKGROUND DISINI BIAR GAK TEMBUS
+                row.style.background = "var(--bg-block)"; 
+                row.style.color = "var(--text-color)";
+                row.style.borderBottom = "1px solid var(--border-color)";
+                
                 row.innerHTML = `
-                    <td style="text-align:center; padding:10px; font-size:0.85rem; color: var(--text-color);">${d.tgl}</td>
-                    <td style="text-align:left; padding:10px; font-weight:bold; color: var(--text-color);">${nama}</td>
-                    <td style="text-align:left; padding:10px; font-size:0.85rem; color: var(--text-color);">${d.ket}</td>
+                    <td style="text-align:center; padding:10px; font-size:0.85rem;">${d.tgl}</td>
+                    <td style="text-align:left; padding:10px; font-weight:bold;">${nama}</td>
+                    <td style="text-align:left; padding:10px; font-size:0.85rem;">${d.ket}</td>
                     <td style="text-align:center; padding:10px; font-weight:bold; color: #4caf50;">${nominalMasuk.toLocaleString('id-ID')}</td>
-                    <td style="text-align:center; padding:10px; font-weight:bold; color: var(--text-color);">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+                    <td style="text-align:center; padding:10px; font-weight:bold;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
                     <td class="admin-action" style="text-align:center; padding:10px;">
                         <button onclick="hapusTargetAdmin('${idWarga}')" 
                             style="background:#ff4444; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.7rem;">RESET</button>
@@ -836,25 +840,27 @@ function tambahBarisRingkasan(tabel, totalTerkumpul) {
     const saldoKasAngka = parseInt(saldoKasTeks.replace(/[^0-9]/g, '')) || 0;
     const totalSemua = totalTerkumpul + saldoKasAngka;
 
-    // Baris Total Patungan
+    // Baris Total Patungan (Gunakan warna abu transparan agar teks tetap kontras)
     let rowTotal = tabel.insertRow();
+    rowTotal.style.background = "var(--bg-block)";
     rowTotal.innerHTML = `
-        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; background: rgba(128,128,128,0.1); color: var(--text-color); font-size:0.75rem;">TOTAL UANG PATUNGAN YG TERKUMPUL</td>
-        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background: rgba(0,188,212,0.1); color: #00bcd4; font-size:0.9rem;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; border-top: 2px solid var(--accent); color: var(--text-color); font-size:0.75rem;">TOTAL UANG PATUNGAN YG TERKUMPUL</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; border-top: 2px solid var(--accent); color: #00bcd4; font-size:0.9rem;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
     `;
  
-    // Baris Total kas
+    // Baris Total Kas
     let rowKas = tabel.insertRow();
+    rowKas.style.background = "var(--bg-block)";
     rowKas.innerHTML = `
-        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; background: rgba(128,128,128,0.1); color: var(--text-color); font-size:0.75rem;">TOTAL SALDO AKHIR KAS SAAT INI</td>
-        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background: rgba(255,193,7,0.1); color: #ffc107; font-size:0.9rem;">Rp ${saldoKasAngka.toLocaleString('id-ID')}</td>
+        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; color: var(--text-color); font-size:0.75rem;">TOTAL SALDO AKHIR KAS SAAT INI</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; color: #ffc107; font-size:0.9rem;">Rp ${saldoKasAngka.toLocaleString('id-ID')}</td>
     `;
 
-    // Baris Grand Total (Gue pake var(--accent) biar warnanya sesuai tema: Hijau/Kuning/Coklat)
+    // Baris Grand Total (Solid var(--accent))
     let rowGrand = tabel.insertRow();
     rowGrand.innerHTML = `
-        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; background: var(--accent); color: white; font-size:0.75rem;">TOTAL UANG PATUNGAN + SALDO KAS</td>
-        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background: var(--accent); color: white; font-size:1rem;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
+        <td colspan="2" style="text-align:left; padding:10px; font-weight:bold; background: var(--accent); color: #000; font-size:0.75rem;">TOTAL UANG PATUNGAN + SALDO KAS</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background: var(--accent); color: #000; font-size:1rem;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
     `;
 }
 
@@ -1598,6 +1604,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
