@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -294,22 +294,22 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div class="block">
- <div id="targetContainer" onclick="openTargetPatungan()" style="margin-bottom: 25px; padding: 15px; border: 2px solid #e91e63; border-radius: 12px; background: #fff0f5; cursor: pointer; position: relative; z-index: 5;" title="Klik untuk lihat detail patungan">
-    <h3 id="judulTargetUtama" style="font-size: 1rem; margin-bottom: 10px; text-align: center; color: #e91e63;">📊 LOADING TARGET...</h3>
+ <div id="targetContainer" onclick="openTargetPatungan()" style="margin-bottom: 25px; padding: 15px; border: 2px solid var(--accent); border-radius: 12px; background: var(--bg-block); cursor: pointer; position: relative; z-index: 5;" title="Klik untuk lihat detail patungan">
+    <h3 id="judulTargetUtama" style="font-size: 1rem; margin-bottom: 10px; text-align: center; color: var(--accent);">📊 LOADING TARGET...</h3>
     <div style="width: 100%; background: #ddd; border-radius: 20px; height: 30px; position: relative; overflow: hidden; border: 1px solid #bbb;">
-        <div id="progressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #e91e63, #ff4081); transition: width 1s ease-in-out;"></div>
+        <div id="progressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 1s ease-in-out;"></div>
         <span id="progressText" style="position: absolute; width: 100%; text-align: center; top: 5px; font-weight: bold; font-size: 0.9rem; color: #000;">0%</span>
     </div>
-    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8rem; font-weight: bold; color: #333;">
+    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.8rem; font-weight: bold; color: var(--text-color);">
         <span id="targetTerkumpul">Terkumpul: Rp 0</span>
         <span id="targetTotal">Target: Rp 0</span>
     </div>
 </div>
 
 <div id="targetPatunganModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; overflow-y:auto; padding:15px; box-sizing:border-box;">
-    <div style="max-width:950px; margin:20px auto; background:#fff; border-radius:15px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5); border:2px solid #e91e63;">
+    <div style="max-width:950px; margin:20px auto; background: var(--bg-block); border-radius:15px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.5); border:2px solid var(--accent);">
         
-        <div style="background:#e91e63; color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="background: var(--accent); color:#fff; padding:15px; display:flex; justify-content:space-between; align-items:center;">
             <h2 style="margin:0; font-size:1.2rem;">🎯 TARGET PATUNGAN WARGA</h2>
             <div class="admin-action" style="background:#fff; padding:10px; margin-top:10px; border-radius:8px; color:#333; font-size:0.8rem;">
                 <label>🎯 Nama Target: </label>
@@ -318,15 +318,15 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
                 <input type="number" id="inputNominalTarget" placeholder="800000" style="padding:4px; width:100px;">
                 <button onclick="simpanSettingTarget()" style="background:#28a745; color:#fff; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">SET</button>
             </div>
-            <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#fff; color:#e91e63; border:none; padding:5px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">TUTUP</button>
+            <button onclick="document.getElementById('targetPatunganModal').style.display='none'" style="background:#fff; color: var(--accent); border:none; padding:5px 15px; border-radius:5px; font-weight:bold; cursor:pointer;">TUTUP</button>
         </div>
 
         <div style="padding:15px;">
-            <div class="block" style="margin:0; border:none; box-shadow:none;">
+            <div class="block" style="margin:0; border:none; box-shadow:none; background: transparent;">
                 <div style="overflow-x:auto;">
-                    <table style="width:100%; border-collapse:collapse; background:#fff;">
+                    <table style="width:100%; border-collapse:collapse; background: var(--bg-block); color: var(--text-color);">
                         <thead>
-                            <tr style="background:#f8f9fa; border-bottom:2px solid #e91e63;">
+                            <tr style="background: rgba(0,0,0,0.05); border-bottom:2px solid var(--accent);">
                                 <th style="padding:12px; text-align:center;">TGL</th>
                                 <th style="padding:12px; text-align:left;">NAMA WARGA</th>
                                 <th style="padding:12px; text-align:left;">KETERANGAN</th>
@@ -376,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1607,6 +1607,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
