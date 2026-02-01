@@ -223,7 +223,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.0.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.2.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,7 +368,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.0.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.2.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1062,29 +1062,43 @@ function openPengunjung() {
     });
 
     if(isAdmin) {
-        listLog.innerHTML = "Memindai riwayat penyusup...";
-        db.ref('log_pelanggaran_hardware').limitToLast(100).once('value', s => {
-            const d = s.val(); let h = "";
-            if(d) {
-                Object.values(d).reverse().forEach(v => { 
-                    const isAdminIlegal = (v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL");
-                    const icon = isAdminIlegal ? "🚨" : "⚠️";
-                    const pesan = isAdminIlegal ? `<b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!` : `HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
-                    
-                    h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
-                            ${icon} ${pesan}<br>
-                            <b style="color:#d81b60;">📱 PERANGKAT: ${v.alias || 'TIDAK TERDETEKSI'}</b><br>
-                            <small>${v.waktu}</small><br>
-                            📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
-                            📱 ${v.os || 'N/A'} | <code style="font-size:0.7rem;">ID: ${v.hw || 'LEGACY'}</code>
-                          </div>`;
-                });
-                listLog.innerHTML = h;
-            } else {
-                listLog.innerHTML = "<p style='text-align:center; color:green;'>TIDAK ADA PERCOBAAN ILEGAL.</p>";
-            }
-        });
-    }
+    listLog.innerHTML = "Memindai riwayat penyusup...";
+    db.ref('log_pelanggaran_hardware').limitToLast(100).once('value', s => {
+        const d = s.val(); let h = "";
+        if(d) {
+            Object.values(d).reverse().forEach(v => { 
+                // Deteksi apakah ini percobaan Admin (baik sistem lama PERCOBAAN_ADMIN_ILEGAL atau sistem auth baru SISTEM_AUTH)
+                const isPenyusupAdmin = (v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL" || v.pemilik_asli === "SISTEM_AUTH");
+                
+                // Tentukan Ikon & Warna (🚨 Merah untuk percobaan Admin, ⚠️ Kuning untuk warga salah login)
+                const icon = isPenyusupAdmin ? "🚨" : "⚠️";
+                const borderCol = isPenyusupAdmin ? "red" : "#ffcc00";
+                const bgCol = isPenyusupAdmin ? "#fff1f1" : "#fffdeb";
+
+                // LOGIKA PESAN: Sesuai permintaan kamu
+                let pesan = "";
+                if (isPenyusupAdmin) {
+                    // Tampilan: HP FAJAR SHANUM (D3/7) MENCOBA MASUK SEBAGAI ADMIN
+                    pesan = `HP <b>${v.penyamar}</b> MENCOBA MASUK SEBAGAI <b>ADMIN</b>`;
+                } else {
+                    // Pesan standar untuk warga yang mencoba login tapi salah
+                    pesan = `HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
+                }
+                
+                h += `<div style='border-left:4px solid ${borderCol}; padding:8px; margin-bottom:10px; font-size:0.8rem; background:${bgCol};'>
+                        ${icon} ${pesan}<br>
+                        <b style="color:#d81b60;">📱 PERANGKAT: ${v.alias || 'TIDAK TERDETEKSI'}</b><br>
+                        <small>${v.waktu}</small><br>
+                        📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
+                        📱 ${v.os || 'N/A'} | <code style="font-size:0.7rem;">ID: ${v.hw || 'LEGACY'}</code>
+                      </div>`;
+            });
+            listLog.innerHTML = h;
+        } else {
+            listLog.innerHTML = "<p style='text-align:center; color:green;'>TIDAK ADA PERCOBAAN ILEGAL.</p>";
+        }
+    });
+}
 }
 function hapusRiwayatPengunjung() {
     if (!isAdmin) return;
@@ -1585,6 +1599,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
