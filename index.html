@@ -62,7 +62,7 @@ header{text-align:center;font-size:2rem;margin-bottom:30px; padding: 40px 20px; 
 .tgl-aman { color: #00ff00; } .tgl-waspada { color: #ffff00; animation: blink 0.8s infinite; } .tgl-lewat { color: #ff4444; animation: pulse 1.5s infinite; } 
 @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-.menu-container {position:fixed; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
+.menu-container {position:absolute; top:12px; right:12px; z-index:1000; display:flex; flex-direction:column; align-items:flex-end; gap:8px}
 .menu-items {display:none; flex-direction:column; gap:8px; background:rgba(0,0,0,0.9); padding:12px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.4); width: 250px;}
 .menu-items.show {display:flex}
 button.main-menu {background:#333; color:#fff; border:2px solid #fff; padding: 15px 25px;}
@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -376,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1604,6 +1604,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
