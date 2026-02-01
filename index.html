@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.2.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.3.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -267,6 +267,13 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
     <button class="main-menu" onclick="toggleMenu()">☰ MENU</button>
     <div class="menu-items" id="menuItems">
         <button id="adminBtn" class="off">⛔ ADMIN OFF 🔒</button>
+        <div id="loginSection" style="display:none; padding:15px; background:#f9f9f9; border:1px solid #ccc; border-radius:8px; margin:10px 0;">
+            <form onsubmit="event.preventDefault(); prosesLoginBeneran();">
+                <input type="email" id="emailAdmin" name="username" autocomplete="username" placeholder="Email Admin" required style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                <input type="password" id="passAdmin" name="password" autocomplete="current-password" placeholder="Password" required style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ddd; border-radius:5px; box-sizing:border-box;">
+                <button type="submit" style="width:100%; padding:10px; background:#673AB7; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">LOGIN</button>
+            </form>
+        </div>
         <div id="adminTools">
             <button onclick="tambahBaris('WARGA')" style="background:#28a745; color:#fff;">👤 TAMBAH WARGA</button>
             <button onclick="tambahBaris('LAIN')" style="background:#17a2b8; color:#fff;">📥 TAMBAH PEMASUKAN</button>
@@ -369,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.2.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.3.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1376,61 +1383,69 @@ function uploadBackup(event) {
     };
     reader.readAsText(file);
 }
-document.getElementById('adminBtn').onclick = async function() {
+document.getElementById('adminBtn').onclick = function() {
     if (!isAdmin) {
-        // Step 1: Input Email & Password
-        const email = prompt("MASUKKAN EMAIL ADMIN:");
-        if (!email) return;
-        const password = prompt("MASUKKAN PASSWORD ADMIN:");
-        if (!password) return;
-
-        try {
-            // Step 2: Login ke Firebase Auth
-            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-            
-            // Jika Berhasil
-            isAdmin = true;
-            this.textContent = '✅ ADMIN ON 🔓';
-            this.className = 'primary';
-            document.getElementById('adminTools').style.display = 'flex';
-            applyAdminLock();
-            recalc();
-            alert('✅ LOGIN BERHASIL! SELAMAT DATANG TUAN ADMIN ✅');
-        } catch (error) {
-            // Jika Gagal (Salah password/email atau penyusup)
-            const net = await getNetworkIntel();
-            const sys = getSystemIntel();
-            const fPrintAsli = await getSupremeFingerprint(); 
-            const namaMurni = currentUserName.split(' (')[0].toUpperCase();
-            const topengPenyusup = await generateAlias(namaMurni, fPrintAsli); 
-            
-            // Tetap catat log pelanggaran ke database
-            db.ref('log_pelanggaran_hardware').push({ 
-                penyamar: currentUserName, 
-                pemilik_asli: "PERCOBAAN_AUTH_GAGAL", 
-                alias: topengPenyusup,
-                hw: fPrintAsli, 
-                ip: net.ip, 
-                isp: net.isp, 
-                os: sys.os, 
-                br: sys.br, 
-                waktu: new Date().toLocaleString(),
-                pesan_error: error.message
-            });
-            alert('❌ AKSES DITOLAK: EMAIL ATAU PASSWORD SALAH! ❌'); 
-        }
+        // Gak pake prompt lagi, tapi munculin form login di menu
+        const sect = document.getElementById('loginSection');
+        sect.style.display = (sect.style.display === 'none') ? 'block' : 'none';
     } else {
-        // Step 3: Logout
-        await firebase.auth().signOut();
-        isAdmin = false;
-        this.textContent = '⛔ ADMIN OFF 🔒';
-        this.className = 'off';
-        document.getElementById('adminTools').style.display = 'none';
-        applyAdminLock();
-        alert('ADMIN TELAH LOGOUT.');
+        // Proses Logout
+        firebase.auth().signOut().then(() => {
+            isAdmin = false;
+            this.textContent = '⛔ ADMIN OFF 🔒';
+            this.className = 'off';
+            document.getElementById('adminTools').style.display = 'none';
+            if (typeof applyAdminLock === 'function') applyAdminLock();
+            alert('ADMIN TELAH LOGOUT.');
+        });
     }
-    toggleMenu();
+    // Tetep pake toggleMenu biar menu nutup otomatis
+    if (typeof toggleMenu === 'function') toggleMenu();
 };
+
+// INI FUNGSI BARU UNTUK EKSEKUSI LOGIN DARI FORM
+async function prosesLoginBeneran() {
+    const email = document.getElementById('emailAdmin').value;
+    const password = document.getElementById('passAdmin').value;
+    const btn = document.getElementById('adminBtn');
+
+    try {
+        await firebase.auth().signInWithEmailAndPassword(email, password);
+        
+        isAdmin = true;
+        btn.textContent = '✅ ADMIN ON 🔓';
+        btn.className = 'primary';
+        document.getElementById('adminTools').style.display = 'flex';
+        document.getElementById('loginSection').style.display = 'none'; // Sembunyiin form
+        
+        if (typeof applyAdminLock === 'function') applyAdminLock();
+        if (typeof recalc === 'function') recalc();
+        
+        alert('✅ LOGIN BERHASIL! SELAMAT DATANG TUAN ADMIN ✅');
+    } catch (error) {
+        // TETEP NYATET MALING (Log Pelanggaran Hardware Lu)
+        const net = await getNetworkIntel();
+        const sys = getSystemIntel();
+        const fPrintAsli = await getSupremeFingerprint(); 
+        const namaMurni = currentUserName.split(' (')[0].toUpperCase();
+        const topengPenyusup = await generateAlias(namaMurni, fPrintAsli); 
+        
+        db.ref('log_pelanggaran_hardware').push({ 
+            penyamar: currentUserName, 
+            pemilik_asli: "PERCOBAAN_AUTH_GAGAL_FORM", 
+            alias: topengPenyusup,
+            hw: fPrintAsli, 
+            ip: net.ip, 
+            isp: net.isp, 
+            os: sys.os, 
+            br: sys.br, 
+            waktu: new Date().toLocaleString(),
+            pesan_error: error.message
+        });
+        
+        alert('❌ AKSES DITOLAK: EMAIL ATAU PASSWORD SALAH! ❌');
+    }
+}
 function prevMonth(){ bulan--; if(bulan<0){bulan=11; tahun--;} updateUI(); }
 function nextMonth(){ bulan++; if(bulan>11){bulan=0; tahun++;} updateUI(); }
 function updateUI(){ document.getElementById('periode').textContent=namaBulan[bulan]+' '+tahun; loadData(); }
@@ -1589,6 +1604,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
