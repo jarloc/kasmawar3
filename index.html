@@ -223,7 +223,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.0.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.0.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,7 +368,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.0.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.0.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -837,39 +837,28 @@ function tambahBarisRingkasan(tabel, totalTerkumpul) {
     const saldoKasAngka = parseInt(saldoKasTeks.replace(/[^0-9]/g, '')) || 0;
     const totalSemua = totalTerkumpul + saldoKasAngka;
 
-// Baris Total Patungan
-let rowTotal = tabel.insertRow();
-rowTotal.innerHTML = `
-    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">
-        TOTAL UANG PATUNGAN
-    </td>
-    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">
-        Rp ${totalTerkumpul.toLocaleString('id-ID')}
-    </td>
-`;
+    // Baris Total Patungan
+    let rowTotal = tabel.insertRow();
+    rowTotal.innerHTML = `
+        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL UANG PATUNGAN</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e1f5fe; color:#01579b;">Rp ${totalTerkumpul.toLocaleString('id-ID')}</td>
+    `;
 
-// Baris Saldo Kas Saat Ini
-let rowKas = tabel.insertRow();
-rowKas.innerHTML = `
-    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">
-        TOTAL UANG KAS SAAT INI
-    </td>
-    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#fffde7; color:#f57f17;">
-        Rp ${saldoKasSekarang.toLocaleString('id-ID')}
-    </td>
-`;
+    // Baris Saldo Kas Saat Ini
+    let rowKas = tabel.insertRow();
+    rowKas.innerHTML = `
+        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#f9f9f9;">TOTAL UANG KAS SAAT INI</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#fffde7; color:#f57f17;">Rp ${saldoKasAngka.toLocaleString('id-ID')}</td>
+    `;
 
-// Baris Grand Total
-let rowGrand = tabel.insertRow();
-rowGrand.innerHTML = `
-    <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">
-        TOTAL UANG PATUNGAN + SALDO KAS
-    </td>
-    <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">
-        Rp ${totalSemua.toLocaleString('id-ID')}
-    </td>
-`;
-
+    // Baris Grand Total
+    let rowGrand = tabel.insertRow();
+    rowGrand.innerHTML = `
+        <td colspan="3" style="text-align:right; padding:10px; font-weight:bold; background:#e91e63; color:white;">TOTAL UANG PATUNGAN + SALDO KAS</td>
+        <td colspan="3" style="text-align:center; padding:10px; font-weight:bold; background:#e91e63; color:white;">Rp ${totalSemua.toLocaleString('id-ID')}</td>
+    `;
+ }
+ 
 function updateTargetAdmin(id, field, value) {
     if(!isAdmin) return;
     db.ref("target_patungan/" + id).child(field).set(value).then(() => {
@@ -1625,6 +1614,7 @@ function loginAdmin(){
  
 </body>
 </html>
+
 
 
 
