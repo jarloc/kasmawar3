@@ -1067,22 +1067,13 @@ function openPengunjung() {
             const d = s.val(); let h = "";
             if(d) {
                 Object.values(d).reverse().forEach(v => { 
-                    // Tentukan Icon
-                    const icon = "🚨";
-                    
-                    // --- LOGIKA PESAN BARU ---
-                    let pesan = "";
-                    if (v.pemilik_asli === "SISTEM_AUTH" || v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL") {
-                        // Jika ini dari login email/pass yang baru, pakai alias yang kita buat tadi
-                        pesan = v.alias; 
-                    } else {
-                        // Ini untuk log lama atau log percobaan login warga biasa
-                        pesan = `HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
-                    }
+                    const isAdminIlegal = (v.pemilik_asli === "PERCOBAAN_ADMIN_ILEGAL");
+                    const icon = isAdminIlegal ? "🚨" : "⚠️";
+                    const pesan = isAdminIlegal ? `<b>${v.penyamar}</b> MENCOBA MASUK KE AKSES ADMIN!` : `HP <b>${v.pemilik_asli}</b> MENCOBA MASUK SEBAGAI <b>${v.penyamar}</b>`;
                     
                     h += `<div style='border-left:4px solid red; padding:8px; margin-bottom:10px; font-size:0.8rem; background:#fff1f1;'>
                             ${icon} ${pesan}<br>
-                            <b style="color:#d81b60;">📱 PERANGKAT: ${v.alias_perangkat || v.alias || 'TIDAK TERDETEKSI'}</b><br>
+                            <b style="color:#d81b60;">📱 PERANGKAT: ${v.alias || 'TIDAK TERDETEKSI'}</b><br>
                             <small>${v.waktu}</small><br>
                             📶 ISP: ${v.isp || 'N/A'} | 📍 IP: ${v.ip || 'N/A'}<br>
                             📱 ${v.os || 'N/A'} | <code style="font-size:0.7rem;">ID: ${v.hw || 'LEGACY'}</code>
@@ -1594,6 +1585,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
