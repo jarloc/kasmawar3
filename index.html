@@ -1553,9 +1553,21 @@ function loginAdmin(){
 
   firebase.auth().signInWithEmailAndPassword(email, pass)
     .then(()=>{
-      alert("ADMIN ON");
-      adminLoginBox.style.display = "none";
-    })
+  isAdmin = true;
+
+  const btn = document.getElementById("adminBtn");
+  btn.textContent = "✅ ADMIN ON 🔓";
+  btn.className = "primary";
+
+  document.getElementById("adminTools").style.display = "flex";
+
+  applyAdminLock();
+  recalc();
+
+  alert("ADMIN ON");
+  adminLoginBox.style.display = "none";
+})
+
     .catch(err=>{
       alert("Login gagal: " + err.message);
     });
@@ -1599,6 +1611,7 @@ function loginAdmin(){
  
 </body>
 </html>
+
 
 
 
