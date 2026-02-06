@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -387,7 +387,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1637,20 +1637,18 @@ function hitungPosisiSaldo() {
         else saldoTunai -= totalKeluar;
     });
 
-    // 3. HITUNG DARI TARGET PATUNGAN (Sinkronisasi Database)
+    // 3. SCAN DATA TARGET PATUNGAN (Logika Akumulatif)
     db.ref("target_patungan").once("value", (snapshot) => {
         const dbData = snapshot.val() || {};
         
         Object.values(dbData).forEach(d => {
             if (!d.tgl) return;
 
-            // Normalisasi pemisah tanggal (Ubah / jadi - agar seragam)
+            // Normalisasi pemisah tanggal
             const tglNormal = d.tgl.replace(/\//g, '-');
             const bagian = tglNormal.split('-');
-            
             let thnData, blnData;
             
-            // Cek apakah format YYYY-MM-DD atau DD-MM-YYYY
             if (bagian[0].length === 4) {
                 thnData = parseInt(bagian[0]);
                 blnData = parseInt(bagian[1]) - 1;
@@ -1659,17 +1657,26 @@ function hitungPosisiSaldo() {
                 blnData = parseInt(bagian[1]) - 1;
             }
 
-            // Validasi Periode
-            if (thnData === periodeTahun && blnData === periodeBulan) {
+            // --- REVISI LOGIKA DISINI ---
+            // Uang patungan dihitung jika:
+            // 1. Tahunnya sudah lewat (misal data 2025, periode sekarang 2026)
+            // 2. Tahunnya sama, tapi bulannya sudah lewat atau sedang berjalan
+            const isTahunLalu = thnData < periodeTahun;
+            const isBulanLaluAtauSekarang = (thnData === periodeTahun && blnData <= periodeBulan);
+
+            if (isTahunLalu || isBulanLaluAtauSekarang) {
                 const ket = (d.ket || "").toUpperCase();
                 const nominal = parseInt(d.masuk) || 0;
                 
-                if (ket.includes("TRANSFER")) saldoATM += nominal;
-                else saldoTunai += nominal;
+                if (ket.includes("TRANSFER")) {
+                    saldoATM += nominal;
+                } else {
+                    saldoTunai += nominal;
+                }
             }
         });
 
-        // Update Tampilan Akhir
+        // Update ke elemen UI
         document.getElementById('saldoATM').innerText = "Rp " + saldoATM.toLocaleString('id-ID');
         document.getElementById('saldoTunai').innerText = "Rp " + saldoTunai.toLocaleString('id-ID');
     });
@@ -1696,6 +1703,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
