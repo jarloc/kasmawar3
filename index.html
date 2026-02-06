@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,80 +1606,67 @@ function hitungPosisiSaldo() {
     let totalATM = 0;
     let totalTunai = 0;
 
-    // 1. Scan Tabel Pemasukan
-    document.querySelectorAll("#tbMasuk tr").forEach(row => {
+    // Fungsi pembantu untuk ambil angka murni
+    const ambilAngka = (txt) => parseInt(txt.replace(/\D/g, "")) || 0;
+
+    // 1. Scan Pemasukan (Kolom 3: Keterangan, Kolom 4: Uang Masuk)
+    const rowsMasuk = document.querySelectorAll("#tbMasuk tr");
+    rowsMasuk.forEach(row => {
         if (row.cells.length >= 4) {
             let ket = row.cells[2].innerText.toUpperCase();
-            let nominal = parseInt(row.cells[3].innerText.replace(/\D/g, "")) || 0;
-            
+            let nominal = ambilAngka(row.cells[3].innerText);
             if (ket.includes("TRANSFER")) totalATM += nominal;
-            if (ket.includes("TUNAI")) totalTunai += nominal;
+            else if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
-    // 2. Scan Tabel Pengeluaran
-    document.querySelectorAll("#tbKeluar tr").forEach(row => {
+    // 2. Scan Pengeluaran (Kolom 2: Keterangan, Kolom 5: Total)
+    const rowsKeluar = document.querySelectorAll("#tbKeluar tr");
+    rowsKeluar.forEach(row => {
         if (row.cells.length >= 5) {
             let ket = row.cells[1].innerText.toUpperCase();
-            let nominal = parseInt(row.cells[4].innerText.replace(/\D/g, "")) || 0;
-            
+            let nominal = ambilAngka(row.cells[4].innerText);
             if (ket.includes("TRANSFER")) totalATM -= nominal;
-            if (ket.includes("TUNAI")) totalTunai -= nominal;
+            else if (ket.includes("TUNAI")) totalTunai -= nominal;
         }
     });
 
-    // 3. Scan Tabel Target Patungan
-    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
+    // 3. Scan Target Patungan (Kolom 3: Keterangan, Kolom 4: Uang Masuk)
+    const rowsPatungan = document.querySelectorAll("#tbTargetPatungan tr");
+    rowsPatungan.forEach(row => {
         if (row.cells.length >= 4) {
             let ket = row.cells[2].innerText.toUpperCase();
-            let nominal = parseInt(row.cells[3].innerText.replace(/\D/g, "")) || 0;
-            
+            let nominal = ambilAngka(row.cells[3].innerText);
             if (ket.includes("TRANSFER")) totalATM += nominal;
-            if (ket.includes("TUNAI")) totalTunai += nominal;
+            else if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
-    // Tampilkan hasil ke ID HTML
+    // Update Tampilan
     const elATM = document.getElementById("saldoATM");
     const elTunai = document.getElementById("saldoTunai");
-    
     if(elATM) elATM.innerText = "Rp " + totalATM.toLocaleString("id-ID");
     if(elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
 }
 
-// --- BAGIAN PENGINTAI & AUTO-RUN ---
-const observerSaldo = new MutationObserver(() => {
+// --- JALANKAN OTOMATIS DENGAN JEDA LOADING ---
+let counterCek = 0;
+const intervalAwal = setInterval(() => {
     hitungPosisiSaldo();
-});
+    counterCek++;
+    // Berhenti cek otomatis setelah 10 detik (data harusnya sudah muncul)
+    if(counterCek > 10) clearInterval(intervalAwal);
+}, 1000);
 
-const configSaldo = { childList: true, subtree: true, characterData: true };
-
-// Fungsi untuk menjalankan pengintai
-function aktifkanPengintai() {
-    const targetMasuk = document.getElementById('tbMasuk');
-    const targetKeluar = document.getElementById('tbKeluar');
-    const targetPatungan = document.getElementById('tbTargetPatungan');
-    
-    if(targetMasuk) observerSaldo.observe(targetMasuk, configSaldo);
-    if(targetKeluar) observerSaldo.observe(targetKeluar, configSaldo);
-    if(targetPatungan) observerSaldo.observe(targetPatungan, configSaldo);
-}
-
-// JALANKAN SECARA BERTAHAP (Biar gak keduluan sama loading data)
-let percobaan = 0;
-const intervalCek = setInterval(() => {
-    hitungPosisiSaldo();
-    percobaan++;
-    
-    // Kalau sudah dapet angka atau sudah nyoba 10 kali, stop interval
-    const atm = document.getElementById('saldoATM')?.innerText;
-    const tunai = document.getElementById('saldoTunai')?.innerText;
-    
-    if ((atm !== "Rp 0" || tunai !== "Rp 0") || percobaan > 10) {
-        clearInterval(intervalCek);
-        aktifkanPengintai(); // Aktifkan pengintai setelah data stabil
-    }
-}, 1000); // Cek tiap 1 detik 
+// Tetap pantau jika ada perubahan data (Input baru)
+const obsSaldo = new MutationObserver(() => hitungPosisiSaldo());
+const configObs = { childList: true, subtree: true };
+setTimeout(() => {
+    ['tbMasuk', 'tbKeluar', 'tbTargetPatungan'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) obsSaldo.observe(el, configObs);
+    });
+}, 3000);
 
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
@@ -1702,6 +1689,7 @@ const intervalCek = setInterval(() => {
 </div>
 </body>
 </html>
+
 
 
 
