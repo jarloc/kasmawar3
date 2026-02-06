@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.4</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.4 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1647,27 +1647,39 @@ function hitungPosisiSaldo() {
     if(elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
 }
 
-// PENGINTAI OTOMATIS: Nama variabel diganti biar gak bentrok sama fitur lain
+// --- BAGIAN PENGINTAI & AUTO-RUN ---
 const observerSaldo = new MutationObserver(() => {
     hitungPosisiSaldo();
 });
 
-// Konfigurasi pengintai
 const configSaldo = { childList: true, subtree: true, characterData: true };
 
-setTimeout(() => {
+// Fungsi untuk menjalankan pengintai
+function aktifkanPengintai() {
     const targetMasuk = document.getElementById('tbMasuk');
     const targetKeluar = document.getElementById('tbKeluar');
     const targetPatungan = document.getElementById('tbTargetPatungan');
     
-    // Gunakan observerSaldo agar tidak tabrakan dengan 'observer' milik textarea
     if(targetMasuk) observerSaldo.observe(targetMasuk, configSaldo);
     if(targetKeluar) observerSaldo.observe(targetKeluar, configSaldo);
     if(targetPatungan) observerSaldo.observe(targetPatungan, configSaldo);
-    
-    // Jalankan hitung pertama kali saat halaman dibuka
+}
+
+// JALANKAN SECARA BERTAHAP (Biar gak keduluan sama loading data)
+let percobaan = 0;
+const intervalCek = setInterval(() => {
     hitungPosisiSaldo();
-}, 2000); 
+    percobaan++;
+    
+    // Kalau sudah dapet angka atau sudah nyoba 10 kali, stop interval
+    const atm = document.getElementById('saldoATM')?.innerText;
+    const tunai = document.getElementById('saldoTunai')?.innerText;
+    
+    if ((atm !== "Rp 0" || tunai !== "Rp 0") || percobaan > 10) {
+        clearInterval(intervalCek);
+        aktifkanPengintai(); // Aktifkan pengintai setelah data stabil
+    }
+}, 1000); // Cek tiap 1 detik 
 
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
@@ -1690,6 +1702,7 @@ setTimeout(() => {
 </div>
 </body>
 </html>
+
 
 
 
