@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,42 +1606,59 @@ function hitungPosisiSaldo() {
     let atm = 0;
     let tunai = 0;
 
-    // Ambil baris dari tabel-tabel yang lu maksud
-    const barisMasuk = document.querySelectorAll("#tbMasuk tr, #tbTargetPatungan tr");
-    const barisKeluar = document.querySelectorAll("#tbKeluar tr");
+    // Fungsi sakti buat ambil angka murni dari kolom nominal
+    const ambilDuit = (row, index) => {
+        if (!row.cells[index]) return 0;
+        // Ambil teks, buang semua yang bukan angka
+        let num = row.cells[index].innerText.replace(/\D/g, "");
+        return parseInt(num) || 0;
+    };
 
-    // 1. Hitung Uang Masuk (Pemasukan & Target Patungan)
-    barisMasuk.forEach(row => {
-        let teks = row.innerText;
-        row.querySelectorAll("textarea").forEach(area => teks += " " + area.value);
-        teks = teks.toUpperCase();
+    // Fungsi ambil keterangan (termasuk isi textarea)
+    const ambilKet = (row, index) => {
+        if (!row.cells[index]) return "";
+        let teks = row.cells[index].innerText;
+        let area = row.cells[index].querySelector("textarea");
+        if (area) teks += " " + area.value;
+        return teks.toUpperCase();
+    };
 
-        let angka = teks.replace(/\D/g, " ").trim().split(/\s+/);
-        let nominal = parseInt(angka[angka.length - 1]) || 0;
-
-        if (teks.includes("TRANSFER")) atm += nominal;
-        else if (teks.includes("TUNAI")) tunai += nominal;
+    // 1. SCAN PEMASUKAN (Ket: kolom 3, Nominal: kolom 4)
+    document.querySelectorAll("#tbMasuk tr").forEach(row => {
+        if (row.cells.length >= 4) {
+            let nominal = ambilDuit(row, 3);
+            let ket = ambilKet(row, 2);
+            if (ket.includes("TRANSFER")) atm += nominal;
+            else if (ket.includes("TUNAI")) tunai += nominal;
+        }
     });
 
-    // 2. Hitung Uang Keluar (Pengeluaran)
-    barisKeluar.forEach(row => {
-        let teks = row.innerText;
-        row.querySelectorAll("textarea").forEach(area => teks += " " + area.value);
-        teks = teks.toUpperCase();
-
-        let angka = teks.replace(/\D/g, " ").trim().split(/\s+/);
-        let nominal = parseInt(angka[angka.length - 1]) || 0;
-
-        if (teks.includes("TRANSFER")) atm -= nominal;
-        else if (teks.includes("TUNAI")) tunai -= nominal;
+    // 2. SCAN TARGET PATUNGAN (Ket: kolom 3, Nominal: kolom 4)
+    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
+        if (row.cells.length >= 4) {
+            let nominal = ambilDuit(row, 3);
+            let ket = ambilKet(row, 2);
+            if (ket.includes("TRANSFER")) atm += nominal;
+            else if (ket.includes("TUNAI")) tunai += nominal;
+        }
     });
 
-    // 3. Update Tampilan Blok Posisi Saldo
+    // 3. SCAN PENGELUARAN (Ket: kolom 2, Nominal: kolom 5)
+    document.querySelectorAll("#tbKeluar tr").forEach(row => {
+        if (row.cells.length >= 5) {
+            let nominal = ambilDuit(row, 4);
+            let ket = ambilKet(row, 1);
+            if (ket.includes("TRANSFER")) atm -= nominal;
+            else if (ket.includes("TUNAI")) tunai -= nominal;
+        }
+    });
+
+    // Update tampilan blok saldo
     document.getElementById("saldoATM").innerText = "Rp " + atm.toLocaleString("id-ID");
     document.getElementById("saldoTunai").innerText = "Rp " + tunai.toLocaleString("id-ID");
 }
 
-// Jalankan tiap 2 detik
+// Biar langsung update
 setInterval(hitungPosisiSaldo, 2000);
 
 </script>
