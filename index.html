@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,21 +368,6 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </table>
 </div>
 
-<div class="block">
-    <h2>POSISI SALDO</h2>
-    <div class="pulse-line"></div>
-    <table class="grand-total-table">
-        <tr>
-            <th style="color: #00e5ff;">SALDO DI ATM (TRANSFER)</th>
-            <th style="color: #ffea00;">SALDO TUNAI (CASH)</th>
-        </tr>
-        <tr>
-            <td id="saldoATM" style="font-weight: bold; color: #00e5ff;">0</td>
-            <td id="saldoTunai" style="font-weight: bold; color: #ffea00;">0</td>
-        </tr>
-    </table>
-</div>
-
 <div class="block note-box">
   <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
   <div class="pulse-line"></div>
@@ -391,7 +376,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1226,7 +1211,6 @@ document.querySelectorAll('#tbKeluar tr').forEach(tr=>{
  document.getElementById('totalKeluar').textContent=tK.toLocaleString('id-ID');
  document.getElementById('saldoAkhir').textContent=(tM-tK).toLocaleString('id-ID');
  applyAdminLock();
- hitungPosisiSaldo();
 }
 function applyAdminLock(){ 
     document.querySelectorAll('.editable').forEach(i=>{ i.disabled=!isAdmin; i.style.cursor = !isAdmin ? "default" : "text"; });
@@ -1602,45 +1586,6 @@ window.hapusPerangkat = (fPrintID) => {
 window.onbeforeunload = function() {
     return "ANDA YAKIN INGIN MENYEGARKAN HALAMAN? DATA YANG BELUM DISIMPAN MUNGKIN AKAN HILANG!";
 };
-
-function hitungPosisiSaldo() {
-    let atm = 0;
-    let tunai = 0;
-
-    // --- 1. SCAN TABEL MASUK ---
-    document.querySelectorAll("#tbMasuk tr").forEach(row => {
-        const inputKet = row.cells[2]?.querySelector("textarea, input");
-        const inputUang = row.cells[3]?.querySelector("input");
-        
-        if (inputKet && inputUang) {
-            let ket = inputKet.value.toUpperCase();
-            let nominal = parseInt(inputUang.value.replace(/[^0-9]/g, "")) || 0;
-            
-            if (ket.includes("TRANSFER")) atm += nominal;
-            else if (ket.includes("TUNAI")) tunai += nominal;
-        }
-    });
-
-    // --- 2. SCAN TABEL KELUAR ---
-    document.querySelectorAll("#tbKeluar tr").forEach(row => {
-        const inputKet = row.cells[1]?.querySelector("textarea, input");
-        // Kolom TOTAL di tabel Keluar Anda ada di index 4 (tr.children[4])
-        const totalText = row.cells[4]?.textContent || "0";
-        
-        if (inputKet) {
-            let ket = inputKet.value.toUpperCase();
-            let nominal = parseInt(totalText.replace(/[^0-9]/g, "")) || 0;
-            
-            if (ket.includes("TRANSFER")) atm -= nominal;
-            else if (ket.includes("TUNAI")) tunai -= nominal;
-        }
-    });
-
-    // UPDATE TAMPILAN
-    document.getElementById("saldoATM").innerText = "Rp " + atm.toLocaleString("id-ID");
-    document.getElementById("saldoTunai").innerText = "Rp " + tunai.toLocaleString("id-ID");
-}
-
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
     <div style="background:#fff; width:100%; max-width:800px; border-radius:10px; padding:20px; color:#000; max-height:90vh; overflow-y:auto;">
@@ -1662,22 +1607,6 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
