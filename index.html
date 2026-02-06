@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,65 +1606,65 @@ function hitungPosisiSaldo() {
     let totalATM = 0;
     let totalTunai = 0;
 
-    // Fungsi pembantu untuk ambil angka murni
-    const ambilAngka = (txt) => parseInt(txt.replace(/\D/g, "")) || 0;
+    // Fungsi pembersih angka (Rp 50.000 -> 50000)
+    const bersihkan = (txt) => parseInt(txt.replace(/\D/g, "")) || 0;
 
-    // 1. Scan Pemasukan (Kolom 3: Keterangan, Kolom 4: Uang Masuk)
-    const rowsMasuk = document.querySelectorAll("#tbMasuk tr");
-    rowsMasuk.forEach(row => {
+    // 1. Scan Pemasukan (Keterangan index 2, Uang Masuk index 3)
+    document.querySelectorAll("#tbMasuk tr").forEach(row => {
         if (row.cells.length >= 4) {
             let ket = row.cells[2].innerText.toUpperCase();
-            let nominal = ambilAngka(row.cells[3].innerText);
-            if (ket.includes("TRANSFER")) totalATM += nominal;
-            else if (ket.includes("TUNAI")) totalTunai += nominal;
+            let nominal = bersihkan(row.cells[3].innerText);
+            if (nominal > 0) { // Hanya hitung jika ada angkanya
+                if (ket.includes("TRANSFER")) totalATM += nominal;
+                if (ket.includes("TUNAI")) totalTunai += nominal;
+            }
         }
     });
 
-    // 2. Scan Pengeluaran (Kolom 2: Keterangan, Kolom 5: Total)
-    const rowsKeluar = document.querySelectorAll("#tbKeluar tr");
-    rowsKeluar.forEach(row => {
+    // 2. Scan Pengeluaran (Keterangan index 1, Total index 4)
+    document.querySelectorAll("#tbKeluar tr").forEach(row => {
         if (row.cells.length >= 5) {
             let ket = row.cells[1].innerText.toUpperCase();
-            let nominal = ambilAngka(row.cells[4].innerText);
-            if (ket.includes("TRANSFER")) totalATM -= nominal;
-            else if (ket.includes("TUNAI")) totalTunai -= nominal;
+            let nominal = bersihkan(row.cells[4].innerText);
+            if (nominal > 0) {
+                if (ket.includes("TRANSFER")) totalATM -= nominal;
+                if (ket.includes("TUNAI")) totalTunai -= nominal;
+            }
         }
     });
 
-    // 3. Scan Target Patungan (Kolom 3: Keterangan, Kolom 4: Uang Masuk)
-    const rowsPatungan = document.querySelectorAll("#tbTargetPatungan tr");
-    rowsPatungan.forEach(row => {
+    // 3. Scan Target Patungan (Keterangan index 2, Uang Masuk index 3)
+    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
         if (row.cells.length >= 4) {
             let ket = row.cells[2].innerText.toUpperCase();
-            let nominal = ambilAngka(row.cells[3].innerText);
-            if (ket.includes("TRANSFER")) totalATM += nominal;
-            else if (ket.includes("TUNAI")) totalTunai += nominal;
+            let nominal = bersihkan(row.cells[3].innerText);
+            if (nominal > 0) {
+                if (ket.includes("TRANSFER")) totalATM += nominal;
+                if (ket.includes("TUNAI")) totalTunai += nominal;
+            }
         }
     });
 
-    // Update Tampilan
-    const elATM = document.getElementById("saldoATM");
-    const elTunai = document.getElementById("saldoTunai");
-    if(elATM) elATM.innerText = "Rp " + totalATM.toLocaleString("id-ID");
-    if(elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+    // Update ke layar
+    document.getElementById("saldoATM").innerText = "Rp " + totalATM.toLocaleString("id-ID");
+    document.getElementById("saldoTunai").innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+    
+    console.log("Saldo Terupdate: ATM=" + totalATM + ", Tunai=" + totalTunai);
 }
 
-// --- JALANKAN OTOMATIS DENGAN JEDA LOADING ---
-let counterCek = 0;
-const intervalAwal = setInterval(() => {
+// JALANKAN OTOMATIS (Retry tiap 2 detik sampai data Firebase muncul)
+let stopInterval = setInterval(() => {
     hitungPosisiSaldo();
-    counterCek++;
-    // Berhenti cek otomatis setelah 10 detik (data harusnya sudah muncul)
-    if(counterCek > 10) clearInterval(intervalAwal);
-}, 1000);
+    let atm = document.getElementById("saldoATM").innerText;
+    if (atm !== "Rp 0") clearInterval(stopInterval); // Berhenti jika sudah ada data
+}, 2000);
 
-// Tetap pantau jika ada perubahan data (Input baru)
+// Pengintai tetap aktif jika ada input baru
 const obsSaldo = new MutationObserver(() => hitungPosisiSaldo());
-const configObs = { childList: true, subtree: true };
 setTimeout(() => {
     ['tbMasuk', 'tbKeluar', 'tbTargetPatungan'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) obsSaldo.observe(el, configObs);
+        let el = document.getElementById(id);
+        if(el) obsSaldo.observe(el, { childList: true, subtree: true });
     });
 }, 3000);
 
@@ -1689,6 +1689,7 @@ setTimeout(() => {
 </div>
 </body>
 </html>
+
 
 
 
