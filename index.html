@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -387,7 +387,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1603,41 +1603,64 @@ function hitungPosisiSaldo() {
     let saldoATM = 0;
     let saldoTunai = 0;
 
-    // 1. SCAN TABEL PEMASUKAN (Bulan yang sedang aktif)
+    // Ambil periode aktif dari UI (Variabel global lu)
+    const periodeBulan = bulan; 
+    const periodeTahun = tahun;
+
+    // 1. HITUNG DARI TABEL PEMASUKAN (Hanya yang tampil di layar)
     document.querySelectorAll('#tbMasuk tr').forEach(tr => {
-        const ketCell = tr.children[2].querySelector('textarea') || tr.children[2].querySelector('input');
-        const ket = (ketCell ? ketCell.value : "").toUpperCase();
-        const nominal = parseInt((tr.children[3].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
+        const ketCell = tr.querySelector('textarea, .editable:nth-child(3)');
+        const ket = (ketCell ? (ketCell.value || ketCell.textContent) : "").toUpperCase();
+        
+        // Ambil nominal dari kolom ke-4 (index 3)
+        const valInput = tr.children[3]?.querySelector('input') || tr.children[3];
+        const nominal = parseInt((valInput?.value || valInput?.textContent || "0").replace(/[^0-9]/g, '')) || 0;
         
         if (ket.includes("TRANSFER")) saldoATM += nominal;
         else saldoTunai += nominal;
     });
 
-    // 2. SCAN TABEL PENGELUARAN (Bulan yang sedang aktif)
+    // 2. HITUNG DARI TABEL PENGELUARAN (Hanya yang tampil di layar)
     document.querySelectorAll('#tbKeluar tr').forEach(tr => {
-        const ketCell = tr.children[1].querySelector('textarea') || tr.children[1].querySelector('input');
-        const ket = (ketCell ? ketCell.value : "").toUpperCase();
-        const qty = parseInt((tr.children[2].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
-        const harga = parseInt((tr.children[3].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
+        const ketCell = tr.querySelector('textarea, .editable:nth-child(2)');
+        const ket = (ketCell ? (ketCell.value || ketCell.textContent) : "").toUpperCase();
+        
+        // Kolom Qty (index 2) * Harga (index 3)
+        const qtyInp = tr.children[2]?.querySelector('input') || tr.children[2];
+        const hargaInp = tr.children[3]?.querySelector('input') || tr.children[3];
+        
+        const qty = parseInt((qtyInp?.value || "0").replace(/[^0-9]/g, '')) || 0;
+        const harga = parseInt((hargaInp?.value || "0").replace(/[^0-9]/g, '')) || 0;
         const totalKeluar = qty * harga;
 
         if (ket.includes("TRANSFER")) saldoATM -= totalKeluar;
         else saldoTunai -= totalKeluar;
     });
 
-    // 3. SCAN DATA TARGET PATUNGAN (Hanya yang sesuai Periode Aktif)
+    // 3. HITUNG DARI TARGET PATUNGAN (Sinkronisasi Database)
     db.ref("target_patungan").once("value", (snapshot) => {
         const dbData = snapshot.val() || {};
+        
         Object.values(dbData).forEach(d => {
-            if (!d.tgl) return; // Lewati jika tidak ada tanggal
+            if (!d.tgl) return;
 
-            // Breakdown tanggal (Format: YYYY-MM-DD)
-            const bagianTgl = d.tgl.split('-'); 
-            const thnPatungan = parseInt(bagianTgl[0]);
-            const blnPatungan = parseInt(bagianTgl[1]) - 1; // Firebase/JS month itu 0-11
+            // Normalisasi pemisah tanggal (Ubah / jadi - agar seragam)
+            const tglNormal = d.tgl.replace(/\//g, '-');
+            const bagian = tglNormal.split('-');
+            
+            let thnData, blnData;
+            
+            // Cek apakah format YYYY-MM-DD atau DD-MM-YYYY
+            if (bagian[0].length === 4) {
+                thnData = parseInt(bagian[0]);
+                blnData = parseInt(bagian[1]) - 1;
+            } else {
+                thnData = parseInt(bagian[2]);
+                blnData = parseInt(bagian[1]) - 1;
+            }
 
-            // VALIDASI: Cek apakah Tahun dan Bulan patungan sama dengan yang sedang dibuka di UI
-            if (thnPatungan === window.tahun && blnPatungan === window.bulan) {
+            // Validasi Periode
+            if (thnData === periodeTahun && blnData === periodeBulan) {
                 const ket = (d.ket || "").toUpperCase();
                 const nominal = parseInt(d.masuk) || 0;
                 
@@ -1646,12 +1669,9 @@ function hitungPosisiSaldo() {
             }
         });
 
-        // UPDATE KE TAMPILAN
-        const atmElem = document.getElementById('saldoATM');
-        const tunaiElem = document.getElementById('saldoTunai');
-        
-        if(atmElem) atmElem.innerText = "Rp " + saldoATM.toLocaleString('id-ID');
-        if(tunaiElem) tunaiElem.innerText = "Rp " + saldoTunai.toLocaleString('id-ID');
+        // Update Tampilan Akhir
+        document.getElementById('saldoATM').innerText = "Rp " + saldoATM.toLocaleString('id-ID');
+        document.getElementById('saldoTunai').innerText = "Rp " + saldoTunai.toLocaleString('id-ID');
     });
 }
 
@@ -1676,6 +1696,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
