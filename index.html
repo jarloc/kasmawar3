@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.3</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.3 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1607,39 +1607,39 @@ function hitungPosisiSaldo() {
     let totalTunai = 0;
 
     // 1. Scan Tabel Pemasukan
-    // Index: Keterangan = 2, Uang Masuk = 3
     document.querySelectorAll("#tbMasuk tr").forEach(row => {
         if (row.cells.length >= 4) {
-            let nominal = parseInt(row.cells[3].innerText.replace(/[^0-9]/g, "")) || 0;
             let ket = row.cells[2].innerText.toUpperCase();
+            let nominal = parseInt(row.cells[3].innerText.replace(/\D/g, "")) || 0;
+            
             if (ket.includes("TRANSFER")) totalATM += nominal;
             if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
     // 2. Scan Tabel Pengeluaran
-    // Index: Keterangan = 1, Total = 4
     document.querySelectorAll("#tbKeluar tr").forEach(row => {
         if (row.cells.length >= 5) {
-            let nominal = parseInt(row.cells[4].innerText.replace(/[^0-9]/g, "")) || 0;
             let ket = row.cells[1].innerText.toUpperCase();
+            let nominal = parseInt(row.cells[4].innerText.replace(/\D/g, "")) || 0;
+            
             if (ket.includes("TRANSFER")) totalATM -= nominal;
             if (ket.includes("TUNAI")) totalTunai -= nominal;
         }
     });
 
     // 3. Scan Tabel Target Patungan
-    // Index: Keterangan = 2, Uang Masuk = 3
     document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
         if (row.cells.length >= 4) {
-            let nominal = parseInt(row.cells[3].innerText.replace(/[^0-9]/g, "")) || 0;
             let ket = row.cells[2].innerText.toUpperCase();
+            let nominal = parseInt(row.cells[3].innerText.replace(/\D/g, "")) || 0;
+            
             if (ket.includes("TRANSFER")) totalATM += nominal;
             if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
-    // Update Tampilan ke Blok POSISI SALDO
+    // Tampilkan hasil ke ID HTML
     const elATM = document.getElementById("saldoATM");
     const elTunai = document.getElementById("saldoTunai");
     
@@ -1690,6 +1690,7 @@ setTimeout(() => {
 </div>
 </body>
 </html>
+
 
 
 
