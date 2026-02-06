@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.5</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.6</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,30 +368,34 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </table>
 </div>
 
-<div class="block" style="margin-top: 20px; border-top: 4px solid var(--primary);">
-    <h2 style="text-align:left; font-size:1.1rem; padding-bottom:10px; display: flex; align-items: center; gap: 10px;">
-        💰 POSISI UANG SAAT INI
-    </h2>
-    <div class="pulse-line"></div>
+<div class="block" style="margin-top: 20px; border-top: 4px solid var(--primary); text-align: center;">
     
-    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
-        <div style="flex: 1; background: #f0f7ff; padding: 15px; border-radius: 10px; border: 1px solid #cce3ff; min-width: 150px; box-shadow: 2px 2px 5px rgba(0,0,0,0.03);">
-            <small style="color: #0056b3; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                🔵 Saldo di ATM (Transfer)
+    <h2 style="justify-content: center; font-size: 1.2rem; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; margin: 0 auto;">
+        POSISI UANG SAAT INI
+    </h2>
+    
+    <div class="pulse-line" style="margin: 0 auto;"></div>
+    
+    <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; justify-content: center;">
+        
+        <div style="flex: 1; background: #f0f7ff; padding: 15px; border-radius: 10px; border: 1px solid #cce3ff; min-width: 200px; box-shadow: 2px 2px 5px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center;">
+            <small style="color: #0056b3; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                🔵 Saldo ATM (Termasuk uang patungan)
             </small>
-            <div id="saldoATM" style="font-size: 1.3rem; font-weight: 800; color: #004085; margin-top: 5px;">Rp 0</div>
+            <div id="saldoATM" style="font-size: 1.4rem; font-weight: 800; color: #004085; margin-top: 5px;">Rp 0</div>
         </div>
 
-        <div style="flex: 1; background: #fff9f0; padding: 15px; border-radius: 10px; border: 1px solid #ffe8cc; min-width: 150px; box-shadow: 2px 2px 5px rgba(0,0,0,0.03);">
-            <small style="color: #995a00; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                🟠 Saldo Tunai (Cash)
+        <div style="flex: 1; background: #fff9f0; padding: 15px; border-radius: 10px; border: 1px solid #ffe8cc; min-width: 200px; box-shadow: 2px 2px 5px rgba(0,0,0,0.03); display: flex; flex-direction: column; align-items: center;">
+            <small style="color: #995a00; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                🟠 Saldo Tunai (Termasuk uang patungan)
             </small>
-            <div id="saldoTunai" style="font-size: 1.3rem; font-weight: 800; color: #854d00; margin-top: 5px;">Rp 0</div>
+            <div id="saldoTunai" style="font-size: 1.4rem; font-weight: 800; color: #854d00; margin-top: 5px;">Rp 0</div>
         </div>
+
     </div>
     
-    <p style="font-size: 0.65rem; color: #888; margin-top: 10px; font-style: italic;">
-        *Sudah termasuk akumulasi Dana Patungan Warga.
+    <p style="font-size: 0.7rem; color: #888; margin-top: 15px; font-style: italic; text-align: center; width: 100%;">
+        *Sudah termasuk uang patungan warga (TOTAL UANG KAS + TOTAL UANG PATUNGAN)
     </p>
 </div>
 
@@ -403,7 +407,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.5 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.6 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1719,6 +1723,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
