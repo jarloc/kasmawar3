@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,57 +1606,52 @@ function hitungPosisiSaldo() {
     let totalATM = 0;
     let totalTunai = 0;
 
-    // Helper ambil angka murni
-    const getDuit = (el) => parseInt(el.innerText.replace(/\D/g, "")) || 0;
+    // Fungsi ambil angka
+    const ambilDuit = (el) => parseInt(el.innerText.replace(/\D/g, "")) || 0;
 
-    // 1. Scan Pemasukan (ID: tbMasuk)
-    // Index 2 = Keterangan, Index 3 = Uang Masuk
+    // 1. SCAN PEMASUKAN
     document.querySelectorAll("#tbMasuk tr").forEach(row => {
         if (row.cells.length >= 4) {
-            let ket = row.cells[2].innerText.trim().toUpperCase();
-            let nominal = getDuit(row.cells[3]);
+            // Ambil teks dari kolom Keterangan (termasuk isi textarea)
+            let txtArea = row.cells[2].querySelector("textarea");
+            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
+            
+            let nominal = ambilDuit(row.cells[3]);
             if (ket.includes("TRANSFER")) totalATM += nominal;
             if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
-    // 2. Scan Pengeluaran (ID: tbKeluar)
-    // Index 1 = Keterangan, Index 4 = Total
+    // 2. SCAN PENGELUARAN
     document.querySelectorAll("#tbKeluar tr").forEach(row => {
         if (row.cells.length >= 5) {
-            let ket = row.cells[1].innerText.trim().toUpperCase();
-            let nominal = getDuit(row.cells[4]);
+            let txtArea = row.cells[1].querySelector("textarea");
+            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[1].innerText.toUpperCase();
+            
+            let nominal = ambilDuit(row.cells[4]);
             if (ket.includes("TRANSFER")) totalATM -= nominal;
             if (ket.includes("TUNAI")) totalTunai -= nominal;
         }
     });
 
-    // 3. Scan Target Patungan (ID: tbTargetPatungan)
-    // Index 2 = Keterangan, Index 3 = Uang Masuk
+    // 3. SCAN TARGET PATUNGAN
     document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
         if (row.cells.length >= 4) {
-            let ket = row.cells[2].innerText.trim().toUpperCase();
-            let nominal = getDuit(row.cells[3]);
+            let txtArea = row.cells[2].querySelector("textarea");
+            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
+            
+            let nominal = ambilDuit(row.cells[3]);
             if (ket.includes("TRANSFER")) totalATM += nominal;
             if (ket.includes("TUNAI")) totalTunai += nominal;
         }
     });
 
-    // TAMPILKAN
     document.getElementById("saldoATM").innerText = "Rp " + totalATM.toLocaleString("id-ID");
     document.getElementById("saldoTunai").innerText = "Rp " + totalTunai.toLocaleString("id-ID");
-    
-    console.log("CEK HASIL: ATM = " + totalATM + " | Tunai = " + totalTunai);
 }
 
-// PAKSA JALAN TIAP 3 DETIK (Biar nunggu Firebase render sempurna)
-const sapuJagat = setInterval(() => {
-    hitungPosisiSaldo();
-    // Kalau angka udah muncul, pelanin intervalnya jadi per 10 detik atau stop
-    if(document.getElementById("saldoATM").innerText !== "Rp 0") {
-        console.log("DATA DITEMUKAN!");
-    }
-}, 3000);
+// Jalankan tiap 2 detik
+setInterval(hitungPosisiSaldo, 2000);
 
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
@@ -1679,6 +1674,7 @@ const sapuJagat = setInterval(() => {
 </div>
 </body>
 </html>
+
 
 
 
