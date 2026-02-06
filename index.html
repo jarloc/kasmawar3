@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -368,6 +368,21 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </table>
 </div>
 
+<div class="block">
+    <h2>POSISI SALDO</h2>
+    <div class="pulse-line"></div>
+    <table class="grand-total-table">
+        <tr>
+            <th style="color: #00e5ff;">SALDO DI ATM (TRANSFER)</th>
+            <th style="color: #ffea00;">SALDO TUNAI (CASH)</th>
+        </tr>
+        <tr>
+            <td id="saldoATM" style="font-weight: bold; color: #00e5ff;">0</td>
+            <td id="saldoTunai" style="font-weight: bold; color: #ffea00;">0</td>
+        </tr>
+    </table>
+</div>
+
 <div class="block note-box">
   <h2 style="text-align:left; font-size:1.1rem; border-bottom:1px solid var(--border); padding-bottom:10px">📌 CATATAN PENTING</h2>
   <div class="pulse-line"></div>
@@ -376,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1586,6 +1601,74 @@ window.hapusPerangkat = (fPrintID) => {
 window.onbeforeunload = function() {
     return "ANDA YAKIN INGIN MENYEGARKAN HALAMAN? DATA YANG BELUM DISIMPAN MUNGKIN AKAN HILANG!";
 };
+
+function hitungPosisiSaldo() {
+    let totalATM = 0;
+    let totalTunai = 0;
+
+    // 1. Scan Tabel Pemasukan
+    // Index: Keterangan = 2, Uang Masuk = 3
+    document.querySelectorAll("#tbMasuk tr").forEach(row => {
+        if (row.cells.length >= 4) {
+            let nominal = parseInt(row.cells[3].innerText.replace(/[^0-9]/g, "")) || 0;
+            let ket = row.cells[2].innerText.toUpperCase();
+            if (ket.includes("TRANSFER")) totalATM += nominal;
+            if (ket.includes("TUNAI")) totalTunai += nominal;
+        }
+    });
+
+    // 2. Scan Tabel Pengeluaran
+    // Index: Keterangan = 1, Total = 4
+    document.querySelectorAll("#tbKeluar tr").forEach(row => {
+        if (row.cells.length >= 5) {
+            let nominal = parseInt(row.cells[4].innerText.replace(/[^0-9]/g, "")) || 0;
+            let ket = row.cells[1].innerText.toUpperCase();
+            if (ket.includes("TRANSFER")) totalATM -= nominal;
+            if (ket.includes("TUNAI")) totalTunai -= nominal;
+        }
+    });
+
+    // 3. Scan Tabel Target Patungan
+    // Index: Keterangan = 2, Uang Masuk = 3
+    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
+        if (row.cells.length >= 4) {
+            let nominal = parseInt(row.cells[3].innerText.replace(/[^0-9]/g, "")) || 0;
+            let ket = row.cells[2].innerText.toUpperCase();
+            if (ket.includes("TRANSFER")) totalATM += nominal;
+            if (ket.includes("TUNAI")) totalTunai += nominal;
+        }
+    });
+
+    // Update Tampilan ke Blok POSISI SALDO
+    const elATM = document.getElementById("saldoATM");
+    const elTunai = document.getElementById("saldoTunai");
+    
+    if(elATM) elATM.innerText = "Rp " + totalATM.toLocaleString("id-ID");
+    if(elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+}
+
+// PENGINTAI OTOMATIS: Nama variabel diganti biar gak bentrok sama fitur lain
+const observerSaldo = new MutationObserver(() => {
+    hitungPosisiSaldo();
+});
+
+// Konfigurasi pengintai
+const configSaldo = { childList: true, subtree: true, characterData: true };
+
+setTimeout(() => {
+    const targetMasuk = document.getElementById('tbMasuk');
+    const targetKeluar = document.getElementById('tbKeluar');
+    const targetPatungan = document.getElementById('tbTargetPatungan');
+    
+    // Gunakan observerSaldo agar tidak tabrakan dengan 'observer' milik textarea
+    if(targetMasuk) observerSaldo.observe(targetMasuk, configSaldo);
+    if(targetKeluar) observerSaldo.observe(targetKeluar, configSaldo);
+    if(targetPatungan) observerSaldo.observe(targetPatungan, configSaldo);
+    
+    // Jalankan hitung pertama kali saat halaman dibuka
+    hitungPosisiSaldo();
+}, 2000); 
+
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
     <div style="background:#fff; width:100%; max-width:800px; border-radius:10px; padding:20px; color:#000; max-height:90vh; overflow-y:auto;">
@@ -1607,6 +1690,7 @@ window.onbeforeunload = function() {
 </div>
 </body>
 </html>
+
 
 
 
