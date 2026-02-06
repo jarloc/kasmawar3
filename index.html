@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.4.9</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.4.9 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,51 +1606,67 @@ function hitungPosisiSaldo() {
     let totalATM = 0;
     let totalTunai = 0;
 
-    // Fungsi ambil angka
-    const ambilDuit = (el) => parseInt(el.innerText.replace(/\D/g, "")) || 0;
+    // Fungsi ambil angka yang lebih galak
+    const ambilAngkaMurni = (el) => {
+        if (!el) return 0;
+        let n = el.innerText.replace(/[^0-9]/g, ""); // Hanya ambil angka 0-9
+        return parseInt(n) || 0;
+    };
 
     // 1. SCAN PEMASUKAN
-    document.querySelectorAll("#tbMasuk tr").forEach(row => {
+    document.querySelectorAll("#tbMasuk tr").forEach((row, i) => {
         if (row.cells.length >= 4) {
-            // Ambil teks dari kolom Keterangan (termasuk isi textarea)
-            let txtArea = row.cells[2].querySelector("textarea");
-            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
-            
-            let nominal = ambilDuit(row.cells[3]);
-            if (ket.includes("TRANSFER")) totalATM += nominal;
-            if (ket.includes("TUNAI")) totalTunai += nominal;
+            let tArea = row.cells[2].querySelector("textarea");
+            let teks = tArea ? tArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
+            let duit = ambilAngkaMurni(row.cells[3]);
+
+            if (teks.includes("TRANSFER")) {
+                totalATM += duit;
+            } else if (teks.includes("TUNAI")) {
+                totalTunai += duit;
+            }
         }
     });
 
     // 2. SCAN PENGELUARAN
-    document.querySelectorAll("#tbKeluar tr").forEach(row => {
+    document.querySelectorAll("#tbKeluar tr").forEach((row) => {
         if (row.cells.length >= 5) {
-            let txtArea = row.cells[1].querySelector("textarea");
-            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[1].innerText.toUpperCase();
-            
-            let nominal = ambilDuit(row.cells[4]);
-            if (ket.includes("TRANSFER")) totalATM -= nominal;
-            if (ket.includes("TUNAI")) totalTunai -= nominal;
+            let tArea = row.cells[1].querySelector("textarea");
+            let teks = tArea ? tArea.value.toUpperCase() : row.cells[1].innerText.toUpperCase();
+            let duit = ambilAngkaMurni(row.cells[4]);
+
+            if (teks.includes("TRANSFER")) {
+                totalATM -= duit;
+            } else if (teks.includes("TUNAI")) {
+                totalTunai -= duit;
+            }
         }
     });
 
     // 3. SCAN TARGET PATUNGAN
-    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
+    document.querySelectorAll("#tbTargetPatungan tr").forEach((row) => {
         if (row.cells.length >= 4) {
-            let txtArea = row.cells[2].querySelector("textarea");
-            let ket = txtArea ? txtArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
-            
-            let nominal = ambilDuit(row.cells[3]);
-            if (ket.includes("TRANSFER")) totalATM += nominal;
-            if (ket.includes("TUNAI")) totalTunai += nominal;
+            let tArea = row.cells[2].querySelector("textarea");
+            let teks = tArea ? tArea.value.toUpperCase() : row.cells[2].innerText.toUpperCase();
+            let duit = ambilAngkaMurni(row.cells[3]);
+
+            if (teks.includes("TRANSFER")) {
+                totalATM += duit;
+            } else if (teks.includes("TUNAI")) {
+                totalTunai += duit;
+            }
         }
     });
 
+    // Update ke layar
     document.getElementById("saldoATM").innerText = "Rp " + totalATM.toLocaleString("id-ID");
     document.getElementById("saldoTunai").innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+    
+    // Log biar lu bisa maki gua kalo 0
+    console.log("DEBUG SALDO -> ATM: " + totalATM + " | TUNAI: " + totalTunai);
 }
 
-// Jalankan tiap 2 detik
+// JANGAN PAKE INTERVAL 2 DETIK TERUS-TERUSAN, PAKE INI BIAR CLING:
 setInterval(hitungPosisiSaldo, 2000);
 
 </script>
@@ -1674,6 +1690,7 @@ setInterval(hitungPosisiSaldo, 2000);
 </div>
 </body>
 </html>
+
 
 
 
