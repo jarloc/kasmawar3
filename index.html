@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1606,57 +1606,43 @@ function hitungPosisiSaldo() {
     let totalATM = 0;
     let totalTunai = 0;
 
-    // Fungsi paling galak: Ambil semua teks, termasuk yang di dalem textarea/input
-    const ambilSemuaTeks = (row) => {
-        let teksLuaran = row.innerText || "";
-        let teksInput = Array.from(row.querySelectorAll('textarea, input')).map(el => el.value).join(" ");
-        return (teksLuaran + " " + teksInput).toUpperCase();
-    };
+    // 1. Ambil SEMUA baris dari ketiga tabel sekaligus
+    const semuaBaris = document.querySelectorAll("#tbMasuk tr, #tbKeluar tr, #tbTargetPatungan tr");
 
-    const ambilDuit = (el) => {
-        if (!el) return 0;
-        let n = el.innerText.replace(/[^0-9]/g, "");
-        return parseInt(n) || 0;
-    };
+    semuaBaris.forEach(row => {
+        // Gabungin semua teks dari textarea dan teks biasa di baris itu
+        let teksArea = Array.from(row.querySelectorAll("textarea")).map(t => t.value).join(" ");
+        let teksBaris = (row.innerText + " " + teksArea).toUpperCase();
 
-    // 1. SCAN PEMASUKAN
-    document.querySelectorAll("#tbMasuk tr").forEach(row => {
-        if (row.cells.length >= 4) {
-            let gabunganTeks = ambilSemuaTeks(row);
-            let nominal = ambilDuit(row.cells[3]);
-            if (gabunganTeks.includes("TRANSFER")) totalATM += nominal;
-            if (gabunganTeks.includes("TUNAI")) totalTunai += nominal;
+        // Ambil SEMUA angka yang ada di baris itu, pilih yang paling besar (biasanya itu nominal duit)
+        let angkaDiBaris = row.innerText.replace(/\D/g, " ").split(" ").filter(n => n.length >= 3);
+        let nominal = angkaDiBaris.length > 0 ? parseInt(angkaDiBaris[angkaDiBaris.length - 1]) : 0;
+
+        if (nominal > 0) {
+            // Cek apakah ini baris PENGELUARAN (liat parent ID-nya)
+            let isKeluar = row.closest("#tbKeluar");
+
+            if (teksBaris.includes("TRANSFER")) {
+                isKeluar ? totalATM -= nominal : totalATM += nominal;
+            } else if (teksBaris.includes("TUNAI")) {
+                isKeluar ? totalTunai -= nominal : totalTunai += nominal;
+            }
         }
     });
 
-    // 2. SCAN PENGELUARAN
-    document.querySelectorAll("#tbKeluar tr").forEach(row => {
-        if (row.cells.length >= 5) {
-            let gabunganTeks = ambilSemuaTeks(row);
-            let nominal = ambilDuit(row.cells[4]);
-            if (gabunganTeks.includes("TRANSFER")) totalATM -= nominal;
-            if (gabunganTeks.includes("TUNAI")) totalTunai -= nominal;
-        }
-    });
-
-    // 3. SCAN PATUNGAN
-    document.querySelectorAll("#tbTargetPatungan tr").forEach(row => {
-        if (row.cells.length >= 4) {
-            let gabunganTeks = ambilSemuaTeks(row);
-            let nominal = ambilDuit(row.cells[3]);
-            if (gabunganTeks.includes("TRANSFER")) totalATM += nominal;
-            if (gabunganTeks.includes("TUNAI")) totalTunai += nominal;
-        }
-    });
-
-    document.getElementById("saldoATM").innerText = "Rp " + totalATM.toLocaleString("id-ID");
-    document.getElementById("saldoTunai").innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+    // Update tampilan
+    const elATM = document.getElementById("saldoATM");
+    const elTunai = document.getElementById("saldoTunai");
     
-    console.log("DEBUG TERAKHIR -> ATM: " + totalATM + " | TUNAI: " + totalTunai);
+    if (elATM) elATM.innerText = "Rp " + totalATM.toLocaleString("id-ID");
+    if (elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+
+    console.log("HASIL RENUNGAN -> ATM:", totalATM, "TUNAI:", totalTunai);
 }
 
 // Jalankan tiap 2 detik
-setInterval(hitungPosisiSaldo, 2000);
+if(window.saldoInterval) clearInterval(window.saldoInterval);
+window.saldoInterval = setInterval(hitungPosisiSaldo, 2000);
 
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
@@ -1679,6 +1665,7 @@ setInterval(hitungPosisiSaldo, 2000);
 </div>
 </body>
 </html>
+
 
 
 
