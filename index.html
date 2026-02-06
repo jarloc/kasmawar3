@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1607,44 +1607,38 @@ function hitungPosisiSaldo() {
     let atm = 0;
     let tunai = 0;
 
-    // 1. SCAN PEMASUKAN (#tbMasuk)
-    // Index: Keterangan (2), Uang Masuk (3)
+    // --- 1. SCAN TABEL MASUK ---
     document.querySelectorAll("#tbMasuk tr").forEach(row => {
-        if (row.cells.length >= 4) {
-            // Ambil value dari textarea/input di kolom index 2 (Keterangan)
-            let ketEl = row.cells[2].querySelector("textarea, input");
-            let ket = ketEl ? ketEl.value.toUpperCase() : "";
-            
-            // Ambil value dari input di kolom index 3 (Uang/Nominal)
-            let nominalEl = row.cells[3].querySelector("input");
-            let nominal = nominalEl ? parseInt(nominalEl.value.replace(/[^0-9]/g, "")) || 0 : 0;
+        const inputKet = row.cells[2]?.querySelector("textarea, input");
+        const inputUang = row.cells[3]?.querySelector("input");
+        
+        if (inputKet && inputUang) {
+            let ket = inputKet.value.toUpperCase();
+            let nominal = parseInt(inputUang.value.replace(/[^0-9]/g, "")) || 0;
             
             if (ket.includes("TRANSFER")) atm += nominal;
             else if (ket.includes("TUNAI")) tunai += nominal;
         }
     });
 
-    // 2. SCAN PENGELUARAN (#tbKeluar)
-    // Index: Keterangan (1), Total (4)
+    // --- 2. SCAN TABEL KELUAR ---
     document.querySelectorAll("#tbKeluar tr").forEach(row => {
-        if (row.cells.length >= 5) {
-            // Kolom keterangan pengeluaran ada di index 1
-            let ketEl = row.cells[1].querySelector("textarea, input");
-            let ket = ketEl ? ketEl.value.toUpperCase() : "";
-            
-            // Kolom total pengeluaran (bukan input, tapi text lgsg dari recalc) ada di index 4
-            let nominal = parseInt(row.cells[4].innerText.replace(/[^0-9]/g, "")) || 0;
+        const inputKet = row.cells[1]?.querySelector("textarea, input");
+        // Kolom TOTAL di tabel Keluar Anda ada di index 4 (tr.children[4])
+        const totalText = row.cells[4]?.textContent || "0";
+        
+        if (inputKet) {
+            let ket = inputKet.value.toUpperCase();
+            let nominal = parseInt(totalText.replace(/[^0-9]/g, "")) || 0;
             
             if (ket.includes("TRANSFER")) atm -= nominal;
             else if (ket.includes("TUNAI")) tunai -= nominal;
         }
     });
 
-    // UPDATE DISPLAY
-    const elATM = document.getElementById("saldoATM");
-    const elTunai = document.getElementById("saldoTunai");
-    if(elATM) elATM.innerText = "Rp " + atm.toLocaleString("id-ID");
-    if(elTunai) elTunai.innerText = "Rp " + tunai.toLocaleString("id-ID");
+    // UPDATE TAMPILAN
+    document.getElementById("saldoATM").innerText = "Rp " + atm.toLocaleString("id-ID");
+    document.getElementById("saldoTunai").innerText = "Rp " + tunai.toLocaleString("id-ID");
 }
 
 </script>
@@ -1668,6 +1662,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
