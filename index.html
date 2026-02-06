@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.5.2</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -391,7 +391,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.5.2 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1603,46 +1603,46 @@ window.onbeforeunload = function() {
 };
 
 function hitungPosisiSaldo() {
-    let totalATM = 0;
-    let totalTunai = 0;
+    let atm = 0;
+    let tunai = 0;
 
-    // 1. Ambil SEMUA baris dari ketiga tabel sekaligus
-    const semuaBaris = document.querySelectorAll("#tbMasuk tr, #tbKeluar tr, #tbTargetPatungan tr");
+    // Ambil baris dari tabel-tabel yang lu maksud
+    const barisMasuk = document.querySelectorAll("#tbMasuk tr, #tbTargetPatungan tr");
+    const barisKeluar = document.querySelectorAll("#tbKeluar tr");
 
-    semuaBaris.forEach(row => {
-        // Gabungin semua teks dari textarea dan teks biasa di baris itu
-        let teksArea = Array.from(row.querySelectorAll("textarea")).map(t => t.value).join(" ");
-        let teksBaris = (row.innerText + " " + teksArea).toUpperCase();
+    // 1. Hitung Uang Masuk (Pemasukan & Target Patungan)
+    barisMasuk.forEach(row => {
+        let teks = row.innerText;
+        row.querySelectorAll("textarea").forEach(area => teks += " " + area.value);
+        teks = teks.toUpperCase();
 
-        // Ambil SEMUA angka yang ada di baris itu, pilih yang paling besar (biasanya itu nominal duit)
-        let angkaDiBaris = row.innerText.replace(/\D/g, " ").split(" ").filter(n => n.length >= 3);
-        let nominal = angkaDiBaris.length > 0 ? parseInt(angkaDiBaris[angkaDiBaris.length - 1]) : 0;
+        let angka = teks.replace(/\D/g, " ").trim().split(/\s+/);
+        let nominal = parseInt(angka[angka.length - 1]) || 0;
 
-        if (nominal > 0) {
-            // Cek apakah ini baris PENGELUARAN (liat parent ID-nya)
-            let isKeluar = row.closest("#tbKeluar");
-
-            if (teksBaris.includes("TRANSFER")) {
-                isKeluar ? totalATM -= nominal : totalATM += nominal;
-            } else if (teksBaris.includes("TUNAI")) {
-                isKeluar ? totalTunai -= nominal : totalTunai += nominal;
-            }
-        }
+        if (teks.includes("TRANSFER")) atm += nominal;
+        else if (teks.includes("TUNAI")) tunai += nominal;
     });
 
-    // Update tampilan
-    const elATM = document.getElementById("saldoATM");
-    const elTunai = document.getElementById("saldoTunai");
-    
-    if (elATM) elATM.innerText = "Rp " + totalATM.toLocaleString("id-ID");
-    if (elTunai) elTunai.innerText = "Rp " + totalTunai.toLocaleString("id-ID");
+    // 2. Hitung Uang Keluar (Pengeluaran)
+    barisKeluar.forEach(row => {
+        let teks = row.innerText;
+        row.querySelectorAll("textarea").forEach(area => teks += " " + area.value);
+        teks = teks.toUpperCase();
 
-    console.log("HASIL RENUNGAN -> ATM:", totalATM, "TUNAI:", totalTunai);
+        let angka = teks.replace(/\D/g, " ").trim().split(/\s+/);
+        let nominal = parseInt(angka[angka.length - 1]) || 0;
+
+        if (teks.includes("TRANSFER")) atm -= nominal;
+        else if (teks.includes("TUNAI")) tunai -= nominal;
+    });
+
+    // 3. Update Tampilan Blok Posisi Saldo
+    document.getElementById("saldoATM").innerText = "Rp " + atm.toLocaleString("id-ID");
+    document.getElementById("saldoTunai").innerText = "Rp " + tunai.toLocaleString("id-ID");
 }
 
 // Jalankan tiap 2 detik
-if(window.saldoInterval) clearInterval(window.saldoInterval);
-window.saldoInterval = setInterval(hitungPosisiSaldo, 2000);
+setInterval(hitungPosisiSaldo, 2000);
 
 </script>
 <div id="modalPerangkat" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
@@ -1665,6 +1665,7 @@ window.saldoInterval = setInterval(hitungPosisiSaldo, 2000);
 </div>
 </body>
 </html>
+
 
 
 
