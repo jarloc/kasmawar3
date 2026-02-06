@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.0</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.1</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -387,7 +387,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.0 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.1 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1605,36 +1605,49 @@ function hitungPosisiSaldo() {
 
     // 1. SCAN TABEL PEMASUKAN
     document.querySelectorAll('#tbMasuk tr').forEach(tr => {
-        const ket = (tr.children[2].firstChild.value || "").toUpperCase();
+        const ketCell = tr.children[2].querySelector('textarea') || tr.children[2].querySelector('input');
+        const ket = (ketCell ? ketCell.value : "").toUpperCase();
         const nominal = parseInt((tr.children[3].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
         
-        if (ket.includes("TRANSFER")) saldoATM += nominal;
-        else if (ket.includes("TUNAI")) saldoTunai += nominal;
+        if (ket.includes("TRANSFER")) {
+            saldoATM += nominal;
+        } else {
+            // Jika tidak ada kata TRANSFER, otomatis dianggap TUNAI
+            saldoTunai += nominal;
+        }
     });
 
     // 2. SCAN TABEL PENGELUARAN
     document.querySelectorAll('#tbKeluar tr').forEach(tr => {
-        const ket = (tr.children[1].firstChild.value || "").toUpperCase();
+        const ketCell = tr.children[1].querySelector('textarea') || tr.children[1].querySelector('input');
+        const ket = (ketCell ? ketCell.value : "").toUpperCase();
         const qty = parseInt((tr.children[2].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
         const harga = parseInt((tr.children[3].firstChild.value || "0").replace(/[^0-9]/g, '')) || 0;
         const totalKeluar = qty * harga;
 
-        if (ket.includes("TRANSFER")) saldoATM -= totalKeluar;
-        else if (ket.includes("TUNAI")) saldoTunai -= totalKeluar;
+        if (ket.includes("TRANSFER")) {
+            saldoATM -= totalKeluar;
+        } else {
+            // Jika tidak ada kata TRANSFER, otomatis memotong saldo TUNAI
+            saldoTunai -= totalKeluar;
+        }
     });
 
-    // 3. SCAN DATA TARGET PATUNGAN (Real-time dari Database)
+    // 3. SCAN DATA TARGET PATUNGAN
     db.ref("target_patungan").once("value", (snapshot) => {
         const dbData = snapshot.val() || {};
         Object.values(dbData).forEach(d => {
             const ket = (d.ket || "").toUpperCase();
             const nominal = parseInt(d.masuk) || 0;
             
-            if (ket.includes("TRANSFER")) saldoATM += nominal;
-            else if (ket.includes("TUNAI")) saldoTunai += nominal;
+            if (ket.includes("TRANSFER")) {
+                saldoATM += nominal;
+            } else {
+                saldoTunai += nominal;
+            }
         });
 
-        // UPDATE KE TAMPILAN (Pastikan ID ini ada di HTML Lu)
+        // UPDATE KE TAMPILAN
         const atmElem = document.getElementById('saldoATM');
         const tunaiElem = document.getElementById('saldoTunai');
         
@@ -1664,6 +1677,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
