@@ -224,7 +224,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 <div id="welcomeScreen">
     <img src="https://ik.imagekit.io/a0mxn2ls1/logo.png" alt="LOGO MAWAR 3" class="logo-welcome">
     <h1>SELAMAT DATANG DI WEBSITE KAS GANG MAWAR 3</h1>
-    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.7</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
+    <p>Built and developed by Fajar Ilmanosa Viar . <b>V3.6.8</b> . Copyright © 2026 Gang Mawar 3 . All Rights Reserved.</p>
     <button id="enterBtn" onclick="masukWeb()">MASUK</button>
 </div>
 
@@ -407,7 +407,7 @@ Copyright © 2026 Administrasi Kas Gang Mawar 3. Seluruh Hak Cipta Dilindungi Un
 </div>
 
 <div style="text-align:center; margin-top:30px; margin-bottom:50px; padding:20px; border-top:1px solid var(--border); font-size:0.8rem; color:#888; text-transform:none;">
-    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.7 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
+    Built and developed by <b style="color:var(--accent);">Fajar Ilmanosa Viar</b> | V3.6.8 Supreme Security and Terms | Copyright &copy; 2026 Gang Mawar 3 . All Rights Reserved.
 </div>
 
 <div id="checklistModal">
@@ -1623,16 +1623,19 @@ function hitungPosisiSaldo() {
     let saldoATM = 0;
     let saldoTunai = 0;
 
-    // Ambil periode aktif dari UI (Variabel global lu)
     const periodeBulan = bulan; 
     const periodeTahun = tahun;
 
-    // 1. HITUNG DARI TABEL PEMASUKAN (Hanya yang tampil di layar)
+    // 1. HITUNG DARI TABEL PEMASUKAN (Loncati baris SISA KAS SEBELUMNYA)
     document.querySelectorAll('#tbMasuk tr').forEach(tr => {
+        const namaBaris = (tr.children[1]?.querySelector('input')?.value || "").toUpperCase();
+        
+        // JANGAN DIHITUNG kalau ini baris sisa kas, karena kita akan ambil rinciannya dari database di bawah
+        if (namaBaris === "SISA KAS SEBELUMNYA") return;
+
         const ketCell = tr.querySelector('textarea, .editable:nth-child(3)');
         const ket = (ketCell ? (ketCell.value || ketCell.textContent) : "").toUpperCase();
         
-        // Ambil nominal dari kolom ke-4 (index 3)
         const valInput = tr.children[3]?.querySelector('input') || tr.children[3];
         const nominal = parseInt((valInput?.value || valInput?.textContent || "0").replace(/[^0-9]/g, '')) || 0;
         
@@ -1640,12 +1643,11 @@ function hitungPosisiSaldo() {
         else saldoTunai += nominal;
     });
 
-    // 2. HITUNG DARI TABEL PENGELUARAN (Hanya yang tampil di layar)
+    // 2. HITUNG DARI TABEL PENGELUARAN
     document.querySelectorAll('#tbKeluar tr').forEach(tr => {
         const ketCell = tr.querySelector('textarea, .editable:nth-child(2)');
         const ket = (ketCell ? (ketCell.value || ketCell.textContent) : "").toUpperCase();
         
-        // Kolom Qty (index 2) * Harga (index 3)
         const qtyInp = tr.children[2]?.querySelector('input') || tr.children[2];
         const hargaInp = tr.children[3]?.querySelector('input') || tr.children[3];
         
@@ -1657,14 +1659,13 @@ function hitungPosisiSaldo() {
         else saldoTunai -= totalKeluar;
     });
 
-    // 3. SCAN DATA TARGET PATUNGAN (Logika Akumulatif)
+    // 3. SCAN DATA TARGET PATUNGAN (Metode A: Kumulatif dari Januari s/d Bulan Aktif)
     db.ref("target_patungan").once("value", (snapshot) => {
         const dbData = snapshot.val() || {};
         
         Object.values(dbData).forEach(d => {
             if (!d.tgl) return;
 
-            // Normalisasi pemisah tanggal
             const tglNormal = d.tgl.replace(/\//g, '-');
             const bagian = tglNormal.split('-');
             let thnData, blnData;
@@ -1677,10 +1678,7 @@ function hitungPosisiSaldo() {
                 blnData = parseInt(bagian[1]) - 1;
             }
 
-            // --- REVISI LOGIKA DISINI ---
-            // Uang patungan dihitung jika:
-            // 1. Tahunnya sudah lewat (misal data 2025, periode sekarang 2026)
-            // 2. Tahunnya sama, tapi bulannya sudah lewat atau sedang berjalan
+            // Ambil semua data dari awal tahun sampai bulan yang sedang dibuka
             const isTahunLalu = thnData < periodeTahun;
             const isBulanLaluAtauSekarang = (thnData === periodeTahun && blnData <= periodeBulan);
 
@@ -1688,6 +1686,7 @@ function hitungPosisiSaldo() {
                 const ket = (d.ket || "").toUpperCase();
                 const nominal = parseInt(d.masuk) || 0;
                 
+                // Cek apakah patungan ini via transfer atau tunai
                 if (ket.includes("TRANSFER")) {
                     saldoATM += nominal;
                 } else {
@@ -1696,9 +1695,51 @@ function hitungPosisiSaldo() {
             }
         });
 
-        // Update ke elemen UI
-        document.getElementById('saldoATM').innerText = "Rp " + saldoATM.toLocaleString('id-ID');
-        document.getElementById('saldoTunai').innerText = "Rp " + saldoTunai.toLocaleString('id-ID');
+        // 4. LOGIKA TAMBAHAN: CEK SALDO PINDAHAN BULAN LALU (Rincian ATM & Tunai dari Kas Data)
+        // Kita scan data kas_data bulan-bulan sebelumnya untuk menghitung pengeluaran & pemasukan lama
+        let pm = bulan - 1, pt = tahun; if (pm < 0) { pm = 11; pt--; }
+
+        db.ref('kas_data').once('value', (snapKas) => {
+            const allKas = snapKas.val() || {};
+            let historicalATM = 0;
+            let historicalTunai = 0;
+
+            // Hitung semua kas_data (Masuk & Keluar) dari Jan sampai Bulan Lalu
+            for (let th = 2025; th <= tahun; th++) {
+                let maxB = (th === tahun) ? bulan - 1 : 11;
+                for (let bl = 0; bl <= maxB; bl++) {
+                    let dataBulan = allKas[bl + '-' + th];
+                    if (dataBulan) {
+                        if (dataBulan.masuk) {
+                            dataBulan.masuk.forEach(m => {
+                                // Loncati baris SISA KAS di bulan-bulan lama agar tidak looping tak terbatas
+                                if (m.nama === 'SISA KAS SEBELUMNYA') return;
+                                let u = parseInt((m.uang || "0").replace(/[^0-9]/g, '')) || 0;
+                                if ((m.ket || "").toUpperCase().includes("TRANSFER")) historicalATM += u;
+                                else historicalTunai += u;
+                            });
+                        }
+                        if (dataBulan.keluar) {
+                            dataBulan.keluar.forEach(k => {
+                                let q = parseInt((k.qty || "0").replace(/[^0-9]/g, '')) || 0;
+                                let h = parseInt((k.harga || "0").replace(/[^0-9]/g, '')) || 0;
+                                let totalK = q * h;
+                                if ((k.ket || "").toUpperCase().includes("TRANSFER")) historicalATM -= totalK;
+                                else historicalTunai -= totalK;
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // Gabungkan hasil historical kas_data dengan hasil patungan
+            let totalFinalATM = saldoATM + historicalATM;
+            let totalFinalTunai = saldoTunai + historicalTunai;
+
+            // Update ke elemen UI
+            document.getElementById('saldoATM').innerText = "Rp " + totalFinalATM.toLocaleString('id-ID');
+            document.getElementById('saldoTunai').innerText = "Rp " + totalFinalTunai.toLocaleString('id-ID');
+        });
     });
 }
 
@@ -1723,6 +1764,7 @@ function hitungPosisiSaldo() {
 </div>
 </body>
 </html>
+
 
 
 
